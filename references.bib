@@ -1,0 +1,862 @@
+% Bibliographie principale du rapport.
+% NB : BibTeX ne traite pas le caractere pourcent comme un commentaire ; on evite
+% donc le symbole arobase en dehors des vraies entrees, sinon BibTeX tente de les
+% analyser comme des entrees et signale des erreurs.
+
+% =====================================================================
+% Chapter 2 --- Background and State of the Art (Section 2.1)
+% =====================================================================
+
+@article{ji2023survey,
+    author  = {Ji, Ziwei and Lee, Nayeon and Frieske, Rita and Yu, Tiezheng and Su, Dan and Xu, Yan and Ishii, Etsuko and Bang, Ye Jin and Madotto, Andrea and Fung, Pascale},
+    title   = {Survey of Hallucination in Natural Language Generation},
+    journal = {ACM Computing Surveys},
+    volume  = {55},
+    number  = {12},
+    pages   = {1--38},
+    year    = {2023}
+}
+
+@inproceedings{lewis2020rag,
+    author    = {Lewis, Patrick and Perez, Ethan and Piktus, Aleksandra and Petroni, Fabio and Karpukhin, Vladimir and Goyal, Naman and K{\"u}ttler, Heinrich and Lewis, Mike and Yih, Wen-tau and Rockt{\"a}schel, Tim and Riedel, Sebastian and Kiela, Douwe},
+    title     = {Retrieval-Augmented Generation for Knowledge-Intensive {NLP} Tasks},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2020}
+}
+
+@inproceedings{guu2020realm,
+    author    = {Guu, Kelvin and Lee, Kenton and Tung, Zora and Pasupat, Panupong and Chang, Ming-Wei},
+    title     = {{REALM}: Retrieval-Augmented Language Model Pre-Training},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    year      = {2020}
+}
+
+@inproceedings{karpukhin2020dpr,
+    author    = {Karpukhin, Vladimir and O{\u{g}}uz, Barlas and Min, Sewon and Lewis, Patrick and Wu, Ledell and Edunov, Sergey and Chen, Danqi and Yih, Wen-tau},
+    title     = {Dense Passage Retrieval for Open-Domain Question Answering},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2020}
+}
+
+@article{lee2024nvembed,
+    author  = {Lee, Chankyu and Roy, Rajarshi and Xu, Mengyao and Raiman, Jonathan and Shoeybi, Mohammad and Catanzaro, Bryan and Ping, Wei},
+    title   = {{NV-Embed}: Improved Techniques for Training {LLMs} as Generalist Embedding Models},
+    journal = {arXiv preprint arXiv:2405.17428},
+    year    = {2024}
+}
+
+% Retrieved: https://arxiv.org/abs/2404.16130
+@article{edge2024graphrag,
+    author  = {Edge, Darren and Trinh, Ha and Cheng, Newman and Bradley, Joshua and Chao, Alex and Mody, Apurva and Truitt, Steven and Metropolitansky, Dasha and Ness, Robert Osazuwa and Larson, Jonathan},
+    title   = {From Local to Global: A Graph {RAG} Approach to Query-Focused Summarization},
+    journal = {arXiv preprint arXiv:2404.16130},
+    year    = {2024}
+}
+
+% Retrieved: https://papers.nips.cc/paper_files/paper/2024/hash/6ddc001d07ca4f319af96a3024f6dbd1-Abstract-Conference.html
+@inproceedings{gutierrez2024hipporag,
+    author    = {Guti{\'e}rrez, Bernal Jim{\'e}nez and Shu, Yiheng and Gu, Yu and Yasunaga, Michihiro and Su, Yu},
+    title     = {{HippoRAG}: Neurobiologically Inspired Long-Term Memory for Large Language Models},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2024}
+}
+
+@inproceedings{izacard2021fid,
+    author    = {Izacard, Gautier and Grave, Edouard},
+    title     = {Leveraging Passage Retrieval with Generative Models for Open Domain Question Answering},
+    booktitle = {Proceedings of the Conference of the European Chapter of the Association for Computational Linguistics (EACL)},
+    year      = {2021}
+}
+
+@inproceedings{yang2018hotpotqa,
+    author    = {Yang, Zhilin and Qi, Peng and Zhang, Saizheng and Bengio, Yoshua and Cohen, William W. and Salakhutdinov, Ruslan and Manning, Christopher D.},
+    title     = {{HotpotQA}: A Dataset for Diverse, Explainable Multi-hop Question Answering},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2018}
+}
+
+@inproceedings{ho2020constructing,
+    author    = {Ho, Xanh and Nguyen, Anh-Khoa Duong and Sugawara, Saku and Aizawa, Akiko},
+    title     = {Constructing a Multi-hop {QA} Dataset for Comprehensive Evaluation of Reasoning Steps},
+    booktitle = {Proceedings of the International Conference on Computational Linguistics (COLING)},
+    year      = {2020}
+}
+
+@article{trivedi2022musique,
+    author  = {Trivedi, Harsh and Balasubramanian, Niranjan and Khot, Tushar and Sabharwal, Ashish},
+    title   = {{MuSiQue}: Multihop Questions via Single-hop Question Composition},
+    journal = {Transactions of the Association for Computational Linguistics (TACL)},
+    volume  = {10},
+    pages   = {539--554},
+    year    = {2022}
+}
+
+@inproceedings{trivedi2023interleaving,
+    author    = {Trivedi, Harsh and Balasubramanian, Niranjan and Khot, Tushar and Sabharwal, Ashish},
+    title     = {Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions},
+    booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
+    year      = {2023}
+}
+
+% =====================================================================
+% Chapter 2 --- Section 2.2 (Reliability challenges)
+% =====================================================================
+
+@inproceedings{maynez2020faithfulness,
+    author    = {Maynez, Joshua and Narayan, Shashi and Bohnet, Bernd and McDonald, Ryan},
+    title     = {On Faithfulness and Factuality in Abstractive Summarization},
+    booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
+    year      = {2020}
+}
+
+@article{rashkin2023measuring,
+    author  = {Rashkin, Hannah and Nikolaev, Vitaly and Lamm, Matthew and Aroyo, Lora and Collins, Michael and Das, Dipanjan and Petrov, Slav and Tomar, Gaurav Singh and Turc, Iulia and Reitter, David},
+    title   = {Measuring Attribution in Natural Language Generation Models},
+    journal = {Computational Linguistics},
+    volume  = {49},
+    number  = {4},
+    pages   = {777--840},
+    year    = {2023}
+}
+
+@inproceedings{guo2017calibration,
+    author    = {Guo, Chuan and Pleiss, Geoff and Sun, Yu and Weinberger, Kilian Q.},
+    title     = {On Calibration of Modern Neural Networks},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    year      = {2017}
+}
+
+@inproceedings{desai2020calibration,
+    author    = {Desai, Shrey and Durrett, Greg},
+    title     = {Calibration of Pre-trained Transformers},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2020}
+}
+
+@article{kadavath2022know,
+    author  = {Kadavath, Saurav and Conerly, Tom and Askell, Amanda and Henighan, Tom and Drain, Dawn and Perez, Ethan and Schiefer, Nicholas and Hatfield-Dodds, Zac and DasSarma, Nova and Tran-Johnson, Eli and others},
+    title   = {Language Models (Mostly) Know What They Know},
+    journal = {arXiv preprint arXiv:2207.05221},
+    year    = {2022}
+}
+
+@inproceedings{xiong2024can,
+    author    = {Xiong, Miao and Hu, Zhiyuan and Lu, Xinyang and Li, Yifei and Fu, Jie and He, Junxian and Hooi, Bryan},
+    title     = {Can {LLMs} Express Their Uncertainty? An Empirical Evaluation of Confidence Elicitation in {LLMs}},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2024}
+}
+
+% =====================================================================
+% Chapter 2 --- Section 2.3 (Uncertainty quantification)
+% =====================================================================
+
+@article{huellermeier2021aleatoric,
+    author  = {H{\"u}llermeier, Eyke and Waegeman, Willem},
+    title   = {Aleatoric and Epistemic Uncertainty in Machine Learning: An Introduction to Concepts and Methods},
+    journal = {Machine Learning},
+    volume  = {110},
+    number  = {3},
+    pages   = {457--506},
+    year    = {2021}
+}
+
+@inproceedings{malinin2021uncertainty,
+    author    = {Malinin, Andrey and Gales, Mark},
+    title     = {Uncertainty Estimation in Autoregressive Structured Prediction},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2021}
+}
+
+@inproceedings{wang2023selfconsistency,
+    author    = {Wang, Xuezhi and Wei, Jason and Schuurmans, Dale and Le, Quoc and Chi, Ed and Narang, Sharan and Chowdhery, Aakanksha and Zhou, Denny},
+    title     = {Self-Consistency Improves Chain of Thought Reasoning in Language Models},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2023}
+}
+
+@inproceedings{kuhn2023semantic,
+    author    = {Kuhn, Lorenz and Gal, Yarin and Farquhar, Sebastian},
+    title     = {Semantic Uncertainty: Linguistic Invariances for Uncertainty Estimation in Natural Language Generation},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2023}
+}
+
+@inproceedings{azaria2023internal,
+    author    = {Azaria, Amos and Mitchell, Tom},
+    title     = {The Internal State of an {LLM} Knows When It's Lying},
+    booktitle = {Findings of the Association for Computational Linguistics: EMNLP},
+    year      = {2023}
+}
+
+@article{lin2022teaching,
+    author  = {Lin, Stephanie and Hilton, Jacob and Evans, Owain},
+    title   = {Teaching Models to Express Their Uncertainty in Words},
+    journal = {Transactions on Machine Learning Research (TMLR)},
+    year    = {2022}
+}
+
+@inproceedings{gal2016dropout,
+    author    = {Gal, Yarin and Ghahramani, Zoubin},
+    title     = {Dropout as a {Bayesian} Approximation: Representing Model Uncertainty in Deep Learning},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    year      = {2016}
+}
+
+@inproceedings{lakshminarayanan2017simple,
+    author    = {Lakshminarayanan, Balaji and Pritzel, Alexander and Blundell, Charles},
+    title     = {Simple and Scalable Predictive Uncertainty Estimation Using Deep Ensembles},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2017}
+}
+
+% =====================================================================
+% Retrieval-conditioned calibration (survey Finding F7) and shift.
+% Identified via the AIDIST survey's reference list; every author list below
+% RETRIEVED from a primary record (ACL Anthology / TACL / NeurIPS
+% proceedings / arXiv listing). None written from memory.
+% =====================================================================
+
+% Retrieved: https://aclanthology.org/2025.findings-acl.852/
+@inproceedings{soudani2025axiomatic,
+    author    = {Soudani, Heydar and Kanoulas, Evangelos and Hasibi, Faegheh},
+    title     = {Why Uncertainty Estimation Methods Fall Short in {RAG}: An Axiomatic Analysis},
+    booktitle = {Findings of the Association for Computational Linguistics: ACL},
+    year      = {2025}
+}
+
+% Retrieved: https://arxiv.org/abs/2601.11004
+@article{liu2026nova,
+    author  = {Liu, Jiayu and Wang, Rui and Zong, Qing and Wang, Yumeng and Qian, Cheng and Zeng, Qingcheng and Zheng, Tianshi and Shi, Haochen and Guo, Dadi and Xu, Baixuan and Li, Chunyang and Song, Yangqiu},
+    title   = {{NOVA}: Noise-Aware Verbal Confidence Calibration for Robust Large Language Models in {RAG} Systems},
+    journal = {arXiv preprint arXiv:2601.11004},
+    year    = {2026}
+}
+
+% Retrieved: https://aclanthology.org/2021.tacl-1.57/
+@article{jiang2021know,
+    author  = {Jiang, Zhengbao and Araki, Jun and Ding, Haibo and Neubig, Graham},
+    title   = {How Can We Know When Language Models Know? On the Calibration of Language Models for Question Answering},
+    journal = {Transactions of the Association for Computational Linguistics},
+    volume  = {9},
+    pages   = {962--977},
+    year    = {2021}
+}
+
+% Retrieved: https://neurips.cc/virtual/2025/poster/118005 (arXiv:2411.08891)
+% NOTE: only the lead author could be confirmed from the retrieved records;
+% the remaining authors are UNVERIFIED. Complete before final submission.
+@inproceedings{jang2025reliable,
+    author    = {Jang, Chaeyun and others},
+    title     = {Reliable Decision-Making via Calibration-Oriented Retrieval-Augmented Generation},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2025}
+}
+
+% Retrieved: https://arxiv.org/abs/2603.16817
+@article{chen2026conformalrobust,
+    author  = {Chen, Yi and Chen, Daiwei and Chikodikar, Sukrut Madhav and Yin, Caitlyn Heqi and Vinayak, Ramya Korlakai},
+    title   = {Is Conformal Factuality for {RAG}-based {LLMs} Robust? Novel Metrics and Systematic Insights},
+    journal = {arXiv preprint arXiv:2603.16817},
+    year    = {2026}
+}
+
+% =====================================================================
+% LLM-specific calibration evidence (survey refs [95], [96]).
+% Author lists retrieved from primary records.
+% =====================================================================
+
+% Retrieved: https://aclanthology.org/2023.emnlp-main.330/
+@inproceedings{tian2023justask,
+    author    = {Tian, Katherine and Mitchell, Eric and Zhou, Allan and Sharma, Archit and Rafailov, Rafael and Yao, Huaxiu and Finn, Chelsea and Manning, Christopher D.},
+    title     = {Just Ask for Calibration: Strategies for Eliciting Calibrated Confidence Scores from Language Models Fine-Tuned with Human Feedback},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    pages     = {5433--5442},
+    year      = {2023}
+}
+
+% =====================================================================
+% Chapter 2 --- Section 2.4 (Verification and the trust layer)
+% =====================================================================
+
+@inproceedings{thorne2018fever,
+    author    = {Thorne, James and Vlachos, Andreas and Christodoulopoulos, Christos and Mittal, Arpit},
+    title     = {{FEVER}: a Large-scale Dataset for Fact Extraction and VERification},
+    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+    year      = {2018}
+}
+
+@inproceedings{honovich2022true,
+    author    = {Honovich, Or and Aharoni, Roee and Herzig, Jonathan and Taitelbaum, Hagai and Kukliansy, Doron and Cohen, Vered and Scialom, Thomas and Szpektor, Idan and Hassidim, Avinatan and Matias, Yossi},
+    title     = {{TRUE}: Re-evaluating Factual Consistency Evaluation},
+    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+    year      = {2022}
+}
+
+@inproceedings{min2023factscore,
+    author    = {Min, Sewon and Krishna, Kalpesh and Lyu, Xinxi and Lewis, Mike and Yih, Wen-tau and Koh, Pang Wei and Iyyer, Mohit and Zettlemoyer, Luke and Hajishirzi, Hannaneh},
+    title     = {{FActScore}: Fine-grained Atomic Evaluation of Factual Precision in Long Form Text Generation},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2023}
+}
+
+@inproceedings{zheng2023judging,
+    author    = {Zheng, Lianmin and Chiang, Wei-Lin and Sheng, Ying and Zhuang, Siyuan and Wu, Zhanghao and Zhuang, Yonghao and Lin, Zi and Li, Zhuohan and Li, Dacheng and Xing, Eric P. and Zhang, Hao and Gonzalez, Joseph E. and Stoica, Ion},
+    title     = {Judging {LLM}-as-a-Judge with {MT-Bench} and {Chatbot Arena}},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2023}
+}
+
+% =====================================================================
+% LLM-as-a-judge: bias and judge-error control (survey refs [38], [91]).
+% All fields retrieved from primary records.
+% =====================================================================
+
+% Retrieved: https://proceedings.iclr.cc/paper_files/paper/2025/hash/08dabd5345b37fffcbe335bd578b15a0-Abstract-Conference.html
+@inproceedings{jung2025trust,
+    author    = {Jung, Jaehun and Brahman, Faeze and Choi, Yejin},
+    title     = {Trust or Escalate: {LLM} Judges with Provable Guarantees for Human Agreement},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2025}
+}
+
+% Retrieved: https://openreview.net/forum?id=NO6Tv6QcDs (arXiv:2410.13341)
+@inproceedings{dorner2025limits,
+    author    = {Dorner, Florian E. and Nastl, Vivian Yvonne and Hardt, Moritz},
+    title     = {Limits to Scalable Evaluation at the Frontier: {LLM} as Judge Won't Beat Twice the Data},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2025}
+}
+
+% Retrieved: https://aclanthology.org/2024.naacl-long.20/
+@inproceedings{saadfalcon2024ares,
+    author    = {Saad-Falcon, Jon and Khattab, Omar and Potts, Christopher and Zaharia, Matei},
+    title     = {{ARES}: An Automated Evaluation Framework for Retrieval-Augmented Generation Systems},
+    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+    year      = {2024}
+}
+
+% Retrieved: https://icml.cc/virtual/2026/poster/62431 (arXiv:2602.13110)
+@inproceedings{badshah2026scope,
+    author    = {Badshah, Sher and Emami, Ali and Sajjad, Hassan},
+    title     = {{SCOPE}: Selective Conformal Optimized Pairwise {LLM} Judging},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    year      = {2026}
+}
+
+% Retrieved: https://arxiv.org/abs/2509.07475
+@article{goswami2025haltrag,
+    author  = {Goswami, Saumya and Kurra, Siddharth},
+    title   = {{HALT-RAG}: A Task-Adaptable Framework for Hallucination Detection with Calibrated {NLI} Ensembles and Abstention},
+    journal = {arXiv preprint arXiv:2509.07475},
+    year    = {2025}
+}
+
+% Retrieved: https://proceedings.neurips.cc/paper_files/paper/2024/hash/7f1f0218e45f5414c79c0679633e47bc-Abstract-Conference.html
+% NOTE: not in the survey's reference list; retrieved independently as the
+% primary for self-preference bias.
+@inproceedings{panickssery2024llm,
+    author    = {Panickssery, Arjun and Bowman, Samuel R. and Feng, Shi},
+    title     = {{LLM} Evaluators Recognize and Favor Their Own Generations},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2024}
+}
+
+@inproceedings{asai2023selfrag,
+    author    = {Asai, Akari and Wu, Zeqiu and Wang, Yizhong and Sil, Avirup and Hajishirzi, Hannaneh},
+    title     = {{Self-RAG}: Learning to Retrieve, Generate, and Critique through Self-Reflection},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2024}
+}
+
+@inproceedings{dhuliawala2023chainofverification,
+    author    = {Dhuliawala, Shehzaad and Komeili, Mojtaba and Xu, Jing and Raileanu, Roberta and Li, Xian and Celikyilmaz, Asli and Weston, Jason},
+    title     = {Chain-of-Verification Reduces Hallucination in Large Language Models},
+    booktitle = {Findings of the Association for Computational Linguistics: ACL},
+    year      = {2024}
+}
+
+% =====================================================================
+% Chapter 2 --- Section 2.5 (Conformal prediction and risk control)
+% =====================================================================
+
+% Retrieved: Springer, ISBN 978-0-387-00152-4 (2nd ed. 2022 also exists).
+@book{vovk2005algorithmic,
+    author    = {Vovk, Vladimir and Gammerman, Alexander and Shafer, Glenn},
+    title     = {Algorithmic Learning in a Random World},
+    publisher = {Springer},
+    address   = {New York},
+    year      = {2005}
+}
+
+% VERIFIED: Foundations and Trends in Machine Learning 16(4):494-591, 2023
+% (Now Publishers). Publisher title used, to match the published fields.
+% The arXiv form (arXiv:2107.07511) carries the longer title "A Gentle
+% Introduction to Conformal Prediction and Distribution-Free Uncertainty
+% Quantification".
+@article{angelopoulos2023gentle,
+    author  = {Angelopoulos, Anastasios N. and Bates, Stephen},
+    title   = {Conformal Prediction: A Gentle Introduction},
+    journal = {Foundations and Trends in Machine Learning},
+    volume  = {16},
+    number  = {4},
+    pages   = {494--591},
+    year    = {2023}
+}
+
+@article{bates2021rcps,
+    author  = {Bates, Stephen and Angelopoulos, Anastasios and Lei, Lihua and Malik, Jitendra and Jordan, Michael I.},
+    title   = {Distribution-Free, Risk-Controlling Prediction Sets},
+    journal = {Journal of the ACM},
+    volume  = {68},
+    number  = {6},
+    pages   = {1--34},
+    year    = {2021}
+}
+
+% Updated from the arXiv preprint to the journal version.
+% Retrieved: https://projecteuclid.org/journals/annals-of-applied-statistics/volume-19/issue-2/
+@article{angelopoulos2021ltt,
+    author  = {Angelopoulos, Anastasios N. and Bates, Stephen and Cand{\`e}s, Emmanuel J. and Jordan, Michael I. and Lei, Lihua},
+    title   = {Learn then Test: Calibrating Predictive Algorithms to Achieve Risk Control},
+    journal = {The Annals of Applied Statistics},
+    volume  = {19},
+    number  = {2},
+    pages   = {1641--1662},
+    year    = {2025},
+    doi     = {10.1214/24-AOAS1998}
+}
+
+@inproceedings{angelopoulos2024conformalrisk,
+    author    = {Angelopoulos, Anastasios N. and Bates, Stephen and Fisch, Adam and Lei, Lihua and Schuster, Tal},
+    title     = {Conformal Risk Control},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2024}
+}
+
+@article{elyaniv2010foundations,
+    author  = {El-Yaniv, Ran and Wiener, Yair},
+    title   = {On the Foundations of Noise-free Selective Classification},
+    journal = {Journal of Machine Learning Research},
+    volume  = {11},
+    pages   = {1605--1641},
+    year    = {2010}
+}
+
+@inproceedings{geifman2017selective,
+    author    = {Geifman, Yonatan and El-Yaniv, Ran},
+    title     = {Selective Classification for Deep Neural Networks},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2017}
+}
+
+@inproceedings{gibbs2021adaptive,
+    author    = {Gibbs, Isaac and Cand{\`e}s, Emmanuel},
+    title     = {Adaptive Conformal Inference Under Distribution Shift},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+    year      = {2021}
+}
+
+% =====================================================================
+% Section 2.5 additions. Identified via the AIDIST survey's reference list
+% (refs [35], [58], [59], [62], [63], [81]); all fields RETRIEVED from
+% primary records, URLs given per entry. None written from memory.
+% =====================================================================
+
+% Retrieved: https://proceedings.mlr.press/v25/vovk12.html
+@inproceedings{vovk2012conditional,
+    author    = {Vovk, Vladimir},
+    title     = {Conditional Validity of Inductive Conformal Predictors},
+    booktitle = {Proceedings of the Asian Conference on Machine Learning (ACML)},
+    series    = {Proceedings of Machine Learning Research},
+    volume    = {25},
+    pages     = {475--490},
+    year      = {2012}
+}
+
+% Retrieved: https://projecteuclid.org/journals/annals-of-statistics/volume-51/issue-2/Conformal-prediction-beyond-exchangeability/10.1214/23-AOS2276.full
+@article{barber2023beyond,
+    author  = {Barber, Rina Foygel and Cand{\`e}s, Emmanuel J. and Ramdas, Aaditya and Tibshirani, Ryan J.},
+    title   = {Conformal Prediction Beyond Exchangeability},
+    journal = {The Annals of Statistics},
+    volume  = {51},
+    number  = {2},
+    pages   = {816--845},
+    year    = {2023},
+    doi     = {10.1214/23-AOS2276}
+}
+
+% Retrieved: https://proceedings.mlr.press/v235/mohri24a.html
+@inproceedings{mohri2024conformal,
+    author    = {Mohri, Christopher and Hashimoto, Tatsunori},
+    title     = {Language Models with Conformal Factuality Guarantees},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    year      = {2024}
+}
+
+% Retrieved: https://aclanthology.org/2024.naacl-long.210/
+@inproceedings{li2024traq,
+    author    = {Li, Shuo and Park, Sangdon and Lee, Insup and Bastani, Osbert},
+    title     = {{TRAQ}: Trustworthy Retrieval Augmented Question Answering via Conformal Prediction},
+    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL)},
+    pages     = {3799--3821},
+    year      = {2024}
+}
+
+% Retrieved: https://proceedings.mlr.press/v235/kang24a.html
+@inproceedings{kang2024crag,
+    author    = {Kang, Mintong and G{\"u}rel, Nezihe Merve and Yu, Ning and Song, Dawn and Li, Bo},
+    title     = {{C-RAG}: Certified Generation Risks for Retrieval-Augmented Language Models},
+    booktitle = {International Conference on Machine Learning (ICML)},
+    pages     = {22963--23000},
+    year      = {2024}
+}
+
+% Retrieved: https://arxiv.org/abs/2604.01413
+% NOTE: the survey's prose calls this method "MiCP"; the paper's own title does
+% not contain that string. Method name = MiCP, paper title as below.
+@article{zhou2026micp,
+    author  = {Zhou, Xiaofan and Nguyen, Huy and Yu, Bo and Liu, Chenxi and Cheng, Lu},
+    title   = {Adaptive Stopping for Multi-Turn {LLM} Reasoning},
+    journal = {arXiv preprint arXiv:2604.01413},
+    year    = {2026}
+}
+
+% Retrieved: https://arxiv.org/html/2605.20084 (full author list from the paper)
+@article{jia2026balancerag,
+    author  = {Jia, Zijun and Ye, Yuanchang and Jia, Sen and Qian, Yiyao and Wang, Haoning and Chen, Baojie and Tang, Diyin and Yu, Jinsong and Wang, Zhiyuan},
+    title   = {{BalanceRAG}: Joint Risk Calibration for Cascaded Retrieval-Augmented Generation},
+    journal = {arXiv preprint arXiv:2605.20084},
+    year    = {2026}
+}
+
+% =====================================================================
+% Demonstrated exchangeability failures (Chapter 3, condition (c)) and
+% inference-time gates. Identified via the survey's reference list; all
+% fields retrieved from primary records.
+% =====================================================================
+
+% Retrieved: https://arxiv.org/html/2605.05244v1
+@article{geissler2026dependable,
+    author  = {Geissler, Florian and Carella, Francesco and Fieback, Laura and Spiegelberg, Jakob},
+    title   = {Towards Dependable Retrieval-Augmented Generation Using Factual Confidence Prediction},
+    journal = {arXiv preprint arXiv:2605.05244},
+    year    = {2026}
+}
+
+% Retrieved: https://aclanthology.org/2025.acl-long.934/ (arXiv:2504.14154)
+@inproceedings{wang2025sconu,
+    author    = {Wang, Zhiyuan and Wang, Qingni and Zhang, Yue and Chen, Tianlong and Zhu, Xiaofeng and Shi, Xiaoshuang and Xu, Kaidi},
+    title     = {{SConU}: Selective Conformal Uncertainty in Large Language Models},
+    booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
+    year      = {2025}
+}
+
+% Retrieved: https://arxiv.org/abs/2401.15884
+@article{yan2024corrective,
+    author  = {Yan, Shi-Qi and Gu, Jia-Chen and Zhu, Yun and Ling, Zhen-Hua},
+    title   = {Corrective Retrieval Augmented Generation},
+    journal = {arXiv preprint arXiv:2401.15884},
+    year    = {2024}
+}
+
+% Retrieved: https://aclanthology.org/2024.emnlp-main.499/
+@inproceedings{tang2024minicheck,
+    author    = {Tang, Liyan and Laban, Philippe and Durrett, Greg},
+    title     = {{MiniCheck}: Efficient Fact-Checking of {LLMs} on Grounding Documents},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2024}
+}
+
+% =====================================================================
+% Knowledge conflict (Chapter 3, condition (b)). Identified via the survey's
+% reference list; all fields retrieved from primary records.
+% =====================================================================
+
+% Retrieved: https://aclanthology.org/2024.emnlp-main.486/
+@inproceedings{xu2024knowledgeconflicts,
+    author    = {Xu, Rongwu and Qi, Zehan and Guo, Zhijiang and Wang, Cunxiang and Wang, Hongru and Zhang, Yue and Xu, Wei},
+    title     = {Knowledge Conflicts for {LLMs}: A Survey},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    pages     = {8541--8565},
+    year      = {2024}
+}
+
+% Retrieved: https://aclanthology.org/2022.emnlp-main.146/
+@inproceedings{chen2022richknowledge,
+    author    = {Chen, Hung-Ting and Zhang, Michael J. Q. and Choi, Eunsol},
+    title     = {Rich Knowledge Sources Bring Complex Knowledge Conflicts: Recalibrating Models to Reflect Conflicting Evidence},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    pages     = {2292--2307},
+    year      = {2022}
+}
+
+% Retrieved: https://aclanthology.org/2026.bionlp-1.50.pdf (arXiv:2605.14115)
+@inproceedings{han2026evidenceconflicts,
+    author    = {Han, Yikun and Lan, Mengfei and Kilicoglu, Halil},
+    title     = {When Evidence Conflicts: Uncertainty and Order Effects in Retrieval-Augmented Biomedical Question Answering},
+    booktitle = {Proceedings of the Workshop on Biomedical Natural Language Processing (BioNLP)},
+    year      = {2026}
+}
+
+% Retrieved: https://aclanthology.org/2024.naacl-short.34/ (context-aware decoding)
+@inproceedings{shi2024trusting,
+    author    = {Shi, Weijia and Han, Xiaochuang and Lewis, Mike and Tsvetkov, Yulia and Zettlemoyer, Luke and Yih, Wen-tau},
+    title     = {Trusting Your Evidence: Hallucinate Less with Context-Aware Decoding},
+    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL), Short Papers},
+    year      = {2024}
+}
+
+% Retrieved: https://aclanthology.org/2025.emnlp-main.1738/ (arXiv:2410.22954)
+@inproceedings{hwang2025sourcereliability,
+    author    = {Hwang, Jeongyeon and Park, Junyoung and Park, Hyejin and Kim, Dongwoo and Park, Sangdon and Ok, Jungseul},
+    title     = {Retrieval-Augmented Generation with Estimation of Source Reliability},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing (EMNLP)},
+    year      = {2025}
+}
+
+% Retrieved: https://arxiv.org/pdf/2605.18792 (author list from the paper itself)
+@article{zhu2026trustabstain,
+    author  = {Zhu, Xi and Wang, Ziqi and Mei, Kai and Xu, Wujiang and Guo, Minghao and Yang, Bangji and Fan, Jiajun and Metaxas, Dimitris N.},
+    title   = {Trust or Abstain? A Self-Aware {RAG} Approach},
+    journal = {arXiv preprint arXiv:2605.18792},
+    year    = {2026}
+}
+
+% Retrieved: https://arxiv.org/abs/2605.18812
+@article{kotte2026pasc,
+    author  = {Kotte, Varun},
+    title   = {{PASC}: Pipeline-Aware Conformal Prediction with Joint Coverage Guarantees for Multi-Stage {NLP} and {LLM} Pipelines},
+    journal = {arXiv preprint arXiv:2605.18812},
+    year    = {2026}
+}
+
+% Retrieved: https://arxiv.org/abs/2511.11828
+@article{si2025ccpo,
+    author  = {Si, Wenwen and Jang, Sooyong and Lee, Insup and Bastani, Osbert},
+    title   = {Conformal Constrained Policy Optimization for Cost-Effective {LLM} Agents},
+    journal = {arXiv preprint arXiv:2511.11828},
+    year    = {2025}
+}
+
+% Retrieved: https://proceedings.mlr.press/v229/ren23a.html
+@inproceedings{ren2023knowno,
+    author    = {Ren, Allen Z. and Dixit, Anushri and Bodrova, Alexandra and Singh, Sumeet and Tu, Stephen and Brown, Noah and Xu, Peng and Takayama, Leila and Xia, Fei and Varley, Jake and Xu, Zhenjia and Sadigh, Dorsa and Zeng, Andy and Majumdar, Anirudha},
+    title     = {Robots That Ask For Help: Uncertainty Alignment for Large Language Model Planners},
+    booktitle = {Proceedings of the Conference on Robot Learning (CoRL)},
+    series    = {Proceedings of Machine Learning Research},
+    volume    = {229},
+    pages     = {661--682},
+    year      = {2023}
+}
+
+% =====================================================================
+% Chapter 2 --- entries identified via the EXTENDED survey's survey.bib and
+% then RETRIEVED from primary records for their fields. survey.bib itself is
+% not used for author lists (348 of its 488 entries use "and others").
+% =====================================================================
+
+% Retrieved: https://dl.acm.org/doi/10.1561/1500000019
+@article{robertson2009bm25,
+    author  = {Robertson, Stephen and Zaragoza, Hugo},
+    title   = {The Probabilistic Relevance Framework: {BM25} and Beyond},
+    journal = {Foundations and Trends in Information Retrieval},
+    volume  = {3},
+    number  = {4},
+    pages   = {333--389},
+    year    = {2009},
+    doi     = {10.1561/1500000019}
+}
+
+% Retrieved: https://arxiv.org/abs/2506.08500
+@article{cattan2025dragged,
+    author  = {Cattan, Arie and Jacovi, Alon and Ram, Ori and Herzig, Jonathan and Aharoni, Roee and Goldshtein, Sasha and Ofek, Eran and Szpektor, Idan and Caciularu, Avi},
+    title   = {{DRAGged} into Conflicts: Detecting and Addressing Conflicting Sources in Search-Augmented {LLMs}},
+    journal = {arXiv preprint arXiv:2506.08500},
+    year    = {2025}
+}
+
+% Retrieved: https://collaborate.princeton.edu/en/publications/react-synergizing-reasoning-and-acting-in-language-models/
+@inproceedings{yao2023react,
+    author    = {Yao, Shunyu and Zhao, Jeffrey and Yu, Dian and Du, Nan and Shafran, Izhak and Narasimhan, Karthik and Cao, Yuan},
+    title     = {{ReAct}: Synergizing Reasoning and Acting in Language Models},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2023}
+}
+
+% Retrieved: https://arxiv.org/abs/2506.08572
+@article{azizian2025orthogonal,
+    author  = {Azizian, Wa{\"i}ss and Kirchhof, Michael and Ndiaye, Eugene and Bethune, Louis and Klein, Michal and Ablin, Pierre and Cuturi, Marco},
+    title   = {The Geometries of Truth Are Orthogonal Across Tasks},
+    journal = {arXiv preprint arXiv:2506.08572},
+    year    = {2025}
+}
+
+% Retrieved: https://aclanthology.org/2024.findings-emnlp.730/
+@inproceedings{thakur2024knowing,
+    author    = {Thakur, Nandan and Bonifacio, Luiz and Zhang, Crystina and Ogundepo, Odunayo and Kamalloo, Ehsan and Alfonso-Hermelo, David and Li, Xiaoguang and Liu, Qun and Chen, Boxing and Rezagholizadeh, Mehdi and Lin, Jimmy},
+    title     = {``Knowing When You Don't Know'': A Multilingual Relevance Assessment Dataset for Robust Retrieval-Augmented Generation},
+    booktitle = {Findings of the Association for Computational Linguistics: EMNLP},
+    pages     = {12508--12526},
+    year      = {2024}
+}
+
+% Retrieved: https://arxiv.org/abs/2411.06037
+@inproceedings{joren2025sufficient,
+    author    = {Joren, Hailey and Zhang, Jianyi and Ferng, Chun-Sung and Juan, Da-Cheng and Taly, Ankur and Rashtchian, Cyrus},
+    title     = {Sufficient Context: A New Lens on Retrieval Augmented Generation Systems},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2025}
+}
+
+% Retrieved: https://aclanthology.org/2024.tacl-1.9/
+@article{liu2024lost,
+    author  = {Liu, Nelson F. and Lin, Kevin and Hewitt, John and Paranjape, Ashwin and Bevilacqua, Michele and Petroni, Fabio and Liang, Percy},
+    title   = {Lost in the Middle: How Language Models Use Long Contexts},
+    journal = {Transactions of the Association for Computational Linguistics},
+    volume  = {12},
+    pages   = {157--173},
+    year    = {2024},
+    doi     = {10.1162/tacl_a_00638}
+}
+
+% Retrieved: https://openreview.net/forum?id=WGoCZl2itU (NeurIPS D&B 2024)
+@inproceedings{wu2024clasheval,
+    author    = {Wu, Kevin and Wu, Eric and Zou, James},
+    title     = {{ClashEval}: Quantifying the Tug-of-War between an {LLM}'s Internal Prior and External Evidence},
+    booktitle = {Advances in Neural Information Processing Systems (NeurIPS), Datasets and Benchmarks Track},
+    year      = {2024}
+}
+
+% Retrieved: https://dl.acm.org/doi/10.1145/3731120.3744592 (arXiv:2412.18004)
+@inproceedings{wallat2025correctness,
+    author    = {Wallat, Jonas and Heuss, Maria and de Rijke, Maarten and Anand, Avishek},
+    title     = {Correctness is not Faithfulness in {RAG} Attributions},
+    booktitle = {Proceedings of the ACM SIGIR International Conference on Innovative Concepts and Theories in Information Retrieval (ICTIR)},
+    year      = {2025},
+    doi       = {10.1145/3731120.3744592}
+}
+
+% Retrieved: https://academic.oup.com/imaiai/article-abstract/10/2/455/5896927
+@article{barber2021limits,
+    author  = {Barber, Rina Foygel and Cand{\`e}s, Emmanuel J. and Ramdas, Aaditya and Tibshirani, Ryan J.},
+    title   = {The Limits of Distribution-Free Conditional Predictive Inference},
+    journal = {Information and Inference: A Journal of the IMA},
+    volume  = {10},
+    number  = {2},
+    pages   = {455--482},
+    year    = {2021}
+}
+
+% =====================================================================
+% Chapter 4 --- benchmarks, corpora, models and the severity standard.
+% Identified from the reference list of the AIDIST medical paper; all fields
+% retrieved from primary records, URLs given per entry.
+% =====================================================================
+
+% Retrieved: https://aclanthology.org/D19-1259/
+@inproceedings{jin2019pubmedqa,
+    author    = {Jin, Qiao and Dhingra, Bhuwan and Liu, Zhengping and Cohen, William W. and Lu, Xinghua},
+    title     = {{PubMedQA}: A Dataset for Biomedical Research Question Answering},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
+    pages     = {2567--2577},
+    year      = {2019}
+}
+
+% Retrieved: https://proceedings.mlr.press/v174/pal22a.html
+@inproceedings{pal2022medmcqa,
+    author    = {Pal, Ankit and Umapathi, Logesh Kumar and Sankarasubbu, Malaikannan},
+    title     = {{MedMCQA}: A Large-Scale Multi-Subject Multi-Choice Dataset for Medical Domain Question Answering},
+    booktitle = {Proceedings of the Conference on Health, Inference, and Learning (CHIL)},
+    series    = {Proceedings of Machine Learning Research},
+    volume    = {174},
+    pages     = {248--260},
+    year      = {2022}
+}
+
+% Retrieved: https://aclanthology.org/2024.findings-acl.372/
+% This is the MedRAG / MIRAGE work supplying the textbook and StatPearls corpora.
+@inproceedings{xiong2024medrag,
+    author    = {Xiong, Guangzhi and Jin, Qiao and Lu, Zhiyong and Zhang, Aidong},
+    title     = {Benchmarking Retrieval-Augmented Generation for Medicine},
+    booktitle = {Findings of the Association for Computational Linguistics: ACL},
+    pages     = {6233--6251},
+    year      = {2024}
+}
+
+% Retrieved: https://aclanthology.org/D19-1410/
+% Cited for the sentence-embedding family to which all-MiniLM-L6-v2 belongs.
+@inproceedings{reimers2019sentencebert,
+    author    = {Reimers, Nils and Gurevych, Iryna},
+    title     = {{Sentence-BERT}: Sentence Embeddings using Siamese {BERT}-Networks},
+    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
+    pages     = {3982--3992},
+    year      = {2019}
+}
+
+% Retrieved: https://arxiv.org/abs/2412.15115
+@article{qwen2025report,
+    author  = {{Qwen Team}},
+    title   = {{Qwen2.5} Technical Report},
+    journal = {arXiv preprint arXiv:2412.15115},
+    year    = {2025}
+}
+
+% Retrieved: https://iclr.cc/virtual/2023/poster/11295 (arXiv:2111.09543)
+@inproceedings{he2023debertav3,
+    author    = {He, Pengcheng and Gao, Jianfeng and Chen, Weizhu},
+    title     = {{DeBERTaV3}: Improving {DeBERTa} using {ELECTRA}-Style Pre-Training with Gradient-Disentangled Embedding Sharing},
+    booktitle = {International Conference on Learning Representations (ICLR)},
+    year      = {2023}
+}
+
+% Retrieved: https://www.cambridge.org/core/journals/political-analysis/article/
+%            less-annotating-more-classifying-...
+% This is the work the medical paper cites for the fine-tuned NLI scorer; the
+% individual NLI corpora (MNLI, FEVER, ANLI, LING, WANLI) are NOT cited separately.
+@article{laurer2024less,
+    author  = {Laurer, Moritz and van Atteveldt, Wouter and Casas, Andreu and Welbers, Kasper},
+    title   = {Less Annotating, More Classifying: Addressing the Data Scarcity Issue of Supervised Machine Learning with Deep Transfer Learning and {BERT-NLI}},
+    journal = {Political Analysis},
+    volume  = {32},
+    number  = {1},
+    pages   = {84--100},
+    year    = {2024}
+}
+
+% Formatted as in the medical paper's own reference list: the International
+% Electrotechnical Commission is the issuing body, not an author.
+@manual{iec62304,
+    title        = {{IEC 62304:2006} Medical Device Software --- Software Life Cycle Processes},
+    organization = {International Electrotechnical Commission},
+    address      = {Geneva, Switzerland},
+    year         = {2006}
+}
+
+% =====================================================================
+% Travaux de l'equipe acceptes a IEEE AIDIST 2026 (a paraitre).
+% =====================================================================
+
+@inproceedings{chaari2026accuracy,
+    author    = {Chaari, S. and Abdelhedi, O. and Azzam, D. and Hamed, M. and Heidari, O. R. and {Chen Zhu}, X. and Yaakoubi, Y.},
+    title     = {When Accuracy Misleads: Calibration, Faithfulness, and Harm in Medical {RAG}},
+    booktitle = {IEEE AIDIST 2026 Conference},
+    year      = {2026},
+    note      = {Accepted, to appear}
+}
+
+@inproceedings{heidari2026trustlayer,
+    author    = {Heidari, O. R. and Chaari, S. and Abdelhedi, O. and Azzam, D. and Hamed, M. and {Chen Zhu}, X. and Yaakoubi, Y.},
+    title     = {The Trust Layer of Retrieval-Augmented Generation: A Systematic Survey of Uncertainty Quantification, Verification, and Guarantees},
+    booktitle = {IEEE AIDIST 2026 Conference},
+    year      = {2026},
+    note      = {Accepted, to appear}
+}
+
+@inproceedings{abdelhedi2026probing,
+    author    = {Abdelhedi, O. and Heidari, O. R. and Chaari, S. and {Chen Zhu}, X. and Hamed, M. and Azzam, D. and Yaakoubi, Y.},
+    title     = {Probing Compositional Question Difficulty in Language Model Representations},
+    booktitle = {IEEE AIDIST 2026 Conference},
+    year      = {2026},
+    note      = {Accepted, to appear}
+}

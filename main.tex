@@ -1,0 +1,266 @@
+\documentclass[12pt,a4paper]{report}
+
+% ---------------------------------------------------
+% Encoding & language
+% ---------------------------------------------------
+\usepackage[utf8]{inputenc}   % UTF-8 input
+\usepackage[T1]{fontenc}      % T1 font encoding
+\usepackage[english]{babel}   % Main language
+\usepackage{indentfirst}      % Indente aussi le 1er paragraphe apres un titre
+
+% ---------------------------------------------------
+% Page layout & margins
+% ---------------------------------------------------
+\usepackage{geometry}
+\geometry{a4paper, margin=2.5cm}
+
+% ---------------------------------------------------
+% Chapter titles & headers/footers
+% ---------------------------------------------------
+\usepackage{titlesec}        % Personnalisation des titres
+\titleformat{\chapter}[display]  % label sur sa propre ligne, titre en dessous
+  {\normalfont\huge\bfseries}    % Style du texte
+  {\chaptername\ \thechapter}    % "Chapitre 1"
+  {0pt}                          % Aucun espace entre le label et le titre
+  {\Huge}                        % Style du titre
+
+% Number headings down to subsubsection level, so that Chapter 4's
+% subsubsections appear as 4.1.2.1, 4.1.2.2, ... rather than unnumbered.
+\setcounter{secnumdepth}{3}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% fancyhdr's own defaults include \fancyfoot[C]{\thepage}. They must be cleared,
+% or the folio is printed twice on every body page: once top-right by the
+% \fancyhead[R] below and once again at the foot.
+\fancyhf{}
+% The 12pt class leaves \headheight at 12pt, but the running head needs
+% 14.5pt; without this fancyhdr warns on every \chapter. Shrink \topmargin
+% by the same amount so the text block does not shift down the page.
+\setlength{\headheight}{14.5pt}
+\addtolength{\topmargin}{-2.5pt}
+% Seuls les chapitres numerotes portent "Chapter N -- " dans l'en-tete.
+% Les chapitres non numerotes (Contents, Introduction, Conclusion...) n'affichent
+% que leur titre, car \chapter* n'appelle pas \chaptermark.
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername\ \thechapter\ --\ #1}{}}
+
+\fancyhead[R]{\thepage}
+\fancyhead[L]{\leftmark}
+% Chapter-opening pages use \pagestyle{plain}; keep their folio in the same
+% place as everywhere else instead of the class default (bottom centre).
+\fancypagestyle{plain}{%
+  \fancyhf{}%
+  \fancyhead[R]{\thepage}%
+  \renewcommand{\headrulewidth}{0pt}%
+}
+
+% ---------------------------------------------------
+% Math
+% ---------------------------------------------------
+\usepackage{amsmath,amssymb,amsthm,bm}
+\usepackage{mathtools}       % requis par le brouillon du chapitre 5
+
+% ---------------------------------------------------
+% Theorem environments and math shorthands (Chapter 5)
+% ---------------------------------------------------
+% Numbered on the chapter, so that propositions read 5.1, 5.2, ... as in the
+% author's draft. Numbering on [section] would instead give 5.3.1, 5.3.2.
+\newtheorem{proposition}{Proposition}[chapter]
+\newtheorem{corollary}[proposition]{Corollary}
+
+\newcommand{\Ind}{\mathbf{1}}
+\newcommand{\Prob}{\mathbb{P}}
+\newcommand{\Expect}{\mathbb{E}}
+\newcommand{\lamhat}{\hat{\lambda}}
+
+% ---------------------------------------------------
+% Algorithms
+% ---------------------------------------------------
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\renewcommand{\listalgorithmname}{List of Algorithms} % English list name
+
+% ---------------------------------------------------
+% Graphics & floats
+% ---------------------------------------------------
+\usepackage{graphicx}
+\graphicspath{{images/}}
+\usepackage{subfig}
+\usepackage{float}
+
+% ---------------------------------------------------
+% Tables
+% ---------------------------------------------------
+\usepackage{array,multirow}
+\usepackage{booktabs}        % \toprule / \midrule / \cmidrule, chapitre 5
+% setspace is loaded ONLY for the "singlespace" environment, which the chapter 5
+% draft wraps around ten of its floats. No global spacing command is issued, so
+% the report's default spacing is unchanged.
+\usepackage{setspace}
+
+% ---------------------------------------------------
+% TikZ & UML diagrams (✅ works with use case + sequence)
+% ---------------------------------------------------
+
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.misc,calc,backgrounds}
+
+% ---------------------------------------------------
+% References, URLs, acronyms, multiple bibliographies
+% ---------------------------------------------------
+% xurl extends url.sty so a URL may break after ANY character. Plain url.sty
+% breaks only at a handful of punctuation marks, which left the long Concordia
+% URLs unable to fill their line: the text line in front of each one came out
+% underfull and visibly gappy ("https : / /").
+\usepackage{xurl}
+\usepackage[footnote]{acronym}
+\usepackage[resetlabels,labeled]{multibib}
+% The suffix given to \newcites is what the "labeled" option prints in the running
+% text. It is "N" so that web sources cite as [N1], [N2], ... -- a clean second
+% numeric series alongside the main bibliography's [1], [2], ... -- rather than
+% the ad-hoc [URL1] form the previous suffix produced. The commands defined are
+% therefore \citeN, \bibliographyN and \bibliographystyleN.
+\newcites{N}{Netography} % single clean "Netography" bibliography
+
+% ---------------------------------------------------
+% Arabic -- required by the EPT cover page (pg-EPT.tex), which sets the
+% ministry / university header in Arabic beside its French counterpart.
+% Compile with pdflatex. arabtex must come AFTER inputenc/fontenc and its
+% companion utf8.sty is what lets \setcode{utf8} accept literal Arabic script.
+% auxhook is pulled in later by hyperref, and it patches \document. arabtex
+% replaces \document, so an auxhook arriving afterwards finds a definition it
+% does not recognise and falls back with "Cannot patch \document". Loading it
+% here, while \document is still pristine, lets the patch take; arabtex then
+% captures the already-patched version in its own \a@document.
+\usepackage{auxhook}
+\usepackage{arabtex}
+\usepackage{utf8}
+% The cover's Arabic blocks are quarantined in their own file, so that
+% pg-EPT.tex stays free of arabtex-sensitive syntax and can be edited freely.
+\input{chapters/cover-arabic}
+
+% ---------------------------------------------------
+% Subfiles for modular document
+% ---------------------------------------------------
+\usepackage{subfiles}
+
+% ---------------------------------------------------
+% PDF inclusion
+% ---------------------------------------------------
+\usepackage{pdfpages}
+
+% ---------------------------------------------------
+% Hyperref MUST be last (except for packages that explicitly require to be after)
+% ---------------------------------------------------
+\usepackage[hidelinks]{hyperref}
+
+% ---------------------------------------------------
+% Lengths for figures (kept from your original)
+% ---------------------------------------------------
+\newlength\figureheight
+\newlength\figurewidth
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%
+%%% Cover page  %%%
+%%%%%%%%%%%%%%%%%%
+% The cover is given its own numbering style. It shows no folio, but hyperref
+% still names a destination after it; leaving it arabic made it collide with
+% arabic page 1 of the body ("destination with the same identifier page.1").
+\pagenumbering{Roman}
+\subfile{chapters/pg-EPT}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Front matter: signatures, abstract, thanks, lists  %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Roman numbering runs from the FIRST page of front matter to the LAST.
+% The cover page (above) is outside the numbering and carries no folio.
+\clearpage
+\pagenumbering{roman}
+\subfile{chapters/0-i-signature}
+\clearpage
+\subfile{chapters/0-iv-abstract}   % Abstract + Keywords, then Resume + Mots cles (one page)
+\clearpage
+\subfile{chapters/0-ii-Dedications}
+\clearpage
+\subfile{chapters/0-iii-Remerciements}
+\clearpage
+% Contents depth: list down to subsubsection (4.1.2.1, ...) but no further.
+% NOTE: titlesec writes UNNUMBERED headings to the .toc regardless of tocdepth,
+% so tocdepth alone does not suppress the many \paragraph headings in Chapter 2.
+% Disabling \l@paragraph makes those entries render as nothing, without editing
+% any chapter file.
+\setcounter{tocdepth}{3}
+\makeatletter
+\renewcommand*\l@paragraph[2]{}
+\makeatother
+\tableofcontents
+\clearpage
+% Front-matter lists are given their own Contents entries, like the Abstract,
+% Dedication and Acknowledgements pages before them.
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Figures}
+\listoffigures
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{List of Tables}
+\listoftables
+\clearpage
+\subfile{chapters/0-v-abbreviations}
+\clearpage
+% Blank line in the Contents separating the front matter from the body.
+\addtocontents{toc}{\protect\vspace{1.2em}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Main matter                          %%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagestyle{fancy}
+\cleardoublepage
+\pagenumbering{arabic}
+
+\subfile{chapters/0-introduction}
+\subfile{chapters/1-first-chapter}   
+\subfile{chapters/2-second-chapter} 
+\subfile{chapters/3-third-chapter}
+\subfile{chapters/4-fourth-chapter}
+\subfile{chapters/5-fifth-chapter}
+\subfile{chapters/conclusion}
+
+% ---------------------------------------------------
+% Appendices
+% ---------------------------------------------------
+% annexes.tex exists but is deliberately not included while it is empty.
+% Uncomment both lines below to switch the appendices on.
+%\appendix
+%\subfile{chapters/annexes}
+
+% ---------------------------------------------------
+% Bibliography (main)
+% ---------------------------------------------------
+% >>> RE-ENABLE THIS BLOCK AS SOON AS THE FIRST \cite{...} IS WRITTEN. <<<
+% There is currently no \cite anywhere in the document, only \citeN (web
+% sources, which go to the Netography below). With the block live, bibtex aborts
+% with "I found no \citation commands", main.bbl comes back empty, and the PDF
+% carries a Bibliography chapter heading with a blank page under it.
+% Uncomment all five lines below to bring it back; nothing else has to change.
+%\cleardoublepage
+%\phantomsection
+%\addcontentsline{toc}{chapter}{Bibliography}
+%\bibliographystyle{ieeetr}
+%\bibliography{references}
+
+% ---------------------------------------------------
+% Netography (URLs) -- web sources, numbered [N1], [N2], ...
+% ---------------------------------------------------
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Netography}
+\bibliographystyleN{ieeetr}
+\bibliographyN{urls}
+
+
+\end{document}
