@@ -6,32 +6,30 @@
 \phantomsection
 \addcontentsline{toc}{section}{Introduction}
 
-The purpose of this chapter is to situate the project in its general framework, and
-to set out the problem it addresses, the objectives it pursued, and the manner in
-which the work was conducted.
+The purpose of this chapter is to situate the project within its general research and institutional context, 
+and to present the main objectives, research directions, and methodology that guided the work carried out during the internship.
 
-The work reported here was carried out as a research internship at the AI for
-Decision Making Lab of Concordia University, under the supervision of
-Dr.~Yassine Yaakoubi, and constitutes the research component of the final year of
-engineering studies at the Ecole Polytechnique de Tunisie.()
+The work reported in this thesis was conducted as a research internship at the AI for Decision Making Lab of Concordia University, 
+under the supervision of Dr. Yassine Yaakoubi, and constitutes the final-year project of the engineering curriculum at 
+École Polytechnique de Tunisie (EPT).
 
 
-We first present the host organisation, its structure and its areas of research.
-We then state the problem the work addresses, in the terms in which it arises for
-a deployed system, and situate it in the systems already deployed and the
-regulations that govern them, before setting out the objectives pursued and the
-deliverables produced. The chapter closes with the methodology by which the work
-was conducted.
+This chapter first introduces the host institution and the research laboratory in which the internship was carried out, 
+together with their main areas of research. It then presents the broader scientific context of the internship, 
+centered on large language models, retrieval-augmented generation, and multi-hop question answering. 
+The progression of the research work is subsequently outlined, from the initial literature exploration and systematic study of 
+trust signals in RAG systems, to the investigation of compositional question difficulty in language model representations,
+and finally to the development of a retrieval-oriented framework for multi-hop question decomposition. 
+The chapter concludes by presenting the main objectives, contributions, and research methodology adopted throughout the internship.
 
 \section{Host organisation}
 \label{sec:ch1-host-organization}
 
-The internship was hosted by the \textbf{AI for Decision Making Lab (AI4DM)}, a
-research group attached to the Gina Cody School of Engineering and Computer
-Science at Concordia University, in Montreal, Canada. Table~\ref{tab:host-organization}
-summarises the host organisation; the subsections below present the host
-university, the faculty to which the laboratory belongs, and finally the research
-group in which the work was carried out.
+The internship was hosted by the \textbf{AI for Decision Making Lab (AI4DM)}, a research group within 
+the Department of Mechanical, Industrial and Aerospace Engineering (MIAE) of the Gina Cody School of 
+Engineering and Computer Science at Concordia University, Montreal, Canada. Table~\ref{tab:host-organization} summarises the host organisation. 
+The following subsections present the university, the faculty and department to which the laboratory belongs, 
+and finally the research group in which the work was carried out.
 
 \begin{table}[H]
 \centering
@@ -55,50 +53,36 @@ group in which the work was carried out.
 \subsection{Concordia University}
 \label{subsec:ch1-concordia}
 
-Concordia University is a public comprehensive research university located in
-Montreal, Quebec. It was founded in 1974 by the merger of two older
-institutions\citeN{net-merger}: Loyola College, established in 1896, and Sir
-George Williams University, which grew out of the evening classes offered by the
-Montreal YMCA from 1851\citeN{net-sgw}. Its name comes from the motto of the
-city of Montreal, \emph{Concordia salus}, that is to say ``well-being through
-harmony''.
+Concordia University is a public comprehensive research university located in Montreal, Quebec. 
+It was officially founded in 1974 following the merger of Loyola College, established in 1896, 
+and Sir George Williams University, whose origins can be traced to the educational activities of the 
+Montreal YMCA~\citeN{net-merger,net-sgw}. The name of the university derives from the motto of the City 
+of Montreal, \emph{Concordia salus}, meaning ``well-being through harmony.''
 
-With 43,922 students enrolled in credit courses in 2024--2025 over its two
-campuses, Sir George Williams downtown and Loyola in the west of the city,
-Concordia is today one of the largest universities in Canada and one of the
-leading Canadian institutions in engineering and applied
-sciences\citeN{net-fastfacts}.
-% NOTE (figure changed, 2026-08-13): this sentence previously read 48,657.
-% That number is the university's GRAND TOTAL and includes 4,735 non-credit
-% Continuing Education registrations; the sentence describes degree students,
-% so the credit-enrolment figure (43,922) is the correct one. Both appear on
-% the same official page (net-fastfacts): credit 43,922, grand total 48,657.
+Concordia operates two main campuses: the Sir George Williams Campus in downtown Montreal and the 
+Loyola Campus in the west of the city. In the 2024--2025 academic year, 43,922 students were enrolled in 
+credit courses across the university \citeN{net-fastfacts}. Its academic activities cover a broad range of 
+disciplines through the Faculty of Arts and Science, the Gina Cody School of Engineering and Computer Science, 
+the John Molson School of Business, and the Faculty of Fine Arts.
+
 
 \subsection{Gina Cody School of Engineering and Computer Science}
 \label{subsec:ch1-gina-cody}
 
-The Gina Cody School of Engineering and Computer Science is the faculty of
-Concordia University dedicated to engineering and computer science. In 2018, it
-became the first engineering faculty in Canada to be named after a woman,
-following a donation of fifteen million dollars from Gina Parvaneh
-Cody\citeN{net-codygift}, who had been in 1989 the first woman to obtain a
-doctorate in building engineering at Concordia, and who has been the chancellor
-of the university since January 2025\citeN{net-codyprofile}.
+The Gina Cody School of Engineering and Computer Science is Concordia University's faculty 
+dedicated to engineering and computer science. In 2018, following a fifteen-million-dollar donation 
+from Concordia alumna Gina Parvaneh Cody, the faculty was renamed in her honour, becoming the first 
+engineering faculty in Canada to be named after a woman \citeN{net-codygift}. Gina Cody, who earned her 
+doctorate in building engineering from Concordia in 1989 and was the first woman in Canada to obtain a PhD 
+in the discipline, has served as Chancellor of Concordia University since January 2025 \citeN{net-codyprofile}.
 
-The school gathers 11,315 students and 262 faculty members around 43
-undergraduate and graduate programmes and 20 interdisciplinary research
-centres\citeN{net-ginacody}.
-% NOTE (discrepancy between two official Concordia pages, checked 2026-08-13):
-% the figure 11,315 is the Gina Cody School's OWN "At a glance" page
-% (net-ginacody), which is what is cited here. The university-level Fast Facts
-% page (net-fastfacts) separately reports Gina Cody School credit enrolment as
-% 11,576 for 2024-25. The two are not reconciled by either page. If questioned,
-% the answer is that the school's own published figure is cited.
-It is organised into seven departments, among which the Department of Mechanical,
-Industrial and Aerospace Engineering (MIAE), to which the host laboratory belongs.
-Its teaching and research activities are housed principally in the Engineering,
-Computer Science and Visual Arts Complex shown in Figure~\ref{fig:ev-building}.
+The school brings together 11,315 undergraduate and graduate students, 262 faculty members, 43 undergraduate 
+and graduate programmes, and 20 interdisciplinary research centres \citeN{net-ginacody}. Its academic structure 
+comprises seven departments, including the Department of Mechanical, Industrial and Aerospace Engineering (MIAE), 
+to which the host research group belongs.
 
+Teaching and research activities are conducted principally in the Engineering, Computer Science and Visual Arts 
+Integrated Complex (EV Building), located on Concordia's Sir George Williams Campus and shown in Figure~\ref{fig:ev-building}.
 \begin{figure}[H]
 \centering
 \includegraphics[width=0.7\textwidth]{ev-building.jpg}
@@ -109,31 +93,35 @@ Computer Science and Visual Arts Complex shown in Figure~\ref{fig:ev-building}.
 \subsection{Research group, supervision, and research axes}
 \label{subsec:ch1-research-group}
 
-The work presented in this report was conducted within the AI for Decision Making
-Lab (AI4DM), the research group led by Dr.~Yassine Yaakoubi, assistant
-professor in the MIAE department.
+The work presented in this report was conducted within the AI for Decision Making Lab (AI4DM), 
+led by Dr.\ Yassine Yaakoubi, Assistant Professor in the Department of Mechanical, Industrial and 
+Aerospace Engineering at Concordia University.
 
-The research of the group is situated at the intersection of optimisation,
-learning and simulation for large-scale real-world decision making. It is
-organised around two main axes: machine-learning-augmented optimisation, which
-integrates learned models into classical optimisation methods, and end-to-end
-optimisation learning. To this end, the group combines mixed-integer and
-stochastic programming, decomposition methods, deep learning, reinforcement
-learning and graph neural networks, in order to design decision-support systems
-that are efficient, robust and scalable, with applications in logistics,
-transportation and sustainable supply chains.
+The research activities of the group lie at the intersection of optimisation, machine learning, 
+and simulation for large-scale real-world decision making. The group combines mathematical optimisation 
+methods, including mixed-integer and stochastic programming and decomposition techniques, with machine-learning 
+approaches such as deep learning, reinforcement learning, and graph-based models. The general objective is to 
+design decision-support systems that remain efficient, robust, and scalable in complex and uncertain environments, 
+with applications including logistics, transportation, supply chains, and sustainability.
 
-A further strand of the group's activity extends this concern with robustness to
-systems built on large language models. It covers retrieval-augmented generation,
-where a model is grounded in evidence drawn from an external corpus, and the
-uncertainty quantification and reliability of such systems, that is, the question
-of how far their outputs can be trusted and how that trust can be measured. The
-work reported here belongs to this strand.
+A major part of the group's work is organised around machine-learning-augmented optimisation, where learned models 
+are integrated into classical optimisation procedures, and end-to-end optimisation learning, where learning 
+mechanisms are used more directly to guide decision making.
 
-This scientific environment, centred on decision making under uncertainty and on
-the robustness of the resulting systems, is directly aligned with the subject of
-the internship, which aims at providing reliability guarantees for multi-agent
-question-answering systems.
+A further strand of the group's research activity extends these concerns with robustness, uncertainty, and 
+adaptive decision making to systems built on large language models. This includes retrieval-augmented generation, 
+where language models are grounded in evidence retrieved from external knowledge sources, as well as uncertainty 
+quantification, reliability assessment, and adaptive behaviour in such systems.
+
+The work carried out during this internship belongs primarily to this latter research direction. It focuses on 
+multi-hop question answering in retrieval-augmented systems and investigates, from complementary perspectives, 
+how the difficulty of such questions can be understood and how their processing can be made more effective. The 
+research therefore evolved from the study of reliability and actionable signals in RAG systems, to the analysis of 
+compositional question difficulty in the internal representations of large language models, and finally to the 
+development of a retrieval-oriented approach to multi-hop question decomposition.
+
+This research environment provided the basis for the successive studies conducted during the internship and for the 
+formulation of the main research problem addressed in this thesis.
 
 \section{Problem statement}
 \label{sec:ch1-problem-statement}

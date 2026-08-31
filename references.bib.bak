@@ -38,13 +38,6 @@
     year      = {2020}
 }
 
-@inproceedings{khattab2020colbert,
-    author    = {Khattab, Omar and Zaharia, Matei},
-    title     = {{ColBERT}: Efficient and Effective Passage Search via Contextualized Late Interaction over {BERT}},
-    booktitle = {Proceedings of the International ACM SIGIR Conference on Research and Development in Information Retrieval (SIGIR)},
-    year      = {2020}
-}
-
 @article{lee2024nvembed,
     author  = {Lee, Chankyu and Roy, Rajarshi and Xu, Mengyao and Raiman, Jonathan and Shoeybi, Mohammad and Catanzaro, Bryan and Ping, Wei},
     title   = {{NV-Embed}: Improved Techniques for Training {LLMs} as Generalist Embedding Models},
@@ -103,99 +96,6 @@
     title     = {Interleaving Retrieval with Chain-of-Thought Reasoning for Knowledge-Intensive Multi-Step Questions},
     booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
     year      = {2023}
-}
-
-% =====================================================================
-% Chapter 2 --- Compositional reasoning, question difficulty and
-% adaptive computation (Section 2.2)
-% =====================================================================
-
-@inproceedings{press2023compositionality,
-    author    = {Press, Ofir and Zhang, Muru and Min, Sewon and Schmidt, Ludwig and Smith, Noah A. and Lewis, Mike},
-    title     = {Measuring and Narrowing the Compositionality Gap in Language Models},
-    booktitle = {Findings of the Association for Computational Linguistics: EMNLP},
-    year      = {2023}
-}
-
-@inproceedings{yang2024latent,
-    author    = {Yang, Sen and Gribovskaya, Ekaterina and Kassner, Nora and Geva, Mor and Riedel, Sebastian},
-    title     = {Do Large Language Models Latently Perform Multi-Hop Reasoning?},
-    booktitle = {Proceedings of the Annual Meeting of the Association for Computational Linguistics (ACL)},
-    year      = {2024}
-}
-
-% NOTE: verify the author list against the published record before submission.
-@inproceedings{jeong2024adaptiverag,
-    author    = {Jeong, Soyeong and Baek, Jinheon and Cho, Sukmin and Hwang, Sung Ju and Park, Jong C.},
-    title     = {{Adaptive-RAG}: Learning to Adapt Retrieval-Augmented Large Language Models through Question Complexity},
-    booktitle = {Proceedings of the Conference of the North American Chapter of the Association for Computational Linguistics (NAACL-HLT)},
-    year      = {2024}
-}
-
-% =====================================================================
-% Chapter 2 --- Probing and internal representations (Section 2.3)
-% =====================================================================
-
-@article{alain2016probes,
-    author  = {Alain, Guillaume and Bengio, Yoshua},
-    title   = {Understanding Intermediate Layers Using Linear Classifier Probes},
-    journal = {arXiv preprint arXiv:1610.01644},
-    year    = {2016}
-}
-
-@inproceedings{park2024linear,
-    author    = {Park, Kiho and Choe, Yo Joong and Veitch, Victor},
-    title     = {The Linear Representation Hypothesis and the Geometry of Large Language Models},
-    booktitle = {Proceedings of the International Conference on Machine Learning (ICML)},
-    year      = {2024}
-}
-
-% VERIFY: published as a preprint in 2024; confirm the arXiv identifier and any
-% subsequent conference version before submission.
-@article{park2024geometry,
-    author  = {Park, Kiho and Choe, Yo Joong and Jiang, Yibo and Veitch, Victor},
-    title   = {The Geometry of Categorical and Hierarchical Concepts in Large Language Models},
-    journal = {arXiv preprint arXiv:2406.01506},
-    year    = {2024}
-}
-
-@inproceedings{hewitt2019control,
-    author    = {Hewitt, John and Liang, Percy},
-    title     = {Designing and Interpreting Probes with Control Tasks},
-    booktitle = {Proceedings of the Conference on Empirical Methods in Natural Language Processing and the International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)},
-    year      = {2019}
-}
-
-@inproceedings{burns2023discovering,
-    author    = {Burns, Collin and Ye, Haotian and Klein, Dan and Steinhardt, Jacob},
-    title     = {Discovering Latent Knowledge in Language Models Without Supervision},
-    booktitle = {Proceedings of the International Conference on Learning Representations (ICLR)},
-    year      = {2023}
-}
-
-@inproceedings{marks2024geometry,
-    author    = {Marks, Samuel and Tegmark, Max},
-    title     = {The Geometry of Truth: Emergent Linear Structure in Large Language Model Representations of True/False Datasets},
-    booktitle = {Proceedings of the Conference on Language Modeling (COLM)},
-    year      = {2024}
-}
-
-% VERIFY: confirm the arXiv identifier and any subsequent conference version.
-@article{orgad2024know,
-    author  = {Orgad, Hadas and Toker, Michael and Gekhman, Zorik and Reichart, Roi and Szpektor, Idan and Kotek, Hadas and Belinkov, Yonatan},
-    title   = {{LLMs} Know More Than They Show: On the Intrinsic Representation of {LLM} Hallucinations},
-    journal = {arXiv preprint arXiv:2410.02707},
-    year    = {2024}
-}
-
-% VERIFY: venue and full author list were not available when this entry was
-% written; the fields below reproduce only what the chapter brief supplied.
-% Complete them from the published record before submission.
-@misc{moreno2025noanswer,
-    author       = {Moreno Cencerrado, I. V. and others},
-    title        = {No Answer Needed: Predicting {LLM} Answer Accuracy from Question-Only Linear Probes},
-    howpublished = {Preprint},
-    year         = {2025}
 }
 
 % =====================================================================

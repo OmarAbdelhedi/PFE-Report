@@ -40,31 +40,145 @@
 \@writefile{toc}{\contentsline {section}{\numberline {1.4}Working methodology}{5}{section.1.4}\protected@file@percent }
 \newlabel{sec:ch1-methodology}{{1.4}{5}{Working methodology}{section.1.4}{}}
 \@writefile{toc}{\contentsline {section}{Conclusion}{5}{section*.18}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {2}Background and literature review}{6}{chapter.2}\protected@file@percent }
+\citation{lewis2020rag}
+\@writefile{toc}{\contentsline {chapter}{\numberline {2}State of the Art in Multi-Hop Reasoning and RAG Systems}{6}{chapter.2}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:background}{{2}{6}{Background and literature review}{chapter.2}{}}
+\newlabel{chap:background}{{2}{6}{State of the Art in Multi-Hop Reasoning and RAG Systems}{chapter.2}{}}
 \@writefile{toc}{\contentsline {section}{Introduction}{6}{section*.19}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{6}{section*.20}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}A Systematic Survey of the Trust Layer of RAG}{7}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2.1}Background and Preliminaries}{6}{section.2.1}\protected@file@percent }
+\newlabel{sec:background-preliminaries}{{2.1}{6}{Background and Preliminaries}{section.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Retrieval-Augmented Generation}{6}{subsection.2.1.1}\protected@file@percent }
+\newlabel{subsec:ch2-rag}{{2.1.1}{6}{Retrieval-Augmented Generation}{subsection.2.1.1}{}}
+\newlabel{eq:corpus}{{2.1}{6}{Retrieval-Augmented Generation}{equation.2.1.1}{}}
+\newlabel{eq:retrieval}{{2.2}{7}{Retrieval-Augmented Generation}{equation.2.1.2}{}}
+\newlabel{eq:context}{{2.3}{7}{Retrieval-Augmented Generation}{equation.2.1.3}{}}
+\newlabel{eq:generation}{{2.4}{7}{Retrieval-Augmented Generation}{equation.2.1.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Conventional single-pass RAG pipeline}}{7}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:rag-pipeline}{{2.1}{7}{Conventional single-pass RAG pipeline}{figure.caption.20}{}}
+\citation{robertson2009bm25}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Retrieval Methods for RAG}{8}{subsection.2.1.2}\protected@file@percent }
+\newlabel{subsec:ch2-retrieval-methods}{{2.1.2}{8}{Retrieval Methods for RAG}{subsection.2.1.2}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Sparse retrieval and BM25}{8}{subsubsection*.21}\protected@file@percent }
+\newlabel{eq:bm25}{{2.5}{8}{Sparse retrieval and BM25}{equation.2.1.5}{}}
+\citation{karpukhin2020dpr}
+\citation{khattab2020colbert}
+\@writefile{toc}{\contentsline {subsubsection}{Dense retrieval}{9}{subsubsection*.22}\protected@file@percent }
+\newlabel{eq:dense-encoders}{{2.6}{9}{Dense retrieval}{equation.2.1.6}{}}
+\newlabel{eq:dense-score}{{2.7}{9}{Dense retrieval}{equation.2.1.7}{}}
+\@writefile{toc}{\contentsline {subsubsection}{Late-interaction retrieval and ColBERT}{9}{subsubsection*.23}\protected@file@percent }
+\newlabel{eq:colbert-tokens}{{2.8}{10}{Late-interaction retrieval and ColBERT}{equation.2.1.8}{}}
+\newlabel{eq:colbert-maxsim}{{2.9}{10}{Late-interaction retrieval and ColBERT}{equation.2.1.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Conceptual comparison of sparse, dense and late-interaction retrieval}}{10}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:retrieval-paradigms}{{2.2}{10}{Conceptual comparison of sparse, dense and late-interaction retrieval}{figure.caption.24}{}}
+\citation{gutierrez2024hipporag}
+\@writefile{toc}{\contentsline {subsubsection}{Hybrid, iterative, and structured retrieval}{11}{subsubsection*.25}\protected@file@percent }
+\newlabel{eq:ranked-list}{{2.10}{11}{Hybrid, iterative, and structured retrieval}{equation.2.1.10}{}}
+\newlabel{eq:evidence-rank}{{2.11}{11}{Hybrid, iterative, and structured retrieval}{equation.2.1.11}{}}
+\citation{yang2018hotpotqa}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Multi-Hop Question Answering and Benchmarks}{12}{subsection.2.1.3}\protected@file@percent }
+\newlabel{subsec:ch2-multihop-background}{{2.1.3}{12}{Multi-Hop Question Answering and Benchmarks}{subsection.2.1.3}{}}
+\newlabel{eq:multihop-chain}{{2.12}{12}{Multi-Hop Question Answering and Benchmarks}{equation.2.1.12}{}}
+\newlabel{eq:evidence-set}{{2.13}{12}{Multi-Hop Question Answering and Benchmarks}{equation.2.1.13}{}}
+\@writefile{toc}{\contentsline {subsubsection}{HotpotQA}{12}{subsubsection*.26}\protected@file@percent }
+\citation{ho2020constructing}
+\citation{trivedi2022musique}
+\@writefile{toc}{\contentsline {subsubsection}{2WikiMultiHopQA}{13}{subsubsection*.27}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{MuSiQue}{13}{subsubsection*.28}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2.1}{\ignorespaces Overview of the multi-hop question-answering benchmarks used in the subsequent chapters of this thesis.}}{13}{table.caption.29}\protected@file@percent }
+\newlabel{tab:multihop-benchmarks}{{2.1}{13}{Overview of the multi-hop question-answering benchmarks used in the subsequent chapters of this thesis}{table.caption.29}{}}
+\citation{press2023compositionality}
+\citation{yang2024latent}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Compositional Reasoning and Question Difficulty}{14}{section.2.2}\protected@file@percent }
+\newlabel{sec:ch2-compositional-difficulty}{{2.2}{14}{Compositional Reasoning and Question Difficulty}{section.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}The Compositionality Gap}{14}{subsection.2.2.1}\protected@file@percent }
+\newlabel{subsec:ch2-compositionality-gap}{{2.2.1}{14}{The Compositionality Gap}{subsection.2.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Latent Multi-Hop Reasoning in Language Models}{14}{subsection.2.2.2}\protected@file@percent }
+\newlabel{subsec:ch2-latent-multihop}{{2.2.2}{14}{Latent Multi-Hop Reasoning in Language Models}{subsection.2.2.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2.2}{\ignorespaces Two distinct research questions concerning multi-hop reasoning.}}{15}{table.caption.30}\protected@file@percent }
+\newlabel{tab:latent-vs-difficulty}{{2.2}{15}{Two distinct research questions concerning multi-hop reasoning}{table.caption.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Notions of Question Difficulty}{15}{subsection.2.2.3}\protected@file@percent }
+\newlabel{subsec:ch2-difficulty-notions}{{2.2.3}{15}{Notions of Question Difficulty}{subsection.2.2.3}{}}
+\citation{jeong2024adaptiverag}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}Difficulty Estimation and Adaptive Computation}{16}{subsection.2.2.4}\protected@file@percent }
+\newlabel{subsec:ch2-adaptive-computation}{{2.2.4}{16}{Difficulty Estimation and Adaptive Computation}{subsection.2.2.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Generic complexity-aware routing principle}}{17}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:difficulty-routing}{{2.3}{17}{Generic complexity-aware routing principle}{figure.caption.31}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Probing and Internal Representations in Language Models}{17}{section.2.3}\protected@file@percent }
+\newlabel{sec:ch2-probing-representations}{{2.3}{17}{Probing and Internal Representations in Language Models}{section.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Linear Probing and the Linear Representation Hypothesis}{17}{subsection.2.3.1}\protected@file@percent }
+\newlabel{subsec:ch2-linear-probing}{{2.3.1}{17}{Linear Probing and the Linear Representation Hypothesis}{subsection.2.3.1}{}}
+\citation{alain2016probes}
+\citation{park2024linear}
+\citation{park2024geometry}
+\citation{kadavath2022know}
+\citation{burns2023discovering}
+\citation{marks2024geometry}
+\citation{azaria2023internal}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Generic layer-wise probing framework}}{18}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:generic-linear-probing}{{2.4}{18}{Generic layer-wise probing framework}{figure.caption.32}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Decoding Latent Properties from Hidden States}{18}{subsection.2.3.2}\protected@file@percent }
+\newlabel{subsec:ch2-latent-properties}{{2.3.2}{18}{Decoding Latent Properties from Hidden States}{subsection.2.3.2}{}}
+\citation{orgad2024know}
+\citation{moreno2025noanswer}
+\citation{hewitt2019control}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Question-Only Pre-Generation Signals}{19}{subsection.2.3.3}\protected@file@percent }
+\newlabel{subsec:ch2-question-only-signals}{{2.3.3}{19}{Question-Only Pre-Generation Signals}{subsection.2.3.3}{}}
+\citation{park2024linear}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.4}Methodological Challenges in Probing}{20}{subsection.2.3.4}\protected@file@percent }
+\newlabel{subsec:ch2-probing-challenges}{{2.3.4}{20}{Methodological Challenges in Probing}{subsection.2.3.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Question Decomposition for Multi-Hop QA}{21}{section.2.4}\protected@file@percent }
+\newlabel{sec:question-decomposition}{{2.4}{21}{Question Decomposition for Multi-Hop QA}{section.2.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Adaptive Retrieval and Retrieval-Quality Signals}{21}{section.2.5}\protected@file@percent }
+\newlabel{sec:adaptive-retrieval}{{2.5}{21}{Adaptive Retrieval and Retrieval-Quality Signals}{section.2.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.6}Relevant Findings from the Trust Layer Survey}{21}{section.2.6}\protected@file@percent }
+\newlabel{sec:trust-layer-survey}{{2.6}{21}{Relevant Findings from the Trust Layer Survey}{section.2.6}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.7}Synthesis and Research Gaps}{21}{section.2.7}\protected@file@percent }
+\newlabel{sec:synthesis-research-gaps}{{2.7}{21}{Synthesis and Research Gaps}{section.2.7}{}}
+\@writefile{toc}{\contentsline {section}{Conclusion}{21}{section*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}A Systematic Survey of the Trust Layer of RAG}{22}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:survey}{{3}{7}{A Systematic Survey of the Trust Layer of RAG}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{7}{section*.21}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{7}{section*.22}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}chapter 4}{8}{chapter.4}\protected@file@percent }
+\newlabel{chap:survey}{{3}{22}{A Systematic Survey of the Trust Layer of RAG}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{Introduction}{22}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Conclusion}{22}{section*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}chapter 4}{23}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:empirical-studies}{{4}{8}{chapter 4}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{8}{section*.23}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{8}{section*.24}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}chapter 5}{9}{chapter.5}\protected@file@percent }
+\newlabel{chap:empirical-studies}{{4}{23}{chapter 4}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{Introduction}{23}{section*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Conclusion}{23}{section*.37}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}chapter 5}{24}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:guarantees}{{5}{9}{chapter 5}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{9}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{9}{section*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{10}{section*.28}\protected@file@percent }
-\newlabel{sec:conclusion}{{}{10}{Conclusion and outlook}{section*.28}{}}
-\@writefile{toc}{\contentsline {chapter}{Netography}{11}{section*.29}\protected@file@percent }
-\gdef \@abspage@last{21}
+\newlabel{chap:guarantees}{{5}{24}{chapter 5}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{Introduction}{24}{section*.38}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Conclusion}{24}{section*.39}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{25}{section*.41}\protected@file@percent }
+\newlabel{sec:conclusion}{{}{25}{Conclusion and outlook}{section*.41}{}}
+\bibstyle{ieeetr}
+\bibdata{references}
+\bibcite{lewis2020rag}{1}
+\bibcite{robertson2009bm25}{2}
+\bibcite{karpukhin2020dpr}{3}
+\bibcite{khattab2020colbert}{4}
+\bibcite{gutierrez2024hipporag}{5}
+\bibcite{yang2018hotpotqa}{6}
+\bibcite{ho2020constructing}{7}
+\bibcite{trivedi2022musique}{8}
+\bibcite{press2023compositionality}{9}
+\bibcite{yang2024latent}{10}
+\bibcite{jeong2024adaptiverag}{11}
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{26}{section*.42}\protected@file@percent }
+\bibcite{alain2016probes}{12}
+\bibcite{park2024linear}{13}
+\bibcite{park2024geometry}{14}
+\bibcite{kadavath2022know}{15}
+\bibcite{burns2023discovering}{16}
+\bibcite{marks2024geometry}{17}
+\bibcite{azaria2023internal}{18}
+\bibcite{orgad2024know}{19}
+\bibcite{moreno2025noanswer}{20}
+\bibcite{hewitt2019control}{21}
+\@writefile{toc}{\contentsline {chapter}{Netography}{28}{section*.44}\protected@file@percent }
+\gdef \@abspage@last{38}

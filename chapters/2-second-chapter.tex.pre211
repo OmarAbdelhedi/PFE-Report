@@ -1,0 +1,135 @@
+% !TEX root = ../main.tex
+\chapter{State of the Art in Multi-Hop Reasoning and RAG Systems}
+\label{chap:background}
+
+\section*{Introduction}
+\phantomsection
+\addcontentsline{toc}{section}{Introduction}
+
+This chapter sets out the technical background and the literature on which the
+rest of the report builds. Its aim is to introduce the notions of
+retrieval-augmented generation used throughout, and to follow the question of
+the reliability of these systems up to the point where the problem treated
+during the internship appears.
+
+We first present the principles and architecture of retrieval-augmented
+generation and the settings in which it is deployed. We then examine the
+reliability challenges of these systems and review the responses proposed to
+them, from uncertainty quantification to verification. We finally turn to the
+statistical guarantees that can be attached to their outputs, before
+synthesising this literature and setting out the question that
+Chapter~\ref{chap:survey} takes up.
+
+\section{Background and Preliminaries}
+\label{sec:background-preliminaries}
+
+Large language models acquire a substantial amount of knowledge during pre-training and can exploit this knowledge when answering questions. However, relying exclusively on information encoded in model parameters is not always sufficient for knowledge-intensive tasks. In particular, the information required to answer a query may be absent from the model's parametric knowledge, or the answer may require access to specific external evidence. Retrieval-Augmented Generation (RAG) addresses this limitation by coupling a language model with an external knowledge source that can be searched at inference time \cite{lewis2020rag}.
+
+Rather than generating an answer directly from an input question, a RAG system first retrieves a set of passages that are considered relevant to the query. These passages are then supplied to the language model as additional context from which the answer can be generated. The approach therefore separates the problem into two complementary capabilities: locating useful information in an external corpus and reasoning over that information to produce an answer.
+
+Let \(q\) denote an input query and let
+\[
+  \mathcal{C}=\{d_1,d_2,\ldots,d_N\}
+\]
+be a corpus containing \(N\) documents or passages. A retriever assigns a relevance score \(s(q,d)\) to each candidate passage \(d \in \mathcal{C}\). The passages are ranked according to this score, and the \(k\) highest-ranked passages are retained. The resulting retrieved set is denoted by
+\begin{equation}
+  \label{eq:retrieval}
+  D_k(q)=\operatorname*{TopK}_{d\in\mathcal{C}}\; s(q,d).
+\end{equation}
+The value \(k\) therefore determines how many retrieved passages are made available to the subsequent stages of the system.
+
+The retrieved passages are then transformed into a context supplied to the language model. Denoting this context-construction operation by \(g\), the resulting context can be written as
+\begin{equation}
+  \label{eq:context}
+  C(q)=g\bigl(q,D_k(q)\bigr).
+\end{equation}
+In its simplest form, \(g\) may consist of concatenating the retrieved passages with the original question. More elaborate RAG architectures may additionally reorder, filter, rerank, or otherwise process the retrieved information before presenting it to the language model.
+
+Finally, given the original query and the constructed context, a language model parameterized by \(\theta\) generates an answer \(y\) according to
+\begin{equation}
+  \label{eq:generation}
+  y \sim p_{\theta}\bigl(y\mid q,C(q)\bigr).
+\end{equation}
+The conventional RAG pipeline can consequently be summarized as
+
+\[
+q
+\longrightarrow
+\text{retrieval}
+\longrightarrow
+D_k(q)
+\longrightarrow
+\text{context construction}
+\longrightarrow
+C(q)
+\longrightarrow
+\text{generation}
+\longrightarrow
+y.
+\]
+This formulation highlights an important property of retrieval-augmented systems: the quality of the final answer depends not only on the reasoning capabilities of the language model, but also on the information made available by the retrieval stage. If a passage containing evidence required to answer the question is not retrieved, the language model cannot directly exploit that evidence during generation. Conversely, increasing \(k\) can increase the probability of including relevant information, but also introduces additional passages that the model must process and distinguish from the evidence that is actually useful.
+
+Retrieval and generation should therefore not be considered as independent components. The retriever determines which portion of the external knowledge source becomes visible to the language model, while the language model must identify and combine the relevant information contained in that retrieved context. This interaction becomes particularly important for questions whose answers depend on several pieces of evidence rather than on a single retrieved fact.
+
+A standard single-pass RAG system performs retrieval once using the original query. More advanced systems may instead modify the retrieval process dynamically by reformulating the query, performing several retrieval rounds, decomposing a complex question into simpler queries, or deciding whether additional retrieval is necessary. Such adaptive mechanisms are discussed later in this chapter. For the moment, the conventional single-pass formulation provides the basic setting in which retrieval quality and evidence availability can be defined.
+
+The distinction between the original query, the retrieved ranking, and the evidence required to answer a question will be particularly important throughout this thesis. In multi-hop question answering, the required information may be distributed across several passages and may correspond to different stages of a reasoning chain. Consequently, retrieving passages that are individually related to the original question does not necessarily guarantee that all evidence required for answering it is available within the first \(k\) results. The notions of retrieval rank, evidence coverage, and retrieval depth are introduced in the following subsections to formalize this issue.
+
+
+\subsection{Retrieval-Augmented Generation}
+\label{subsec:rag}
+
+\subsection{Information Retrieval for RAG}
+\label{subsec:informative-rag}
+
+% Sparse / BM25
+% Dense retrieval
+% Late interaction / ColBERT
+% Other retrieval paradigms
+
+\subsection{Retrieval Ranking, Top-\texorpdfstring{\(k\)}{k}, and Evidence Coverage}
+\label{subsec:retrieval-ranking}
+
+\subsection{Multi-Hop Question Answering}
+\label{subsec:multi-hop-qa}
+
+\subsection{Multi-Hop QA Benchmarks}
+\label{subsec:multi-hop-qa-benchmarks}
+
+% HotpotQA
+% 2WikiMultiHopQA
+% MuSiQue
+
+\subsection{Terminology and Notation}
+\label{subsec:terminology-notation}
+% How 2.1 should end 
+%The last paragraph should transition away from pure background and into the actual state of the art.
+%Something along these lines:
+%While the standard RAG formulation assumes that the input query can directly retrieve the evidence required 
+%for generation, this assumption becomes increasingly fragile for questions involving multiple dependent reasoning 
+%steps. In multi-hop question answering, evidence may be distributed across several passages, and the information 
+%needed for one reasoning step may depend on the result of another. Understanding how such compositional difficulty 
+%affects language models and retrieval systems therefore requires examining both the reasoning demands of multi-hop 
+%questions and the mechanisms used to estimate and manage their difficulty. These issues are reviewed in the following section.
+
+\section{Compositional Reasoning and Question Difficulty}
+\label{sec:compositional-reasoning}
+
+\section{Probing Language-Model Representations}
+\label{sec:probing-lm-representations}
+
+\section{Question Decomposition for Multi-Hop QA}
+\label{sec:question-decomposition}
+
+\section{Adaptive Retrieval and Retrieval-Quality Signals}
+\label{sec:adaptive-retrieval}
+
+\section{Relevant Findings from the Trust Layer Survey}
+\label{sec:trust-layer-survey}
+
+\section{Synthesis and Research Gaps}
+\label{sec:synthesis-research-gaps}
+
+\section*{Conclusion}
+\phantomsection
+\addcontentsline{toc}{section}{Conclusion}

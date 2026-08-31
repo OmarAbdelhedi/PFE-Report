@@ -1,5 +1,5 @@
 % !TEX root = ../main.tex
-\chapter{Background and literature review}
+\chapter{State of the Art in Multi-Hop Reasoning and RAG Systems}
 \label{chap:background}
 
 \section*{Introduction}
@@ -20,7 +20,600 @@ statistical guarantees that can be attached to their outputs, before
 synthesising this literature and setting out the question that
 Chapter~\ref{chap:survey} takes up.
 
+\section{Background and Preliminaries}
+\label{sec:background-preliminaries}
 
+\subsection{Retrieval-Augmented Generation}
+\label{subsec:ch2-rag}
+
+Large language models acquire a substantial amount of knowledge during pre-training and can exploit this knowledge when answering questions. However, relying exclusively on information encoded in model parameters is not always sufficient for knowledge-intensive tasks. In particular, the information required to answer a query may be absent from the model's parametric knowledge, or the answer may require access to specific external evidence. Retrieval-Augmented Generation (RAG) addresses this limitation by coupling a language model with an external knowledge source that can be searched at inference time \cite{lewis2020rag}.
+
+Rather than generating an answer directly from an input question, a RAG system first retrieves a set of passages that are considered relevant to the query. These passages are then supplied to the language model as additional context from which the answer can be generated. The approach therefore separates the problem into two complementary capabilities: locating useful information in an external corpus and reasoning over that information to produce an answer.
+
+Let \(q\) denote an input query and let
+\begin{equation}
+  \label{eq:corpus}
+  \mathcal{C}=\{d_1,d_2,\ldots,d_N\}
+\end{equation}
+be a corpus containing \(N\) documents or passages. A retriever assigns a relevance score \(s(q,d)\) to each candidate passage \(d \in \mathcal{C}\). The passages are ranked according to this score, and the \(k\) highest-ranked passages are retained. The resulting retrieved set is denoted by
+\begin{equation}
+  \label{eq:retrieval}
+  D_k(q)=\operatorname*{TopK}_{d\in\mathcal{C}}\; s(q,d).
+\end{equation}
+The value \(k\) therefore determines how many retrieved passages are made available to the subsequent stages of the system.
+
+The retrieved passages are then transformed into a context supplied to the language model. Denoting this context-construction operation by \(g\), the resulting context can be written as
+\begin{equation}
+  \label{eq:context}
+  C(q)=g\bigl(q,D_k(q)\bigr).
+\end{equation}
+In its simplest form, \(g\) may consist of concatenating the retrieved passages with the original question. More elaborate RAG architectures may additionally reorder, filter, rerank, or otherwise process the retrieved information before presenting it to the language model.
+
+Finally, given the original query and the constructed context, a language model parameterized by \(\theta\) generates an answer \(y\) according to
+\begin{equation}
+  \label{eq:generation}
+  y \sim p_{\theta}\bigl(y\mid q,C(q)\bigr).
+\end{equation}
+The conventional RAG pipeline can consequently be summarized as the sequence of stages shown in Figure~\ref{fig:rag-pipeline}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      node distance = 0.8cm and 0.4cm,
+      stage/.style  = {draw, rectangle, align=center, font=\footnotesize,
+                       text width=1.95cm, minimum height=1.35cm, inner sep=3pt},
+      store/.style  = {draw, rectangle, align=center, font=\footnotesize,
+                       text width=1.95cm, minimum height=0.95cm, inner sep=3pt},
+      flow/.style   = {-{Latex[length=1.7mm,width=1.3mm]}, semithick}
+    ]
+    \node[stage]                     (query)     {Input question\\$q$};
+    \node[stage, right=of query]     (retriever) {Retriever};
+    \node[stage, right=of retriever] (topk)      {Top-$k$ passages\\$D_k(q)$};
+    \node[stage, right=of topk]      (context)   {Context construction};
+    \node[stage, right=of context]   (llm)       {LLM\\generator};
+    \node[stage, right=of llm]       (answer)    {Answer\\$y$};
+    \node[store, below=of retriever] (corpus)    {External corpus\\$\mathcal{C}$};
+
+    \draw[flow] (query)     -- (retriever);
+    \draw[flow] (retriever) -- (topk);
+    \draw[flow] (topk)      -- (context);
+    \draw[flow] (context)   -- (llm);
+    \draw[flow] (llm)       -- (answer);
+    \draw[flow] (corpus)    -- (retriever);
+  \end{tikzpicture}
+  \caption[Conventional single-pass RAG pipeline]{Overview of a conventional single-pass Retrieval-Augmented Generation
+    pipeline. The input query is used to retrieve the top-$k$ passages from an
+    external corpus; these passages are incorporated into the model context
+    before answer generation.}
+  \label{fig:rag-pipeline}
+\end{figure}
+
+This formulation highlights an important property of retrieval-augmented systems: the quality of the final answer depends not only on the reasoning capabilities of the language model, but also on the information made available by the retrieval stage. If a passage containing evidence required to answer the question is not retrieved, the language model cannot directly exploit that evidence during generation. Conversely, increasing \(k\) can increase the probability of including relevant information, but also introduces additional passages that the model must process and distinguish from the evidence that is actually useful.
+
+Retrieval and generation should therefore not be considered as independent components. The retriever determines which portion of the external knowledge source becomes visible to the language model, while the language model must identify and combine the relevant information contained in that retrieved context. This interaction becomes particularly important for questions whose answers depend on several pieces of evidence rather than on a single retrieved fact.
+
+A standard single-pass RAG system performs retrieval once using the original query. More advanced systems may instead modify the retrieval process dynamically by reformulating the query, performing several retrieval rounds, decomposing a complex question into simpler queries, or deciding whether additional retrieval is necessary. Such adaptive mechanisms are discussed in Section~\ref{sec:adaptive-retrieval}. For the moment, the conventional single-pass formulation provides the basic setting in which retrieval quality and evidence availability can be defined.
+
+The distinction between the original query, the retrieved ranking, and the evidence required to answer a question will be particularly important throughout this thesis. In multi-hop question answering, the required information may be distributed across several passages and may correspond to different stages of a reasoning chain. Consequently, retrieving passages that are individually related to the original question does not necessarily guarantee that all evidence required for answering it is available within the first \(k\) results. The following subsection first examines how retrieval is actually performed, and how the resulting ranking determines which evidence becomes accessible at a given retrieval depth.
+\subsection{Retrieval Methods for RAG}
+\label{subsec:ch2-retrieval-methods}
+
+The retrieval component of a Retrieval-Augmented Generation system is responsible for identifying, from a potentially large corpus, the passages that are most likely to contain information useful for answering the input query. Section~\ref{subsec:ch2-rag} introduced the relevance score \(s(q,d)\) and the top-\(k\) set \(D_k(q)\) of Equation~\eqref{eq:retrieval} without specifying how that score is computed; this subsection examines the paradigms that produce it. The resulting ranking determines which information is made available to the language model in the subsequent generation stage.
+
+Retrieval methods used in RAG differ primarily in how queries and documents are represented and how their relevance is computed. Classical sparse methods rely largely on lexical correspondence between query and document terms, dense retrievers compare learned semantic representations, and late-interaction approaches retain finer-grained token-level representations while remaining suitable for large-scale retrieval. These paradigms provide different trade-offs between efficiency, lexical precision, semantic matching, and computational cost.
+
+\subsubsection{Sparse retrieval and BM25}
+
+Sparse retrieval represents queries and documents in a high-dimensional term space and estimates relevance mainly through lexical overlap. Such approaches are particularly effective when the query contains discriminative terms that also occur explicitly in the relevant passage. Among them, BM25 remains one of the most widely used ranking functions in information retrieval and constitutes a common lexical baseline for retrieval-augmented systems~\cite{robertson2009bm25}.
+
+For a query \(q\) and a document \(d\), BM25 can be expressed as
+\begin{equation}
+  \label{eq:bm25}
+  \operatorname{BM25}(q,d)=\sum_{t\in q}\operatorname{IDF}(t)\,
+  \frac{f(t,d)\,(k_1+1)}
+       {f(t,d)+k_1\left(1-b+b\frac{|d|}{\operatorname{avgdl}}\right)},
+\end{equation}
+where \(f(t,d)\) denotes the frequency of term \(t\) in document \(d\), \(|d|\) is the length of the document, and \(\operatorname{avgdl}\) is the average document length in the corpus. The parameter \(k_1\) controls the saturation of the term-frequency contribution, while \(b\) controls the degree of document-length normalisation. The inverse document frequency term, \(\operatorname{IDF}(t)\), assigns greater weight to terms that occur in fewer documents and are therefore more discriminative.
+
+The strength of BM25 lies in its efficiency and its ability to exploit exact lexical correspondences. It does not require the documents to be processed jointly with each incoming query, and mature inverted-index implementations allow retrieval from very large collections. However, lexical matching also introduces an important limitation: a relevant passage may use expressions that differ from those appearing in the query. In such cases, strong semantic relatedness does not necessarily translate into a high lexical-relevance score.
+
+This limitation is particularly relevant in question answering, where the wording of a question and the wording of the passage containing its answer may differ substantially. Neural retrieval methods address this issue by learning representations in which semantically related queries and passages can be located close to one another even in the absence of substantial token overlap.
+
+\subsubsection{Dense retrieval}
+
+Dense retrieval represents both queries and passages as continuous low-dimensional vectors learned by neural encoders. A typical dual-encoder architecture uses one encoder for the query and another for the document:
+\begin{equation}
+  \label{eq:dense-encoders}
+  \mathbf{z}_q=f_q(q),\qquad \mathbf{z}_d=f_d(d),
+\end{equation}
+where \(\mathbf{z}_q,\mathbf{z}_d\in\mathbb{R}^{m}\) denote the resulting dense representations. Relevance can then be estimated using a similarity function such as the inner product,
+\begin{equation}
+  \label{eq:dense-score}
+  s_{\mathrm{dense}}(q,d)=\mathbf{z}_q^{\top}\mathbf{z}_d,
+\end{equation}
+or cosine similarity.
+
+Dense Passage Retrieval (DPR) demonstrated that open-domain question answering can be supported using learned dense representations in a dual-encoder architecture rather than relying exclusively on sparse lexical retrieval~\cite{karpukhin2020dpr}. Because document representations can be computed in advance and indexed using approximate nearest-neighbour search, dense retrieval can remain computationally practical even for large corpora.
+
+The main advantage of dense retrieval is its ability to capture semantic correspondence beyond exact term matching. For example, a query and a relevant passage may express the same relation using different vocabulary while still receiving a high similarity score. This property is particularly useful for natural-language questions, whose phrasing may not closely resemble that of the supporting evidence.
+
+Nevertheless, representing an entire query or passage by a single vector requires compressing substantial linguistic information into one embedding. Fine-grained relationships between individual query terms and portions of a passage may therefore be weakened. Late-interaction retrieval provides an intermediate approach between single-vector dense retrieval and more computationally expensive models that jointly encode every query--document pair.
+
+\subsubsection{Late-interaction retrieval and ColBERT}
+
+ColBERT introduces a late-interaction architecture in which queries and documents are encoded independently, while retaining contextualized representations at the token level~\cite{khattab2020colbert}. Instead of compressing a complete query or passage into a single vector, let
+\begin{equation}
+  \label{eq:colbert-tokens}
+  Q=\left[\mathbf{q}_1,\ldots,\mathbf{q}_{|q|}\right],\qquad
+  D=\left[\mathbf{d}_1,\ldots,\mathbf{d}_{|d|}\right]
+\end{equation}
+denote the token-level representations of a query and document, respectively.
+
+Relevance is computed after these representations have been produced. In the original ColBERT formulation, each query-token representation is matched with its most similar document-token representation, leading to a MaxSim-style scoring function of the form
+\begin{equation}
+  \label{eq:colbert-maxsim}
+  s_{\mathrm{ColBERT}}(q,d)=\sum_{i=1}^{|q|}\;\max_{1\leq j\leq |d|}\;
+  \mathbf{q}_i^{\top}\mathbf{d}_j.
+\end{equation}
+This mechanism allows different parts of the query to interact with different parts of the passage. At the same time, because document representations are generated independently of the incoming query, they can be precomputed and indexed offline. ColBERT therefore preserves substantially more fine-grained interaction than a single-vector dense retriever while avoiding the cost of jointly encoding every possible query--document pair.
+
+This characteristic is particularly relevant to the work presented later in this thesis. Both BM25 and ColBERT provide query--passage relevance signals with complementary properties: BM25 emphasizes lexical correspondence, whereas ColBERT captures contextualized token-level semantic interactions. Their scores can therefore provide different indications of how closely a retrieved passage is associated with a given natural-language query. Figure~\ref{fig:retrieval-paradigms} summarises the conceptual differences between the three retrieval paradigms introduced above.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font          = \footnotesize,
+      io/.style     = {draw, rectangle, minimum width=0.95cm, minimum height=0.55cm,
+                       inner sep=1pt},
+      proc/.style   = {draw, rectangle, minimum width=2.0cm, minimum height=0.66cm,
+                       inner sep=2pt, align=center},
+      inter/.style  = {draw, rectangle, minimum width=2.3cm, minimum height=0.78cm,
+                       inner sep=2pt, align=center},
+      score/.style  = {draw, rectangle, minimum width=2.7cm, minimum height=0.62cm,
+                       inner sep=2pt, align=center},
+      unit/.style   = {draw, rectangle, minimum size=0.26cm, inner sep=0pt, fill=black!10},
+      vec/.style    = {draw, rectangle, minimum width=0.26cm, minimum height=0.62cm,
+                       inner sep=0pt, fill=black!10},
+      ulab/.style   = {font=\scriptsize, inner sep=1pt},
+      ptitle/.style = {font=\footnotesize\bfseries, anchor=west},
+      flow/.style   = {-{Latex[length=1.5mm,width=1.2mm]}, semithick},
+      match/.style  = {densely dotted},
+      maxsim/.style = {-{Latex[length=1.1mm,width=0.9mm]}, densely dashed}
+    ]
+
+    %% ---------------- (a) sparse retrieval / BM25 ----------------
+    \begin{scope}[yshift=0cm]
+      \node[ptitle] at (-0.5,1.32) {(a)~Sparse retrieval (BM25)};
+      \node[io]    (aq)  at (0, 0.6) {$q$};
+      \node[io]    (ad)  at (0,-0.6) {$d$};
+      \node[proc]  (aeq) at (2.3, 0.6) {Term\\analysis};
+      \node[proc]  (aed) at (2.3,-0.6) {Term\\analysis};
+      \foreach \i/\x in {1/4.72, 2/5.04, 3/5.36} \node[unit] (aqt\i) at (\x, 0.6) {};
+      \foreach \i/\x in {1/4.56, 2/4.88, 3/5.20, 4/5.52} \node[unit] (adt\i) at (\x,-0.6) {};
+      \node[ulab] at (5.04, 1.0) {query terms};
+      \node[ulab] at (5.04,-1.0) {document terms};
+      \draw[match] (aqt1.south) -- (adt2.north);
+      \draw[match] (aqt3.south) -- (adt4.north);
+      \node[inter] (ai) at (8.0, 0) {Shared-term\\overlap};
+      \node[score] (as) at (10.9, 0) {$\operatorname{BM25}(q,d)$};
+      \draw[flow] (aq)  -- (aeq);   \draw[flow] (ad)  -- (aed);
+      \draw[flow] (aeq.east) -- (4.42, 0.6);
+      \draw[flow] (aed.east) -- (4.42,-0.6);
+      \draw[flow] (5.82, 0.6) -- (ai.west);
+      \draw[flow] (5.82,-0.6) -- (ai.west);
+      \draw[flow] (ai) -- (as);
+    \end{scope}
+
+    %% ---------------- (b) dense retrieval ----------------
+    \begin{scope}[yshift=-3.1cm]
+      \node[ptitle] at (-0.5,1.32) {(b)~Dense retrieval (dual encoder)};
+      \node[io]    (bq)  at (0, 0.6) {$q$};
+      \node[io]    (bd)  at (0,-0.6) {$d$};
+      \node[proc]  (beq) at (2.3, 0.6) {Query\\encoder $f_q$};
+      \node[proc]  (bed) at (2.3,-0.6) {Document\\encoder $f_d$};
+      \node[vec]   (bzq) at (5.04, 0.6) {};
+      \node[vec]   (bzd) at (5.04,-0.6) {};
+      \node[ulab] at (5.04, 1.15) {$\mathbf{z}_q$};
+      \node[ulab] at (5.04,-1.15) {$\mathbf{z}_d$};
+      \node[inter] (bi) at (8.0, 0) {Vector similarity\\$\mathbf{z}_q^{\top}\mathbf{z}_d$};
+      \node[score] (bs) at (10.9, 0) {$s_{\mathrm{dense}}(q,d)$};
+      \draw[flow] (bq)  -- (beq);   \draw[flow] (bd)  -- (bed);
+      \draw[flow] (beq.east) -- (bzq.west);
+      \draw[flow] (bed.east) -- (bzd.west);
+      \draw[flow] (bzq.east) -- (bi.west);
+      \draw[flow] (bzd.east) -- (bi.west);
+      \draw[flow] (bi) -- (bs);
+    \end{scope}
+
+    %% ---------------- (c) late interaction / ColBERT ----------------
+    \begin{scope}[yshift=-6.2cm]
+      \node[ptitle] at (-0.5,1.32) {(c)~Late interaction (ColBERT)};
+      \node[io]    (cq)  at (0, 0.6) {$q$};
+      \node[io]    (cd)  at (0,-0.6) {$d$};
+      \node[proc]  (ceq) at (2.3, 0.6) {Encoder};
+      \node[proc]  (ced) at (2.3,-0.6) {Encoder};
+      \foreach \i/\x in {1/4.72, 2/5.04, 3/5.36} \node[unit] (cqt\i) at (\x, 0.6) {};
+      \foreach \i/\x in {1/4.56, 2/4.88, 3/5.20, 4/5.52} \node[unit] (cdt\i) at (\x,-0.6) {};
+      \node[ulab] at (5.04, 1.0) {$\mathbf{q}_1,\ldots,\mathbf{q}_m$};
+      \node[ulab] at (5.04,-1.0) {$\mathbf{d}_1,\ldots,\mathbf{d}_n$};
+      \draw[maxsim] (cqt1.south) -- (cdt2.north);
+      \draw[maxsim] (cqt2.south) -- (cdt4.north);
+      \draw[maxsim] (cqt3.south) -- (cdt3.north);
+      \node[inter] (ci) at (8.0, 0) {MaxSim\\$\sum_i\max_j$};
+      \node[score] (cs) at (10.9, 0) {$s_{\mathrm{ColBERT}}(q,d)$};
+      \draw[flow] (cq)  -- (ceq);   \draw[flow] (cd)  -- (ced);
+      \draw[flow] (ceq.east) -- (4.42, 0.6);
+      \draw[flow] (ced.east) -- (4.42,-0.6);
+      \draw[flow] (5.82, 0.6) -- (ci.west);
+      \draw[flow] (5.82,-0.6) -- (ci.west);
+      \draw[flow] (ci) -- (cs);
+    \end{scope}
+  \end{tikzpicture}
+  \caption[Conceptual comparison of sparse, dense and late-interaction retrieval]{Conceptual
+    comparison of sparse, dense, and late-interaction retrieval. BM25 primarily exploits
+    lexical correspondence, dense retrieval represents each query and passage with a single
+    vector, while ColBERT retains token-level representations and performs contextualized
+    late interaction.}
+  \label{fig:retrieval-paradigms}
+\end{figure}
+
+\subsubsection{Hybrid, iterative, and structured retrieval}
+
+The preceding retrieval paradigms are not mutually exclusive. Hybrid retrieval systems combine lexical and neural signals, for example by merging or reranking results produced by sparse and dense retrievers. Such combinations seek to benefit simultaneously from the precision of exact lexical matching and the semantic generalization offered by learned representations.
+
+Retrieval can also extend beyond a single query--ranking operation. Iterative approaches perform several retrieval steps, allowing information obtained at one stage to influence subsequent searches. This is particularly relevant when answering questions whose required evidence cannot be identified effectively from the original query alone.
+
+Other approaches impose additional structure on the retrieval space. Graph-based retrieval systems represent entities, passages, facts, or their relationships as nodes and edges, enabling retrieval to exploit connections between pieces of information rather than treating every passage independently~\cite{gutierrez2024hipporag}. Such architectures are particularly attractive for multi-hop reasoning, where the evidence required to answer a question may form a chain of related information distributed across different documents.
+
+These extensions illustrate that the retriever used in a RAG system need not be restricted to a particular architecture. The research developed later in this thesis therefore treats retrieval primarily through its observable output---a ranked set of candidate evidence passages---rather than assuming a single retrieval mechanism. This makes it possible to reason about retrieval quality across sparse, neural, late-interaction, and more structured retrieval systems.
+
+Regardless of whether retrieval is sparse, dense, late-interaction, hybrid, or structured, its observable result can ultimately be represented as an ordered list
+\begin{equation}
+  \label{eq:ranked-list}
+  R(q)=\left[d_{(1)},d_{(2)},\ldots,d_{(N)}\right],
+\end{equation}
+where \(d_{(1)}\) is the passage assigned the highest relevance to \(q\), \(d_{(2)}\) the second highest, and so forth. The parenthesised subscript denotes a position in this ranking and not an identifier of the document within \(\mathcal{C}\).
+
+For a particular evidence passage \(e\), its retrieval rank with respect to the query \(q\) is defined as
+\begin{equation}
+  \label{eq:evidence-rank}
+  \operatorname{rank}(e\mid q)=i \quad\text{if}\quad e=d_{(i)}.
+\end{equation}
+A smaller value of \(\operatorname{rank}(e\mid q)\) indicates that the evidence is retrieved earlier and can be reached with a smaller retrieval budget. In practice the full ranking is not supplied to the language model: only its length-\(k\) prefix
+\[
+  D_k(q)=\left\{d_{(1)},d_{(2)},\ldots,d_{(k)}\right\}
+\]
+is retained, which is the top-\(k\) set already introduced in Equation~\eqref{eq:retrieval}. A passage \(e\) is accessible at retrieval depth \(k\) precisely when \(\operatorname{rank}(e\mid q)\leq k\).
+
+The value of \(k\) therefore plays an important role in the interaction between retrieval and generation. A small value limits the amount of context that must be processed by the language model and reduces the number of potentially distracting passages. However, if relevant evidence is ranked below this threshold, it will not be available to the generator. Increasing \(k\) improves the opportunity to recover lower-ranked evidence, but also increases the amount of retrieved material that must be processed.
+
+For question answering, the position occupied by the required evidence in this ranking therefore determines how deeply the system must retrieve before that evidence becomes available. This becomes a central concern when a single question requires several distinct pieces of evidence, which is the setting examined in the following subsection.
+
+\subsection{Multi-Hop Question Answering and Benchmarks}
+\label{subsec:ch2-multihop-background}
+
+Question-answering tasks differ in the number and the organisation of the facts required to derive an answer. A single-hop question can typically be answered from one principal piece of evidence, so that the path from question to answer passes through a single retrieval step,
+\[
+  q \longrightarrow e \longrightarrow y.
+\]
+A multi-hop question instead requires several pieces of evidence, or several intermediate reasoning steps, before the answer can be produced:
+\begin{equation}
+  \label{eq:multihop-chain}
+  q \longrightarrow e_1 \longrightarrow e_2 \longrightarrow \cdots \longrightarrow e_h \longrightarrow y,
+\end{equation}
+where \(h\) denotes the number of reasoning hops. A hop corresponds to one stage of the reasoning chain in which information is obtained or transformed before it can support a later step.
+
+The difficulty of such questions does not lie merely in the fact that several facts are involved. The required evidence can be dependent: information obtained during one hop may be needed in order to identify or interpret the evidence required by a subsequent hop. A frequent instance of this dependency is the bridge entity, an intermediate entity connecting two reasoning stages. A question may, for example, conceptually require the chain
+\[
+  \text{work}\;\rightarrow\;\text{author}\;\rightarrow\;\text{author's birthplace},
+\]
+in which the author is never itself the object of the question, but must nevertheless be established before the birthplace can be retrieved.
+
+Let
+\begin{equation}
+  \label{eq:evidence-set}
+  E(q)=\{e_1,e_2,\ldots,e_h\}
+\end{equation}
+denote the set of annotated supporting passages associated with the reasoning chain of a multi-hop question. This notation is conceptual: some benchmarks associate more than one supporting fact or passage with a single reasoning stage, and no strict one-passage-per-hop correspondence is assumed here.
+
+Several properties make multi-hop question answering demanding for retrieval-augmented systems. The evidence required by different hops may be distributed across several passages rather than concentrated in one. Individual pieces of evidence may stand in different lexical or semantic relationships to the original question, so that a retriever scoring passages against that question alone does not treat them equally. A later reasoning step may depend on an entity or fact that is not stated explicitly in the original query, and that therefore cannot be matched against it directly. Retrieving passages that are generally related to the question consequently does not guarantee that every piece of evidence needed to complete the reasoning chain has been recovered. Multi-hop question answering therefore poses a reasoning problem and a retrieval problem at the same time.
+
+\subsubsection{HotpotQA}
+
+HotpotQA is a multi-hop question-answering benchmark built from Wikipedia and designed so that answering requires reasoning across multiple documents~\cite{yang2018hotpotqa}. In addition to question--answer pairs, it provides supporting-fact annotations identifying the sentences on which an answer depends. This makes it possible to examine the evidence underlying an answer rather than the answer alone, which is the property that makes the dataset useful in the present work.
+
+\subsubsection{2WikiMultiHopQA}
+
+2WikiMultiHopQA is constructed over relations derived from Wikipedia and Wikidata, and associates each question with an explicit reasoning structure linking the pieces of information it requires~\cite{ho2020constructing}. Because these reasoning paths are stated rather than left implicit, the dataset is well suited to studying questions whose answers depend on several relational steps.
+
+\subsubsection{MuSiQue}
+
+MuSiQue was designed to reduce the extent to which multi-hop questions can be answered through shortcuts, that is, without carrying out the intended reasoning~\cite{trivedi2022musique}. Rather than collecting multi-hop questions directly, it composes them from simpler single-hop questions, so that each resulting question is connected by construction to the components from which it was built. The benchmark spans reasoning structures of different depths, including two-, three-, and four-hop questions.
+
+Because MuSiQue exposes the compositional structure underlying each question together with its supporting evidence, it is particularly relevant to the study of compositional difficulty and of question decomposition. It is used later in this thesis both in the probing study and in the decomposition work.
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \caption{Overview of the multi-hop question-answering benchmarks used in the subsequent chapters of this thesis.}
+  \label{tab:multihop-benchmarks}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{3.0cm}>{\raggedright\arraybackslash}p{2.3cm}>{\raggedright\arraybackslash}p{2.6cm}>{\raggedright\arraybackslash}p{2.7cm}>{\raggedright\arraybackslash}p{2.5cm}@{}}
+    \toprule
+    \textbf{Dataset} & \textbf{Source} & \textbf{Multi-hop structure} &
+    \textbf{Supporting evidence} & \textbf{Relevance to this thesis} \\
+    \midrule
+    HotpotQA & Wikipedia & Multi-document reasoning & Supporting-fact annotations
+      & Probing compositional difficulty \\
+    \addlinespace
+    2WikiMultiHopQA & Wikipedia and Wikidata-derived relations
+      & Explicit relational multi-hop patterns & Supporting evidence and reasoning structure
+      & Probing compositional difficulty \\
+    \addlinespace
+    MuSiQue & Composed from single-hop questions & Two- to four-hop structures
+      & Decomposition and supporting-evidence information
+      & Probing, decomposition, and evidence attribution \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The preceding preliminaries establish how external evidence is retrieved and how multi-hop questions distribute the information required for answering across several reasoning steps. The number of steps alone, however, does not fully explain why such questions remain difficult for language models: a model may possess the knowledge required for each individual component and nevertheless fail when those components must be combined. This motivates the study of compositional reasoning and question difficulty developed in the following section.
+
+\section{Compositional Reasoning and Question Difficulty}
+\label{sec:ch2-compositional-difficulty}
+
+Multi-hop question answering requires not only access to several pieces of information but also their correct composition. A model may therefore succeed on the individual components underlying a question while failing to combine them into the final answer. This distinction has motivated three connected lines of work: the measurement of the compositionality gap, the study of how multi-hop reasoning is executed internally, and the estimation of question difficulty for adaptive computation.
+
+\subsection{The Compositionality Gap}
+\label{subsec:ch2-compositionality-gap}
+
+Press et al.\ examined the discrepancy between the ability of a language model to answer the constituent parts of a compositional question and its ability to answer the composed question itself~\cite{press2023compositionality}. If a multi-hop question \(q\) is understood as resting on a set of constituent subquestions
+\[
+  \mathcal{Q}(q)=\{q_1,q_2,\ldots,q_h\},
+\]
+a model \(M\) may return the correct answer to each of them individually,
+\[
+  M(q_i)=a_i, \qquad i=1,\ldots,h,
+\]
+and nevertheless fail on the complete question, \(M(q)\neq y\). This notation is introduced only to describe the phenomenon and does not reproduce the formalism of the original work.
+
+The compositionality gap denotes precisely this discrepancy: the distance between the ability to solve the constituent subproblems of a compositional question and the ability to combine them so as to solve the original question. The finding of most relevance here is that the gap does not simply close as models are scaled. Failures on compositional questions can therefore not be attributed solely to missing factual knowledge or to insufficient model capacity.
+
+This supports a distinction used throughout the remainder of the chapter. Component-level capability concerns whether a model can recover the individual facts on which a question depends; compositional capability concerns whether it can combine those facts according to the reasoning structure the question imposes. A question may accordingly remain difficult even when each of its constituent facts is individually accessible. The persistence of such failures is what makes the amount and the structure of reasoning demanded by a question worth studying as a property in its own right, separately from the factual knowledge it presupposes.
+
+One practical response to the compositionality gap is to expose the reasoning structure explicitly, by decomposing a difficult question into simpler subquestions that are solved and then recombined. Decomposition methods are reviewed in Section~\ref{sec:question-decomposition}.
+
+The compositionality gap demonstrates that access to the required facts does not by itself guarantee successful multi-hop reasoning. A complementary line of work therefore asks whether the intermediate reasoning operations involved in such questions are nevertheless represented or executed internally by language models.
+
+\subsection{Latent Multi-Hop Reasoning in Language Models}
+\label{subsec:ch2-latent-multihop}
+
+When a language model answers a multi-hop question without generating intermediate steps, its internal computation may nevertheless recover the information that the reasoning chain requires. Yang et al.\ investigated this possibility directly~\cite{yang2024latent}. Writing a two-hop question as
+\[
+  q \longrightarrow e_1 \longrightarrow z \longrightarrow e_2 \longrightarrow y,
+\]
+where \(z\) denotes an intermediate fact or bridge entity, latent multi-hop reasoning refers to the case in which \(z\) is represented internally and used to support the second step even though it never appears in the generated text.
+
+The reported evidence is partial rather than conclusive. Latent pathways do exist along which intermediate information is recalled internally, and that information can contribute to a subsequent reasoning step. The behaviour is, however, strongly context-dependent, and the second-hop composition proves considerably less robust than the recall of the first intermediate fact. These results therefore support the existence of latent reasoning in some settings without establishing that language models perform faithful multi-hop reasoning in general.
+
+A related concern is that a correct final answer is weak evidence that the intended chain was followed. Memorised associations, lexical shortcuts, correlations present in the dataset, and direct question-to-answer mappings can all produce the right output for the wrong reasons. Internal analysis and shortcut-resistant benchmark construction are consequently both relevant when compositional reasoning is the object of study.
+
+Two research questions should be separated at this point, since they are easily conflated.
+
+\begin{table}[htbp]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}
+  \caption{Two distinct research questions concerning multi-hop reasoning.}
+  \label{tab:latent-vs-difficulty}
+  \begin{tabular}{@{}>{\raggedright\arraybackslash}p{4.4cm}>{\raggedright\arraybackslash}p{8.6cm}@{}}
+    \toprule
+    \textbf{Perspective} & \textbf{Main question} \\
+    \midrule
+    Latent multi-hop reasoning & Does the model internally execute the reasoning chain? \\
+    \addlinespace
+    Difficulty estimation & How much reasoning does the input question require? \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Latent-reasoning studies address the first of these. The second is logically independent: a model might encode information about how much reasoning a question demands without subsequently executing that reasoning correctly. While latent-reasoning studies investigate whether intermediate reasoning operations occur internally, they do not by themselves determine how the complexity of a question should be characterised. This requires considering the different notions through which question difficulty has been defined.
+
+\subsection{Notions of Question Difficulty}
+\label{subsec:ch2-difficulty-notions}
+
+Difficulty is not a single agreed quantity, and the literature operationalises it in several ways that are related but not interchangeable.
+
+\emph{Structural or compositional difficulty} associates difficulty with the reasoning process a question demands. Usual proxies are the number of reasoning hops, the depth of the reasoning chain, the number of dependent intermediate steps, or the depth of a decomposition, yielding an ordered structural scale such as
+\[
+  2\text{-hop} \;<\; 3\text{-hop} \;<\; 4\text{-hop}.
+\]
+Hop count should, however, be read as a structural proxy for compositional complexity rather than a guarantee that every four-hop question is harder than every three-hop question for every model.
+
+\emph{Human-assessed difficulty} instead derives from human judgements, often on a coarse scale such as \(\text{easy}\), \(\text{medium}\), \(\text{hard}\). Such judgements can simultaneously reflect linguistic complexity, the obscurity of the required information, ambiguity, reasoning burden, and perceived effort, and therefore need not align with a purely structural measure such as hop count.
+
+\emph{Model-dependent or empirical difficulty} is operationalised through the behaviour of a particular system: incorrect answers, low confidence, the need for additional retrieval or additional reasoning steps, or increased computational cost. Unlike structural difficulty, this notion is system-dependent by construction, and a question that is difficult for one model or retrieval architecture need not be equally difficult for another.
+
+\emph{Surface or proxy-based complexity} is estimated from observable properties of the query itself, such as its length, the number of entities it mentions, syntactic or lexical patterns, task-specific structural proxies, or the output of a classifier trained directly on the surface form of the question.
+
+These four notions are related but should not automatically be treated as equivalent constructs: structural complexity, human-perceived difficulty, surface complexity, and model-dependent failure can diverge on the same question. This heterogeneity matters for the present work, because it raises the question of whether difficulty labels originating from different definitions nonetheless correspond to a common internal representation.
+
+\subsection{Difficulty Estimation and Adaptive Computation}
+\label{subsec:ch2-adaptive-computation}
+
+If questions require different amounts of reasoning, applying an identical computational pipeline to every query is inefficient. This observation underlies a family of systems that estimate difficulty before answering and adapt their processing accordingly. The principle can be written generically as
+\[
+  q \;\xrightarrow{\;\phi\;}\; \hat{c}(q) \;\xrightarrow{\;\pi\;}\; \mathcal{S}(q),
+\]
+where \(\phi\) is a difficulty or complexity estimator, \(\hat{c}(q)\) the estimated complexity of the query, \(\pi\) a routing policy, and \(\mathcal{S}(q)\) the processing strategy selected for that query. This notation expresses the adaptive-computation principle only; it is not the methodology adopted later in this thesis.
+
+A pre-answer difficulty estimate is useful because it can be acted upon before any expensive computation is committed. It may be used to allocate different amounts of computation, to decide whether external retrieval is required at all, to select among retrieval strategies, to invoke a multi-step reasoning pipeline, to determine whether decomposition is warranted, or simply to avoid costly reasoning on queries that do not need it.
+
+Adaptive-RAG is representative of this family~\cite{jeong2024adaptiverag}. Question complexity is estimated and then used to select among retrieval and reasoning strategies of differing computational cost, so that complexity estimation becomes an actionable routing signal,
+\[
+  \text{query} \;\rightarrow\; \text{complexity estimate} \;\rightarrow\; \text{retrieval/reasoning strategy}.
+\]
+The estimate is produced by a classifier trained separately and applied to the input query. Comparable complexity-based routing appears in other task settings, where a lightweight structural proxy for query complexity is used to choose between a relatively direct processing strategy and a decomposition-oriented one.
+
+The general pattern these systems share can be stated compactly:
+\[
+  \boxed{\text{estimate difficulty}} \;\longrightarrow\; \boxed{\text{adapt computation}}.
+\]
+Simple queries are handled by comparatively direct pipelines, while more complex queries justify retrieval, additional reasoning, or decomposition. Figure~\ref{fig:difficulty-routing} summarises this principle in a model-agnostic form.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font          = \footnotesize,
+      node distance = 0.5cm and 1.1cm,
+      box/.style    = {draw, rectangle, align=center, minimum height=0.72cm, inner sep=3pt},
+      strat/.style  = {box, text width=3.5cm},
+      flow/.style   = {-{Latex[length=1.6mm,width=1.25mm]}, semithick},
+      lab/.style    = {font=\scriptsize, inner sep=1.5pt}
+    ]
+    \node[box, text width=1.5cm] (q) {Question\\$q$};
+    \node[box, text width=2.4cm, right=of q] (est) {Complexity\\estimator};
+    \node[strat, right=1.7cm of est] (mid)    {Single-pass retrieval};
+    \node[strat, above=of mid]       (direct) {Direct answering};
+    \node[strat, below=of mid]       (multi)  {Multi-step reasoning\\or decomposition};
+    \draw[flow] (q) -- (est);
+    \draw[flow] (est.east) -- node[lab, above, sloped] {low}    (direct.west);
+    \draw[flow] (est.east) -- node[lab, above]         {medium} (mid.west);
+    \draw[flow] (est.east) -- node[lab, below, sloped] {high}   (multi.west);
+  \end{tikzpicture}
+  \caption[Generic complexity-aware routing principle]{Generic complexity-aware routing
+    principle. A question-level difficulty estimate can be used to select processing
+    strategies with different computational and reasoning requirements.}
+  \label{fig:difficulty-routing}
+\end{figure}
+
+These systems establish an important point: question difficulty is actionable, in the sense that a complexity signal can change what the system does next. The approaches closest to the present work, however, obtain that signal from surface properties of the query, from a separately trained classifier, or from handcrafted task-specific proxies. In each case the signal is computed outside the model that will ultimately answer the question.
+
+The literature reviewed in this section therefore establishes two complementary observations. First, compositional difficulty affects the ability of language models to solve multi-hop questions even when the constituent information is individually accessible. Second, estimates of question complexity can serve as actionable signals for selecting among computational and retrieval strategies. Taken together, these observations leave a representational question open. If a language model is to process the question in any case, could information about the amount of reasoning that question demands already be encoded in the internal representations the model itself produces? The literature addressing internal representations and probing is reviewed in the following section.
+
+
+\section{Probing and Internal Representations in Language Models}
+\label{sec:ch2-probing-representations}
+
+A language model transforms its input through a sequence of hidden representations. Beyond supporting next-token prediction, these representations can carry information about semantic, factual, or behavioural properties of the input. Probing methods ask whether such properties can be recovered from the internal activations of a model that is left unmodified. If question difficulty is in principle available before an answer is generated, the relevant question is therefore whether it can be read from the representation the model forms while processing the question itself.
+
+\subsection{Linear Probing and the Linear Representation Hypothesis}
+\label{subsec:ch2-linear-probing}
+
+Consider a model with layers \(\ell=0,1,\ldots,L\), and let \(\mathbf{h}^{(\ell)}(x)\in\mathbb{R}^{d}\) denote a representation derived from an input \(x\) at layer \(\ell\). Probing keeps the model frozen and trains a comparatively simple supervised readout on these representations to predict a target property \(z\). A generic linear probe takes the form
+\[
+  \hat{z} = f\!\left(\mathbf{w}^{\top}\mathbf{h}^{(\ell)}(x) + b\right),
+\]
+where \(\mathbf{h}^{(\ell)}(x)\) is the frozen representation, \(\mathbf{w}\) and \(b\) are the parameters of the probe, and \(f\) maps the linear score to the desired prediction. This formulation is generic and is not to be identified with any particular probe design.
+
+If such a readout reliably predicts the property, that property is said to be linearly decodable at that layer. The interpretation of this statement requires care: linear decodability establishes that the information is accessible through a linear readout, not that the model causally uses it while generating an answer. Alain and Bengio introduced this style of analysis, attaching linear classifiers to intermediate representations in order to examine where task-relevant information becomes accessible as depth increases~\cite{alain2016probes}.
+
+The linear representation hypothesis provides a rationale for expecting linear readouts to succeed at all. Park et al.\ argue that semantically meaningful properties may correspond to approximately linear directions or structures in activation space~\cite{park2024linear}. For a direction \(\mathbf{w}\), the scalar
+\[
+  s_{\mathbf{w}}(\mathbf{h}) = \mathbf{w}^{\top}\mathbf{h}
+\]
+can then be read as a coordinate measuring the extent to which a representation lies along that direction. The hypothesis does not require every concept to be captured by a single scalar direction, and subsequent work by Park et al.\ examines richer categorical and hierarchical representational structures~\cite{park2024geometry}. Taken together, this line of work supports a progression from hidden state, to simple readout, to linear decodability, and finally to the geometric organisation of high-level properties. Figure~\ref{fig:generic-linear-probing} summarises the arrangement.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font        = \footnotesize,
+      layer/.style= {draw, rectangle, minimum width=1.15cm, minimum height=0.6cm, inner sep=2pt},
+      probe/.style= {draw, rectangle, align=center, text width=1.35cm,
+                     minimum height=0.75cm, inner sep=2pt},
+      io/.style   = {draw, rectangle, align=center, minimum height=0.6cm, inner sep=3pt},
+      flow/.style = {-{Latex[length=1.5mm,width=1.2mm]}, semithick},
+      tap/.style  = {-{Latex[length=1.3mm,width=1.05mm]}, densely dotted}
+    ]
+    \node[io] (q) at (0,0) {Question $q$};
+    \node[layer] (h1) at (2.6,0)  {$\mathbf{h}^{(1)}$};
+    \node[layer] (h2) at (4.1,0)  {$\mathbf{h}^{(2)}$};
+    \node        (hd) at (5.5,0)  {$\cdots$};
+    \node[layer] (hL) at (6.9,0)  {$\mathbf{h}^{(L)}$};
+    \draw[dashed] (1.85,-0.55) rectangle (7.65,0.55);
+    \node[font=\scriptsize] at (4.75,0.82) {frozen language model};
+
+    \node[probe] (p1) at (2.6,-1.75) {Linear probe};
+    \node[probe] (p2) at (4.1,-1.75) {Linear probe};
+    \node[probe] (pL) at (6.9,-1.75) {Linear probe};
+    \node[io, text width=1.9cm] (out) at (9.6,-1.75) {Property\\prediction $\hat{z}$};
+
+    \draw[flow] (q) -- (h1);
+    \draw[flow] (h1) -- (h2);
+    \draw[flow] (h2) -- (hd);
+    \draw[flow] (hd) -- (hL);
+    \draw[tap] (h1) -- (p1);
+    \draw[tap] (h2) -- (p2);
+    \draw[tap] (hL) -- (pL);
+    \draw[flow] (p1.east) -- (out.west);
+    \draw[flow] (p2.east) -- (out.west);
+    \draw[flow] (pL.east) -- (out.west);
+  \end{tikzpicture}
+  \caption[Generic layer-wise probing framework]{Generic layer-wise probing framework.
+    A pretrained model remains frozen while simple readouts are trained on intermediate
+    hidden representations to test whether a target property is linearly decodable.}
+  \label{fig:generic-linear-probing}
+\end{figure}
+
+\subsection{Decoding Latent Properties from Hidden States}
+\label{subsec:ch2-latent-properties}
+
+A body of work has applied this approach to properties that are not explicit in the input, and the results are relevant here because they establish what kinds of information hidden states can be shown to carry.
+
+One strand concerns knowledge and self-assessment. Kadavath et al.\ report evidence that language models contain signals related to whether their own answers are likely to be correct, and that these signals can support estimates of that correctness~\cite{kadavath2022know}. The observation that matters for the present discussion is that correctness-related information may be available internally, rather than only becoming observable once a generated answer has been evaluated.
+
+A second strand concerns truth-like internal structure. Burns et al.\ investigate whether latent truth-related structure can be recovered from model representations using consistency constraints rather than labelled supervision, supporting the broader idea that high-level semantic properties may have identifiable internal organisation~\cite{burns2023discovering}. Marks and Tegmark report evidence for an approximately linear geometric organisation associated with truth and falsehood in language-model representations~\cite{marks2024geometry}. Azaria and Mitchell show, from a different direction, that classifiers trained on hidden states can distinguish true from false statements, providing a further example of factual information recoverable from internal activations~\cite{azaria2023internal}.
+
+A third strand concerns hallucination. Orgad et al.\ observe that correctness- and hallucination-related signals are reflected in internal representations, and that they may be concentrated more strongly at some intermediate layers than at the final representation~\cite{orgad2024know}.
+
+Collectively, these studies show that internal representations can carry simply decodable information about knowledge, truthfulness, factual correctness, and hallucination propensity. It is worth being precise about what they have in common. Each of these properties concerns what the model knows, or whether its output is likely to be correct. None of them asks how much reasoning the input question itself demands. That distinction separates the literature reviewed here from the property considered in this chapter.
+
+\subsection{Question-Only Pre-Generation Signals}
+\label{subsec:ch2-question-only-signals}
+
+A narrower question is whether an output-related property can be predicted from the representation of the question alone, before any answer exists. The distinction is between post-generation estimation, in which the signal is computed from the generated answer or reasoning trace, and pre-generation estimation, in which it is extracted while the question is being processed. Schematically, the latter follows
+\[
+  q \longrightarrow \mathbf{h}^{(\ell)}(q) \longrightarrow \text{property estimate},
+\]
+whereas the conventional arrangement is
+\[
+  q \longrightarrow y \longrightarrow \text{output evaluation}.
+\]
+
+Moreno Cencerrado et al.\ fit question-only linear probes to predict answer accuracy and confidence, and report that predictive information is present in intermediate representations, although it weakens for particular domains such as mathematical questions~\cite{moreno2025noanswer}. This is the closest methodological precedent to the work developed later in this thesis, since the estimator sees only the question and operates before generation.
+
+The targets, however, differ in an important way. Their probes answer the question \emph{is the model likely to answer this question correctly?}, which is a prediction about the model's expected success. The property considered in the present work is instead \emph{how much compositional reasoning does this question require?}, which is a property of the question rather than of the model's anticipated performance. The two are plausibly related, since a question demanding more reasoning may be answered correctly less often, but they are not the same quantity: a question can be compositionally demanding and still be answered correctly, and a simple question can be answered incorrectly for reasons unrelated to its structure. Whether the second property is recoverable from a question representation in the way the first has been shown to be is the representational problem that motivates the later chapter.
+
+\subsection{Methodological Challenges in Probing}
+\label{subsec:ch2-probing-challenges}
+
+Probe performance is not self-interpreting, and the literature has developed a series of cautions that bear directly on how such an experiment should be designed. Hewitt and Liang give the central argument: a sufficiently expressive probe may learn the target task itself, memorise labels, or exploit superficial correlations, rather than reveal information already organised within the representation~\cite{hewitt2019control}. It follows that
+\[
+  \text{high probe accuracy} \;\not\Rightarrow\; \text{meaningful internal representation}.
+\]
+
+Three concerns follow from this. The first is probe capacity. If the probe is too expressive, success may reflect the learning power of the probe rather than the accessibility of information in the representation, which is an argument for using deliberately simple probes whenever the goal is interpretation rather than prediction. The second is the need for controls. Probe performance should be compared against baselines that test whether the observed signal exceeds what could arise from label structure, chance, or probe capacity alone; control tasks and permutation-based null baselines are two implementations of this principle.
+
+The third concern is surface confounding. A property predicted from hidden states may correlate with directly observable features of the input. In the case of question difficulty, plausible candidates include question length, word count, the number of entities mentioned, punctuation, and lexical structure. If such features already predict the label, then successful probing does not by itself demonstrate that the model has formed a deeper semantic representation of the property, and controlling for them is therefore a methodological requirement rather than a refinement.
+
+A final caution concerns interpretation. Decodability remains correlational: recovering a direction \(\mathbf{w}\) from which a property can be predicted does not establish that the model uses that direction in its own computation. Stronger causal claims require intervention, through activation editing, ablation, or steering, which is one of the questions the linear-representation framework connects to the study of representational directions~\cite{park2024linear}.
+
+Taken together, these studies establish that language-model representations contain pre-generation signals about several properties related to knowledge and expected correctness. Yet these signals primarily describe what the model knows, or whether it is likely to succeed. They do not directly characterise the amount of compositional reasoning demanded by the question itself. Whether such difficulty is accessible from the internal representation of a question therefore remains a distinct representational problem, and one that must be posed together with the controls described above if an affirmative answer is to mean anything.
+
+Understanding whether difficulty can be represented internally addresses how a system might identify complex questions. A complementary line of work asks what can be done once a question has been recognised as compositionally demanding. One of the principal responses is to restructure the problem explicitly through question decomposition, reviewed in the following section.
+
+
+\section{Question Decomposition for Multi-Hop QA}
+\label{sec:question-decomposition}
+
+\section{Adaptive Retrieval and Retrieval-Quality Signals}
+\label{sec:adaptive-retrieval}
+
+\section{Relevant Findings from the Trust Layer Survey}
+\label{sec:trust-layer-survey}
+
+\section{Synthesis and Research Gaps}
+\label{sec:synthesis-research-gaps}
 
 \section*{Conclusion}
 \phantomsection

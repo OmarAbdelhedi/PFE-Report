@@ -1,0 +1,324 @@
+% !TEX root = ../main.tex
+\chapter{State of the Art in Multi-Hop Reasoning and RAG Systems}
+\label{chap:background}
+
+\section*{Introduction}
+\phantomsection
+\addcontentsline{toc}{section}{Introduction}
+
+This chapter sets out the technical background and the literature on which the
+rest of the report builds. Its aim is to introduce the notions of
+retrieval-augmented generation used throughout, and to follow the question of
+the reliability of these systems up to the point where the problem treated
+during the internship appears.
+
+We first present the principles and architecture of retrieval-augmented
+generation and the settings in which it is deployed. We then examine the
+reliability challenges of these systems and review the responses proposed to
+them, from uncertainty quantification to verification. We finally turn to the
+statistical guarantees that can be attached to their outputs, before
+synthesising this literature and setting out the question that
+Chapter~\ref{chap:survey} takes up.
+
+\section{Background and Preliminaries}
+\label{sec:background-preliminaries}
+
+\subsection{Retrieval-Augmented Generation}
+\label{subsec:rag}
+
+Large language models acquire a substantial amount of knowledge during pre-training and can exploit this knowledge when answering questions. However, relying exclusively on information encoded in model parameters is not always sufficient for knowledge-intensive tasks. In particular, the information required to answer a query may be absent from the model's parametric knowledge, or the answer may require access to specific external evidence. Retrieval-Augmented Generation (RAG) addresses this limitation by coupling a language model with an external knowledge source that can be searched at inference time \cite{lewis2020rag}.
+
+Rather than generating an answer directly from an input question, a RAG system first retrieves a set of passages that are considered relevant to the query. These passages are then supplied to the language model as additional context from which the answer can be generated. The approach therefore separates the problem into two complementary capabilities: locating useful information in an external corpus and reasoning over that information to produce an answer.
+
+Let \(q\) denote an input query and let
+\begin{equation}
+  \label{eq:corpus}
+  \mathcal{C}=\{d_1,d_2,\ldots,d_N\}
+\end{equation}
+be a corpus containing \(N\) documents or passages. A retriever assigns a relevance score \(s(q,d)\) to each candidate passage \(d \in \mathcal{C}\). The passages are ranked according to this score, and the \(k\) highest-ranked passages are retained. The resulting retrieved set is denoted by
+\begin{equation}
+  \label{eq:retrieval}
+  D_k(q)=\operatorname*{TopK}_{d\in\mathcal{C}}\; s(q,d).
+\end{equation}
+The value \(k\) therefore determines how many retrieved passages are made available to the subsequent stages of the system.
+
+The retrieved passages are then transformed into a context supplied to the language model. Denoting this context-construction operation by \(g\), the resulting context can be written as
+\begin{equation}
+  \label{eq:context}
+  C(q)=g\bigl(q,D_k(q)\bigr).
+\end{equation}
+In its simplest form, \(g\) may consist of concatenating the retrieved passages with the original question. More elaborate RAG architectures may additionally reorder, filter, rerank, or otherwise process the retrieved information before presenting it to the language model.
+
+Finally, given the original query and the constructed context, a language model parameterized by \(\theta\) generates an answer \(y\) according to
+\begin{equation}
+  \label{eq:generation}
+  y \sim p_{\theta}\bigl(y\mid q,C(q)\bigr).
+\end{equation}
+The conventional RAG pipeline can consequently be summarized as the sequence of stages shown in Figure~\ref{fig:rag-pipeline}.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      node distance = 0.8cm and 0.4cm,
+      stage/.style  = {draw, rectangle, align=center, font=\footnotesize,
+                       text width=1.95cm, minimum height=1.35cm, inner sep=3pt},
+      store/.style  = {draw, rectangle, align=center, font=\footnotesize,
+                       text width=1.95cm, minimum height=0.95cm, inner sep=3pt},
+      flow/.style   = {-{Latex[length=1.7mm,width=1.3mm]}, semithick}
+    ]
+    \node[stage]                     (query)     {Input question\\$q$};
+    \node[stage, right=of query]     (retriever) {Retriever};
+    \node[stage, right=of retriever] (topk)      {Top-$k$ passages\\$D_k(q)$};
+    \node[stage, right=of topk]      (context)   {Context construction};
+    \node[stage, right=of context]   (llm)       {LLM\\generator};
+    \node[stage, right=of llm]       (answer)    {Answer\\$y$};
+    \node[store, below=of retriever] (corpus)    {External corpus\\$\mathcal{C}$};
+
+    \draw[flow] (query)     -- (retriever);
+    \draw[flow] (retriever) -- (topk);
+    \draw[flow] (topk)      -- (context);
+    \draw[flow] (context)   -- (llm);
+    \draw[flow] (llm)       -- (answer);
+    \draw[flow] (corpus)    -- (retriever);
+  \end{tikzpicture}
+  \caption[Conventional single-pass RAG pipeline]{Overview of a conventional single-pass Retrieval-Augmented Generation
+    pipeline. The input query is used to retrieve the top-$k$ passages from an
+    external corpus; these passages are incorporated into the model context
+    before answer generation.}
+  \label{fig:rag-pipeline}
+\end{figure}
+
+This formulation highlights an important property of retrieval-augmented systems: the quality of the final answer depends not only on the reasoning capabilities of the language model, but also on the information made available by the retrieval stage. If a passage containing evidence required to answer the question is not retrieved, the language model cannot directly exploit that evidence during generation. Conversely, increasing \(k\) can increase the probability of including relevant information, but also introduces additional passages that the model must process and distinguish from the evidence that is actually useful.
+
+Retrieval and generation should therefore not be considered as independent components. The retriever determines which portion of the external knowledge source becomes visible to the language model, while the language model must identify and combine the relevant information contained in that retrieved context. This interaction becomes particularly important for questions whose answers depend on several pieces of evidence rather than on a single retrieved fact.
+
+A standard single-pass RAG system performs retrieval once using the original query. More advanced systems may instead modify the retrieval process dynamically by reformulating the query, performing several retrieval rounds, decomposing a complex question into simpler queries, or deciding whether additional retrieval is necessary. Such adaptive mechanisms are discussed later in this chapter. For the moment, the conventional single-pass formulation provides the basic setting in which retrieval quality and evidence availability can be defined.
+
+The distinction between the original query, the retrieved ranking, and the evidence required to answer a question will be particularly important throughout this thesis. In multi-hop question answering, the required information may be distributed across several passages and may correspond to different stages of a reasoning chain. Consequently, retrieving passages that are individually related to the original question does not necessarily guarantee that all evidence required for answering it is available within the first \(k\) results. The following subsection first examines how retrieval is actually performed, before the notions of retrieval rank, evidence coverage, and retrieval depth are introduced to formalize this issue.
+\subsection{Information Retrieval for RAG}
+\label{subsec:informative-rag}
+
+The retrieval component of a Retrieval-Augmented Generation system is responsible for identifying, from a potentially large corpus, the passages that are most likely to contain information useful for answering the input query. Section~\ref{subsec:rag} introduced the relevance score \(s(q,d)\) and the top-\(k\) set \(D_k(q)\) of Equation~\eqref{eq:retrieval} without specifying how that score is computed; this subsection examines the paradigms that produce it. The resulting ranking determines which information is made available to the language model in the subsequent generation stage.
+
+Information-retrieval methods used in RAG differ primarily in how queries and documents are represented and how their relevance is computed. Classical sparse methods rely largely on lexical correspondence between query and document terms, dense retrievers compare learned semantic representations, and late-interaction approaches retain finer-grained token-level representations while remaining suitable for large-scale retrieval. These paradigms provide different trade-offs between efficiency, lexical precision, semantic matching, and computational cost.
+
+\subsubsection{Sparse retrieval and BM25}
+
+Sparse retrieval represents queries and documents in a high-dimensional term space and estimates relevance mainly through lexical overlap. Such approaches are particularly effective when the query contains discriminative terms that also occur explicitly in the relevant passage. Among them, BM25 remains one of the most widely used ranking functions in information retrieval and constitutes a common lexical baseline for retrieval-augmented systems~\cite{robertson2009bm25}.
+
+For a query \(q\) and a document \(d\), BM25 can be expressed as
+\begin{equation}
+  \label{eq:bm25}
+  \operatorname{BM25}(q,d)=\sum_{t\in q}\operatorname{IDF}(t)\,
+  \frac{f(t,d)\,(k_1+1)}
+       {f(t,d)+k_1\left(1-b+b\frac{|d|}{\operatorname{avgdl}}\right)},
+\end{equation}
+where \(f(t,d)\) denotes the frequency of term \(t\) in document \(d\), \(|d|\) is the length of the document, and \(\operatorname{avgdl}\) is the average document length in the corpus. The parameter \(k_1\) controls the saturation of the term-frequency contribution, while \(b\) controls the degree of document-length normalisation. The inverse document frequency term, \(\operatorname{IDF}(t)\), assigns greater weight to terms that occur in fewer documents and are therefore more discriminative.
+
+The strength of BM25 lies in its efficiency and its ability to exploit exact lexical correspondences. It does not require the documents to be processed jointly with each incoming query, and mature inverted-index implementations allow retrieval from very large collections. However, lexical matching also introduces an important limitation: a relevant passage may use expressions that differ from those appearing in the query. In such cases, strong semantic relatedness does not necessarily translate into a high lexical-relevance score.
+
+This limitation is particularly relevant in question answering, where the wording of a question and the wording of the passage containing its answer may differ substantially. Neural retrieval methods address this issue by learning representations in which semantically related queries and passages can be located close to one another even in the absence of substantial token overlap.
+
+\subsubsection{Dense retrieval}
+
+Dense retrieval represents both queries and passages as continuous low-dimensional vectors learned by neural encoders. A typical dual-encoder architecture uses one encoder for the query and another for the document:
+\begin{equation}
+  \label{eq:dense-encoders}
+  \mathbf{z}_q=f_q(q),\qquad \mathbf{z}_d=f_d(d),
+\end{equation}
+where \(\mathbf{z}_q,\mathbf{z}_d\in\mathbb{R}^{m}\) denote the resulting dense representations. Relevance can then be estimated using a similarity function such as the inner product,
+\begin{equation}
+  \label{eq:dense-score}
+  s_{\mathrm{dense}}(q,d)=\mathbf{z}_q^{\top}\mathbf{z}_d,
+\end{equation}
+or cosine similarity.
+
+Dense Passage Retrieval (DPR) demonstrated that open-domain question answering can be supported using learned dense representations in a dual-encoder architecture rather than relying exclusively on sparse lexical retrieval~\cite{karpukhin2020dpr}. Because document representations can be computed in advance and indexed using approximate nearest-neighbour search, dense retrieval can remain computationally practical even for large corpora.
+
+The main advantage of dense retrieval is its ability to capture semantic correspondence beyond exact term matching. For example, a query and a relevant passage may express the same relation using different vocabulary while still receiving a high similarity score. This property is particularly useful for natural-language questions, whose phrasing may not closely resemble that of the supporting evidence.
+
+Nevertheless, representing an entire query or passage by a single vector requires compressing substantial linguistic information into one embedding. Fine-grained relationships between individual query terms and portions of a passage may therefore be weakened. Late-interaction retrieval provides an intermediate approach between single-vector dense retrieval and more computationally expensive models that jointly encode every query--document pair.
+
+\subsubsection{Late-interaction retrieval and ColBERT}
+
+ColBERT introduces a late-interaction architecture in which queries and documents are encoded independently, while retaining contextualized representations at the token level~\cite{khattab2020colbert}. Instead of compressing a complete query or passage into a single vector, let
+\begin{equation}
+  \label{eq:colbert-tokens}
+  Q=\left[\mathbf{q}_1,\ldots,\mathbf{q}_{|q|}\right],\qquad
+  D=\left[\mathbf{d}_1,\ldots,\mathbf{d}_{|d|}\right]
+\end{equation}
+denote the token-level representations of a query and document, respectively.
+
+Relevance is computed after these representations have been produced. In the original ColBERT formulation, each query-token representation is matched with its most similar document-token representation, leading to a MaxSim-style scoring function of the form
+\begin{equation}
+  \label{eq:colbert-maxsim}
+  s_{\mathrm{ColBERT}}(q,d)=\sum_{i=1}^{|q|}\;\max_{1\leq j\leq |d|}\;
+  \mathbf{q}_i^{\top}\mathbf{d}_j.
+\end{equation}
+This mechanism allows different parts of the query to interact with different parts of the passage. At the same time, because document representations are generated independently of the incoming query, they can be precomputed and indexed offline. ColBERT therefore preserves substantially more fine-grained interaction than a single-vector dense retriever while avoiding the cost of jointly encoding every possible query--document pair.
+
+This characteristic is particularly relevant to the work presented later in this thesis. Both BM25 and ColBERT provide query--passage relevance signals with complementary properties: BM25 emphasizes lexical correspondence, whereas ColBERT captures contextualized token-level semantic interactions. Their scores can therefore provide different indications of how closely a retrieved passage is associated with a given natural-language query. Figure~\ref{fig:retrieval-paradigms} summarises the conceptual differences between the three retrieval paradigms introduced above.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font          = \footnotesize,
+      io/.style     = {draw, rectangle, minimum width=0.95cm, minimum height=0.55cm,
+                       inner sep=1pt},
+      proc/.style   = {draw, rectangle, minimum width=2.0cm, minimum height=0.66cm,
+                       inner sep=2pt, align=center},
+      inter/.style  = {draw, rectangle, minimum width=2.3cm, minimum height=0.78cm,
+                       inner sep=2pt, align=center},
+      score/.style  = {draw, rectangle, minimum width=2.7cm, minimum height=0.62cm,
+                       inner sep=2pt, align=center},
+      unit/.style   = {draw, rectangle, minimum size=0.26cm, inner sep=0pt, fill=black!10},
+      vec/.style    = {draw, rectangle, minimum width=0.26cm, minimum height=0.62cm,
+                       inner sep=0pt, fill=black!10},
+      ulab/.style   = {font=\scriptsize, inner sep=1pt},
+      ptitle/.style = {font=\footnotesize\bfseries, anchor=west},
+      flow/.style   = {-{Latex[length=1.5mm,width=1.2mm]}, semithick},
+      match/.style  = {densely dotted},
+      maxsim/.style = {-{Latex[length=1.1mm,width=0.9mm]}, densely dashed}
+    ]
+
+    %% ---------------- (a) sparse retrieval / BM25 ----------------
+    \begin{scope}[yshift=0cm]
+      \node[ptitle] at (-0.5,1.32) {(a)~Sparse retrieval (BM25)};
+      \node[io]    (aq)  at (0, 0.6) {$q$};
+      \node[io]    (ad)  at (0,-0.6) {$d$};
+      \node[proc]  (aeq) at (2.3, 0.6) {Term\\analysis};
+      \node[proc]  (aed) at (2.3,-0.6) {Term\\analysis};
+      \foreach \i/\x in {1/4.72, 2/5.04, 3/5.36} \node[unit] (aqt\i) at (\x, 0.6) {};
+      \foreach \i/\x in {1/4.56, 2/4.88, 3/5.20, 4/5.52} \node[unit] (adt\i) at (\x,-0.6) {};
+      \node[ulab] at (5.04, 1.0) {query terms};
+      \node[ulab] at (5.04,-1.0) {document terms};
+      \draw[match] (aqt1.south) -- (adt2.north);
+      \draw[match] (aqt3.south) -- (adt4.north);
+      \node[inter] (ai) at (8.0, 0) {Shared-term\\overlap};
+      \node[score] (as) at (10.9, 0) {$\operatorname{BM25}(q,d)$};
+      \draw[flow] (aq)  -- (aeq);   \draw[flow] (ad)  -- (aed);
+      \draw[flow] (aeq.east) -- (4.42, 0.6);
+      \draw[flow] (aed.east) -- (4.42,-0.6);
+      \draw[flow] (5.82, 0.6) -- (ai.west);
+      \draw[flow] (5.82,-0.6) -- (ai.west);
+      \draw[flow] (ai) -- (as);
+    \end{scope}
+
+    %% ---------------- (b) dense retrieval ----------------
+    \begin{scope}[yshift=-3.1cm]
+      \node[ptitle] at (-0.5,1.32) {(b)~Dense retrieval (dual encoder)};
+      \node[io]    (bq)  at (0, 0.6) {$q$};
+      \node[io]    (bd)  at (0,-0.6) {$d$};
+      \node[proc]  (beq) at (2.3, 0.6) {Query\\encoder $f_q$};
+      \node[proc]  (bed) at (2.3,-0.6) {Document\\encoder $f_d$};
+      \node[vec]   (bzq) at (5.04, 0.6) {};
+      \node[vec]   (bzd) at (5.04,-0.6) {};
+      \node[ulab] at (5.04, 1.15) {$\mathbf{z}_q$};
+      \node[ulab] at (5.04,-1.15) {$\mathbf{z}_d$};
+      \node[inter] (bi) at (8.0, 0) {Vector similarity\\$\mathbf{z}_q^{\top}\mathbf{z}_d$};
+      \node[score] (bs) at (10.9, 0) {$s_{\mathrm{dense}}(q,d)$};
+      \draw[flow] (bq)  -- (beq);   \draw[flow] (bd)  -- (bed);
+      \draw[flow] (beq.east) -- (bzq.west);
+      \draw[flow] (bed.east) -- (bzd.west);
+      \draw[flow] (bzq.east) -- (bi.west);
+      \draw[flow] (bzd.east) -- (bi.west);
+      \draw[flow] (bi) -- (bs);
+    \end{scope}
+
+    %% ---------------- (c) late interaction / ColBERT ----------------
+    \begin{scope}[yshift=-6.2cm]
+      \node[ptitle] at (-0.5,1.32) {(c)~Late interaction (ColBERT)};
+      \node[io]    (cq)  at (0, 0.6) {$q$};
+      \node[io]    (cd)  at (0,-0.6) {$d$};
+      \node[proc]  (ceq) at (2.3, 0.6) {Encoder};
+      \node[proc]  (ced) at (2.3,-0.6) {Encoder};
+      \foreach \i/\x in {1/4.72, 2/5.04, 3/5.36} \node[unit] (cqt\i) at (\x, 0.6) {};
+      \foreach \i/\x in {1/4.56, 2/4.88, 3/5.20, 4/5.52} \node[unit] (cdt\i) at (\x,-0.6) {};
+      \node[ulab] at (5.04, 1.0) {$\mathbf{q}_1,\ldots,\mathbf{q}_m$};
+      \node[ulab] at (5.04,-1.0) {$\mathbf{d}_1,\ldots,\mathbf{d}_n$};
+      \draw[maxsim] (cqt1.south) -- (cdt2.north);
+      \draw[maxsim] (cqt2.south) -- (cdt4.north);
+      \draw[maxsim] (cqt3.south) -- (cdt3.north);
+      \node[inter] (ci) at (8.0, 0) {MaxSim\\$\sum_i\max_j$};
+      \node[score] (cs) at (10.9, 0) {$s_{\mathrm{ColBERT}}(q,d)$};
+      \draw[flow] (cq)  -- (ceq);   \draw[flow] (cd)  -- (ced);
+      \draw[flow] (ceq.east) -- (4.42, 0.6);
+      \draw[flow] (ced.east) -- (4.42,-0.6);
+      \draw[flow] (5.82, 0.6) -- (ci.west);
+      \draw[flow] (5.82,-0.6) -- (ci.west);
+      \draw[flow] (ci) -- (cs);
+    \end{scope}
+  \end{tikzpicture}
+  \caption[Conceptual comparison of sparse, dense and late-interaction retrieval]{Conceptual
+    comparison of sparse, dense, and late-interaction retrieval. BM25 primarily exploits
+    lexical correspondence, dense retrieval represents each query and passage with a single
+    vector, while ColBERT retains token-level representations and performs contextualized
+    late interaction.}
+  \label{fig:retrieval-paradigms}
+\end{figure}
+
+\subsubsection{Hybrid, iterative, and structured retrieval}
+
+The preceding retrieval paradigms are not mutually exclusive. Hybrid retrieval systems combine lexical and neural signals, for example by merging or reranking results produced by sparse and dense retrievers. Such combinations seek to benefit simultaneously from the precision of exact lexical matching and the semantic generalization offered by learned representations.
+
+Retrieval can also extend beyond a single query--ranking operation. Iterative approaches perform several retrieval steps, allowing information obtained at one stage to influence subsequent searches. This is particularly relevant when answering questions whose required evidence cannot be identified effectively from the original query alone.
+
+Other approaches impose additional structure on the retrieval space. Graph-based retrieval systems represent entities, passages, facts, or their relationships as nodes and edges, enabling retrieval to exploit connections between pieces of information rather than treating every passage independently~\cite{gutierrez2024hipporag}. Such architectures are particularly attractive for multi-hop reasoning, where the evidence required to answer a question may form a chain of related information distributed across different documents.
+
+These extensions illustrate that the retriever used in a RAG system need not be restricted to a particular architecture. The research developed later in this thesis therefore treats retrieval primarily through its observable output---a ranked set of candidate evidence passages---rather than assuming a single retrieval mechanism. This makes it possible to reason about retrieval quality across sparse, neural, late-interaction, and more structured retrieval systems.
+
+Regardless of the retrieval architecture, the output can ultimately be represented as an ordered list
+\begin{equation}
+  \label{eq:ranked-list}
+  R(q)=\left[d_{(1)},d_{(2)},\ldots,d_{(N)}\right],
+\end{equation}
+where \(d_{(1)}\) is the passage assigned the highest relevance to \(q\), \(d_{(2)}\) the second highest, and so forth. The parenthesised subscript denotes a position in this ranking and not an identifier of the document within \(\mathcal{C}\); the top-\(k\) set of Equation~\eqref{eq:retrieval} is accordingly the length-\(k\) prefix of \(R(q)\). For question answering, an important issue is therefore not only whether the supporting evidence exists somewhere in the corpus, but also where that evidence appears in the ranking produced for the query.
+
+This observation motivates the notions of retrieval rank, top-\(k\) retrieval, and evidence coverage introduced in the following subsection.
+
+\subsection{Retrieval Ranking, Top-\texorpdfstring{\(k\)}{k}, and Evidence Coverage}
+\label{subsec:retrieval-ranking}
+
+\subsection{Multi-Hop Question Answering}
+\label{subsec:multi-hop-qa}
+
+\subsection{Multi-Hop QA Benchmarks}
+\label{subsec:multi-hop-qa-benchmarks}
+
+% HotpotQA
+% 2WikiMultiHopQA
+% MuSiQue
+
+\subsection{Terminology and Notation}
+\label{subsec:terminology-notation}
+% How 2.1 should end 
+%The last paragraph should transition away from pure background and into the actual state of the art.
+%Something along these lines:
+%While the standard RAG formulation assumes that the input query can directly retrieve the evidence required 
+%for generation, this assumption becomes increasingly fragile for questions involving multiple dependent reasoning 
+%steps. In multi-hop question answering, evidence may be distributed across several passages, and the information 
+%needed for one reasoning step may depend on the result of another. Understanding how such compositional difficulty 
+%affects language models and retrieval systems therefore requires examining both the reasoning demands of multi-hop 
+%questions and the mechanisms used to estimate and manage their difficulty. These issues are reviewed in the following section.
+
+\section{Compositional Reasoning and Question Difficulty}
+\label{sec:compositional-reasoning}
+
+\section{Probing Language-Model Representations}
+\label{sec:probing-lm-representations}
+
+\section{Question Decomposition for Multi-Hop QA}
+\label{sec:question-decomposition}
+
+\section{Adaptive Retrieval and Retrieval-Quality Signals}
+\label{sec:adaptive-retrieval}
+
+\section{Relevant Findings from the Trust Layer Survey}
+\label{sec:trust-layer-survey}
+
+\section{Synthesis and Research Gaps}
+\label{sec:synthesis-research-gaps}
+
+\section*{Conclusion}
+\phantomsection
+\addcontentsline{toc}{section}{Conclusion}

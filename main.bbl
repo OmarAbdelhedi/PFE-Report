@@ -1,0 +1,118 @@
+\begin{thebibliography}{10}
+
+\bibitem{lewis2020rag}
+P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal,
+  H.~K{\"u}ttler, M.~Lewis, W.-t. Yih, T.~Rockt{\"a}schel, S.~Riedel, and
+  D.~Kiela, ``Retrieval-augmented generation for knowledge-intensive {NLP}
+  tasks,'' in {\em Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2020.
+
+\bibitem{robertson2009bm25}
+S.~Robertson and H.~Zaragoza, ``The probabilistic relevance framework: {BM25}
+  and beyond,'' {\em Foundations and Trends in Information Retrieval}, vol.~3,
+  no.~4, pp.~333--389, 2009.
+
+\bibitem{karpukhin2020dpr}
+V.~Karpukhin, B.~O{\u{g}}uz, S.~Min, P.~Lewis, L.~Wu, S.~Edunov, D.~Chen, and
+  W.-t. Yih, ``Dense passage retrieval for open-domain question answering,'' in
+  {\em Proceedings of the Conference on Empirical Methods in Natural Language
+  Processing (EMNLP)}, 2020.
+
+\bibitem{khattab2020colbert}
+O.~Khattab and M.~Zaharia, ``{ColBERT}: Efficient and effective passage search
+  via contextualized late interaction over {BERT},'' in {\em Proceedings of the
+  International ACM SIGIR Conference on Research and Development in Information
+  Retrieval (SIGIR)}, 2020.
+
+\bibitem{gutierrez2024hipporag}
+B.~J. Guti{\'e}rrez, Y.~Shu, Y.~Gu, M.~Yasunaga, and Y.~Su, ``{HippoRAG}:
+  Neurobiologically inspired long-term memory for large language models,'' in
+  {\em Advances in Neural Information Processing Systems (NeurIPS)}, 2024.
+
+\bibitem{yang2018hotpotqa}
+Z.~Yang, P.~Qi, S.~Zhang, Y.~Bengio, W.~W. Cohen, R.~Salakhutdinov, and C.~D.
+  Manning, ``{HotpotQA}: A dataset for diverse, explainable multi-hop question
+  answering,'' in {\em Proceedings of the Conference on Empirical Methods in
+  Natural Language Processing (EMNLP)}, 2018.
+
+\bibitem{ho2020constructing}
+X.~Ho, A.-K.~D. Nguyen, S.~Sugawara, and A.~Aizawa, ``Constructing a multi-hop
+  {QA} dataset for comprehensive evaluation of reasoning steps,'' in {\em
+  Proceedings of the International Conference on Computational Linguistics
+  (COLING)}, 2020.
+
+\bibitem{trivedi2022musique}
+H.~Trivedi, N.~Balasubramanian, T.~Khot, and A.~Sabharwal, ``{MuSiQue}:
+  Multihop questions via single-hop question composition,'' {\em Transactions
+  of the Association for Computational Linguistics (TACL)}, vol.~10,
+  pp.~539--554, 2022.
+
+\bibitem{press2023compositionality}
+O.~Press, M.~Zhang, S.~Min, L.~Schmidt, N.~A. Smith, and M.~Lewis, ``Measuring
+  and narrowing the compositionality gap in language models,'' in {\em Findings
+  of the Association for Computational Linguistics: EMNLP}, 2023.
+
+\bibitem{yang2024latent}
+S.~Yang, E.~Gribovskaya, N.~Kassner, M.~Geva, and S.~Riedel, ``Do large
+  language models latently perform multi-hop reasoning?,'' in {\em Proceedings
+  of the Annual Meeting of the Association for Computational Linguistics
+  (ACL)}, 2024.
+
+\bibitem{jeong2024adaptiverag}
+S.~Jeong, J.~Baek, S.~Cho, S.~J. Hwang, and J.~C. Park, ``{Adaptive-RAG}:
+  Learning to adapt retrieval-augmented large language models through question
+  complexity,'' in {\em Proceedings of the Conference of the North American
+  Chapter of the Association for Computational Linguistics (NAACL-HLT)}, 2024.
+
+\bibitem{alain2016probes}
+G.~Alain and Y.~Bengio, ``Understanding intermediate layers using linear
+  classifier probes,'' {\em arXiv preprint arXiv:1610.01644}, 2016.
+
+\bibitem{park2024linear}
+K.~Park, Y.~J. Choe, and V.~Veitch, ``The linear representation hypothesis and
+  the geometry of large language models,'' in {\em Proceedings of the
+  International Conference on Machine Learning (ICML)}, 2024.
+
+\bibitem{park2024geometry}
+K.~Park, Y.~J. Choe, Y.~Jiang, and V.~Veitch, ``The geometry of categorical and
+  hierarchical concepts in large language models,'' {\em arXiv preprint
+  arXiv:2406.01506}, 2024.
+
+\bibitem{kadavath2022know}
+S.~Kadavath, T.~Conerly, A.~Askell, T.~Henighan, D.~Drain, E.~Perez,
+  N.~Schiefer, Z.~Hatfield-Dodds, N.~DasSarma, E.~Tran-Johnson, {\em et~al.},
+  ``Language models (mostly) know what they know,'' {\em arXiv preprint
+  arXiv:2207.05221}, 2022.
+
+\bibitem{burns2023discovering}
+C.~Burns, H.~Ye, D.~Klein, and J.~Steinhardt, ``Discovering latent knowledge in
+  language models without supervision,'' in {\em Proceedings of the
+  International Conference on Learning Representations (ICLR)}, 2023.
+
+\bibitem{marks2024geometry}
+S.~Marks and M.~Tegmark, ``The geometry of truth: Emergent linear structure in
+  large language model representations of true/false datasets,'' in {\em
+  Proceedings of the Conference on Language Modeling (COLM)}, 2024.
+
+\bibitem{azaria2023internal}
+A.~Azaria and T.~Mitchell, ``The internal state of an {LLM} knows when it's
+  lying,'' in {\em Findings of the Association for Computational Linguistics:
+  EMNLP}, 2023.
+
+\bibitem{orgad2024know}
+H.~Orgad, M.~Toker, Z.~Gekhman, R.~Reichart, I.~Szpektor, H.~Kotek, and
+  Y.~Belinkov, ``{LLMs} know more than they show: On the intrinsic
+  representation of {LLM} hallucinations,'' {\em arXiv preprint
+  arXiv:2410.02707}, 2024.
+
+\bibitem{moreno2025noanswer}
+I.~V. Moreno~Cencerrado {\em et~al.}, ``No answer needed: Predicting {LLM}
+  answer accuracy from question-only linear probes.'' Preprint, 2025.
+
+\bibitem{hewitt2019control}
+J.~Hewitt and P.~Liang, ``Designing and interpreting probes with control
+  tasks,'' in {\em Proceedings of the Conference on Empirical Methods in
+  Natural Language Processing and the International Joint Conference on Natural
+  Language Processing (EMNLP-IJCNLP)}, 2019.
+
+\end{thebibliography}

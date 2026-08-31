@@ -34,9 +34,12 @@
 % or the folio is printed twice on every body page: once top-right by the
 % \fancyhead[R] below and once again at the foot.
 \fancyhf{}
-% The 12pt class leaves \headheight at 12pt, but the running head needs
-% 14.5pt; without this fancyhdr warns on every \chapter. Shrink \topmargin
-% by the same amount so the text block does not shift down the page.
+% The 12pt class leaves \headheight at 12pt, but the running head needs 14.5pt;
+% without this fancyhdr warns on every \chapter. Shrink \topmargin by the same
+% amount so the text block does not shift down the page. NOTE: if a chapter
+% title ever grows long enough to wrap the running head onto a second line,
+% fancyhdr will ask for ~27.5pt here (and -15.5pt below) -- or shorten the head
+% with \chapter[short title]{long title}, which is usually the better answer.
 \setlength{\headheight}{14.5pt}
 \addtolength{\topmargin}{-2.5pt}
 % Seuls les chapitres numerotes portent "Chapter N -- " dans l'en-tete.
@@ -154,6 +157,11 @@
 % ---------------------------------------------------
 \usepackage[hidelinks]{hyperref}
 
+% Last-resort stretch for lines TeX cannot otherwise break. LaTeX will not
+% hyphenate inside an already-hyphenated compound, so words such as
+% "retrieval-augmented" would otherwise overhang the right margin.
+\setlength{\emergencystretch}{1em}
+
 % ---------------------------------------------------
 % Lengths for figures (kept from your original)
 % ---------------------------------------------------
@@ -241,17 +249,11 @@
 % ---------------------------------------------------
 % Bibliography (main)
 % ---------------------------------------------------
-% >>> RE-ENABLE THIS BLOCK AS SOON AS THE FIRST \cite{...} IS WRITTEN. <<<
-% There is currently no \cite anywhere in the document, only \citeN (web
-% sources, which go to the Netography below). With the block live, bibtex aborts
-% with "I found no \citation commands", main.bbl comes back empty, and the PDF
-% carries a Bibliography chapter heading with a blank page under it.
-% Uncomment all five lines below to bring it back; nothing else has to change.
-%\cleardoublepage
-%\phantomsection
-%\addcontentsline{toc}{chapter}{Bibliography}
-%\bibliographystyle{ieeetr}
-%\bibliography{references}
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Bibliography}
+\bibliographystyle{ieeetr}
+\bibliography{references}
 
 % ---------------------------------------------------
 % Netography (URLs) -- web sources, numbered [N1], [N2], ...
