@@ -2,10 +2,11 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {1.1}{\ignorespaces The EV Complex, home of the Gina Cody School (photograph: Tasitch, CC BY 2.0)}}{4}{figure.caption.17}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Conventional single-pass RAG pipeline}}{7}{figure.caption.20}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Conceptual comparison of sparse, dense and late-interaction retrieval}}{10}{figure.caption.24}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Generic complexity-aware routing principle}}{17}{figure.caption.31}%
-\contentsline {figure}{\numberline {2.4}{\ignorespaces Generic layer-wise probing framework}}{18}{figure.caption.32}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Separation of retrieval and generation in RAG}}{7}{figure.caption.20}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Multi-hop reasoning through a bridge entity}}{8}{figure.caption.21}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Evidence coverage and minimum complete retrieval depth}}{11}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Dependency-aware question decomposition as a DAG}}{13}{figure.caption.23}%
+\contentsline {figure}{\numberline {2.5}{\ignorespaces Conceptual coverage--depth trade-off}}{16}{figure.caption.24}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
