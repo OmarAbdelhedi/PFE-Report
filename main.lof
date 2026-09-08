@@ -13,4 +13,5 @@
 \contentsline {figure}{\numberline {3.5}{\ignorespaces Ordinality of the decoded MuSiQue difficulty direction}}{28}{figure.caption.30}%
 \contentsline {figure}{\numberline {3.6}{\ignorespaces Cross-benchmark transfer to MuSiQue}}{28}{figure.caption.32}%
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted.}}{38}{figure.caption.38}%
 \addvspace {10\p@ }

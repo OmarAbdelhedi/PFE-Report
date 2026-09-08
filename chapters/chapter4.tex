@@ -350,6 +350,104 @@ reader's predicted intermediate answers. Both retain reference subquestions;
 the gold-answer condition isolates the effect of supplying correct intermediate
 bindings within this pipeline.
 
+Figure~\ref{fig:ch4-execution-conditions} shows the execution shared by these
+configurations and states what each condition supplies at the two points that
+the comparison varies.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt,
+                  minimum height=1.15cm,
+                  execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+      flow/.style={-{Latex[length=2mm]}, semithick},
+      back/.style={-{Latex[length=2mm]}, semithick, rounded corners=3pt},
+      tag/.style={circle, fill=black!80, text=white, inner sep=0pt,
+                  minimum size=3.4mm, font=\scriptsize\bfseries},
+      cell/.style={anchor=west, align=left, inner sep=3pt,
+                   execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+      rule/.style={draw=black!70, semithick}
+    ]
+    % --- Execution shared by every condition ---------------------------------
+    \node[box, text width=1.5cm] (q)     at (-6.86,0)
+      {Question\\\(q\)};
+    \node[box, text width=2.5cm] (plan)  at (-4.22,0)
+      {Subquestion sequence\\\(u_1,\dots,u_A\)};
+    \node[box, text width=2.1cm] (query) at (-1.24,0)
+      {Resolved query\\\(\widetilde u_a\)};
+    \node[box, text width=2.1cm] (retr)  at (1.54,0)
+      {Retrieval\\\(R_a[1{:}k]\)};
+    \node[box, text width=1.7cm] (read)  at (4.12,0)
+      {Reader\\\(\widehat y_a\)};
+    \node[box, text width=1.8cm] (final) at (6.55,0)
+      {Final answer\\\(\widehat y_A\)};
+
+    \draw[flow] (q) -- (plan);
+    \draw[flow] (plan) -- (query);
+    \draw[flow] (query) -- (retr);
+    \draw[flow] (retr) -- (read);
+    \draw[flow] (read) -- (final);
+    \node[font=\scriptsize, anchor=south] at (5.31,0.60) {\(a=A\)};
+
+    % Sequential dependency: an earlier answer resolves a later subquestion.
+    \draw[back] (read.south) -- (4.12,-1.35) -- (-1.24,-1.35) -- (query.south);
+    \node[font=\scriptsize, anchor=east] at (3.98,-1.00) {\(a<A\)};
+    \node[tag] at (1.44,-1.35) {2};
+    \node[anchor=north, font=\footnotesize] at (1.44,-1.60)
+      {intermediate answer substituted into \(u_{a+1}\)};
+
+    \node[tag] at (-4.22,0.92) {1};
+
+    % --- What each compared condition supplies at points 1 and 2 -------------
+    \fill[black!5] (-7.70,-3.85) rectangle (7.60,-4.85);
+    \fill[black!5] (-7.70,-5.85) rectangle (7.60,-6.85);
+
+    \draw[rule] (-7.70,-2.25) -- (7.60,-2.25);
+    \draw[rule] (-7.70,-2.85) -- (7.60,-2.85);
+    \draw[rule] (-7.70,-6.85) -- (7.60,-6.85);
+
+    \node[cell] at (-7.50,-2.55) {\textbf{Condition}};
+    \node[tag]  at (-4.10,-2.55) {1};
+    \node[cell] at (-3.90,-2.55) {\textbf{Subquestion sequence}};
+    \node[tag]  at (2.55,-2.55) {2};
+    \node[cell] at (2.75,-2.55) {\textbf{Intermediate bindings}};
+
+    \node[cell, text width=2.8cm] at (-7.50,-3.35) {\textbf{Direct}};
+    \node[cell, text width=6.2cm] at (-3.90,-3.35)
+      {None: the full question is the only query};
+    \node[cell, text width=4.3cm] at (2.75,-3.35)
+      {None: one retrieval and one reader call};
+
+    \node[cell, text width=2.8cm] at (-7.50,-4.35) {\textbf{Generated plan}};
+    \node[cell, text width=6.2cm] at (-3.90,-4.35)
+      {Prompt-generated (baseline,\\atomic-query, extended-instruction)};
+    \node[cell, text width=4.3cm] at (2.75,-4.35)
+      {Reader's predicted intermediate answers};
+
+    \node[cell, text width=2.8cm] at (-7.50,-5.35)
+      {\textbf{Reference plan}\\\textbf{(predicted)}};
+    \node[cell, text width=6.2cm] at (-3.90,-5.35)
+      {MuSiQue reference decomposition};
+    \node[cell, text width=4.3cm] at (2.75,-5.35)
+      {Reader's predicted intermediate answers};
+
+    \node[cell, text width=2.8cm] at (-7.50,-6.35)
+      {\textbf{Reference plan}\\\textbf{(gold)}};
+    \node[cell, text width=6.2cm] at (-3.90,-6.35)
+      {MuSiQue reference decomposition};
+    \node[cell, text width=4.3cm] at (2.75,-6.35)
+      {Gold intermediate answers (oracle-assisted)};
+  \end{tikzpicture}
+  \caption{Execution conditions in the retrieval study. The diagram is the
+    execution shared by every condition, with the two marked points that the
+    comparison varies: the source of the subquestion sequence and the source
+    of the intermediate answers substituted into later subquestions. The
+    table states what each condition supplies at those two points. Direct
+    execution has neither, and the gold-binding condition is oracle-assisted.}
+  \label{fig:ch4-execution-conditions}
+\end{figure}
+
 \subsection{Metrics and Comparison Units}
 
 Answer quality is measured by exact match (EM) and token F1 against the reference
