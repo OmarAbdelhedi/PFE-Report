@@ -272,52 +272,54 @@
 \newlabel{eq:ch4-threshold}{{4.10}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.10}{}}
 \newlabel{eq:ch4-vote}{{4.11}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.11}{}}
 \citation{gutierrez2025hipporag2}
+\citation{trivedi2022musique}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}How Assignment Error Changes the Depth Measurement}{37}{subsection.4.3.4}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Experimental Protocol}{37}{section.4.4}\protected@file@percent }
 \newlabel{sec:ch4-protocol}{{4.4}{37}{Experimental Protocol}{section.4.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Systems and Retained Executions}{37}{subsection.4.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{37}{subsection.4.4.2}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted.}}{38}{figure.caption.38}\protected@file@percent }
 \newlabel{fig:ch4-execution-conditions}{{4.1}{38}{Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted}{figure.caption.38}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Results}{38}{section.4.5}\protected@file@percent }
-\newlabel{sec:ch4-results}{{4.5}{38}{Results}{section.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{38}{subsection.4.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{38}{subsection.4.4.2}\protected@file@percent }
+\newlabel{eq:ch4-answer}{{4.12}{38}{Metrics and Comparison Units}{equation.4.4.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Results}{39}{section.4.5}\protected@file@percent }
+\newlabel{sec:ch4-results}{{4.5}{39}{Results}{section.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{39}{subsection.4.5.1}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions.}}{39}{table.caption.39}\protected@file@percent }
 \newlabel{tab:ch4-ownership}{{4.1}{39}{Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions}{table.caption.39}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions.}}{39}{table.caption.40}\protected@file@percent }
 \newlabel{tab:ch4-cohorts}{{4.2}{39}{Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions}{table.caption.40}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{39}{subsection.4.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{39}{subsection.4.5.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The last row uses the exact reference assignment.}}{40}{table.caption.41}\protected@file@percent }
-\newlabel{tab:ch4-masks}{{4.3}{40}{Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The last row uses the exact reference assignment}{table.caption.41}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes.}}{40}{table.caption.42}\protected@file@percent }
-\newlabel{tab:ch4-system}{{4.4}{40}{Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes}{table.caption.42}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{40}{subsection.4.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{40}{subsection.4.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment.}}{40}{table.caption.41}\protected@file@percent }
+\newlabel{tab:ch4-masks}{{4.3}{40}{Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment}{table.caption.41}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{40}{subsection.4.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes.}}{41}{table.caption.42}\protected@file@percent }
+\newlabel{tab:ch4-system}{{4.4}{41}{Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes}{table.caption.42}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{41}{subsection.4.5.4}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs.}}{41}{table.caption.43}\protected@file@percent }
 \newlabel{tab:ch4-bindings}{{4.5}{41}{Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs}{table.caption.43}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.6}Depth Under a Total Passage Budget}{41}{section.4.6}\protected@file@percent }
 \newlabel{sec:ch4-budget}{{4.6}{41}{Depth Under a Total Passage Budget}{section.4.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Equal-Allocation Replay}{41}{subsection.4.6.1}\protected@file@percent }
-\newlabel{eq:ch4-budget-allocation}{{4.12}{41}{Equal-Allocation Replay}{equation.4.6.12}{}}
-\@writefile{toc}{\contentsline {paragraph}{Per-question and average budgets.}{41}{paragraph*.44}\protected@file@percent }
+\newlabel{eq:ch4-budget-allocation}{{4.13}{41}{Equal-Allocation Replay}{equation.4.6.13}{}}
+\@writefile{toc}{\contentsline {paragraph}{Per-question and average budgets.}{42}{paragraph*.44}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.6.2}A Fixed-List Oracle Allocation}{42}{subsection.4.6.2}\protected@file@percent }
-\newlabel{eq:ch4-oracle-budget}{{4.13}{42}{A Fixed-List Oracle Allocation}{equation.4.6.13}{}}
-\newlabel{eq:ch4-dynamic-program}{{4.14}{42}{A Fixed-List Oracle Allocation}{equation.4.6.14}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{42}{subsection.4.6.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions.}}{42}{table.caption.45}\protected@file@percent }
-\newlabel{tab:ch4-budget}{{4.6}{42}{Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions}{table.caption.45}{}}
+\newlabel{eq:ch4-oracle-budget}{{4.14}{42}{A Fixed-List Oracle Allocation}{equation.4.6.14}{}}
+\newlabel{eq:ch4-dynamic-program}{{4.15}{42}{A Fixed-List Oracle Allocation}{equation.4.6.15}{}}
 \citation{ch4-2wiki}
 \citation{ch4-hotpot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{43}{subsection.4.6.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions.}}{43}{table.caption.45}\protected@file@percent }
+\newlabel{tab:ch4-budget}{{4.6}{43}{Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions}{table.caption.45}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.7}A Cross-Benchmark Fixed-Trace Study}{43}{section.4.7}\protected@file@percent }
 \newlabel{sec:ch4-bm25}{{4.7}{43}{A Cross-Benchmark Fixed-Trace Study}{section.4.7}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Retrieval Regime and Evaluation Population}{43}{subsection.4.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{43}{subsection.4.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{44}{subsection.4.7.2}\protected@file@percent }
 \@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Complete annotated-evidence coverage at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel.}}{44}{table.caption.46}\protected@file@percent }
 \newlabel{tab:ch4-bm25-availability}{{4.7}{44}{Complete annotated-evidence coverage at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel}{table.caption.46}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel.}}{44}{table.caption.47}\protected@file@percent }
-\newlabel{tab:ch4-bm25-regimes}{{4.8}{44}{MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel}{table.caption.47}{}}
-\newlabel{eq:ch4-oracle-frontier}{{4.15}{44}{Matched Passage-Slot Frontiers}{equation.4.7.15}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{44}{subsection.4.7.3}\protected@file@percent }
+\newlabel{eq:ch4-oracle-frontier}{{4.16}{44}{Matched Passage-Slot Frontiers}{equation.4.7.16}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel.}}{45}{table.caption.47}\protected@file@percent }
+\newlabel{tab:ch4-bm25-regimes}{{4.8}{45}{MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel}{table.caption.47}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{45}{subsection.4.7.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {4.8}Discussion and Implications for Optimisation}{45}{section.4.8}\protected@file@percent }
 \newlabel{sec:ch4-discussion}{{4.8}{45}{Discussion and Implications for Optimisation}{section.4.8}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{47}{chapter.5}\protected@file@percent }

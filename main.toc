@@ -86,21 +86,21 @@
 \contentsline {subsection}{\numberline {4.3.4}How Assignment Error Changes the Depth Measurement}{37}{subsection.4.3.4}%
 \contentsline {section}{\numberline {4.4}Experimental Protocol}{37}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Systems and Retained Executions}{37}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{37}{subsection.4.4.2}%
-\contentsline {section}{\numberline {4.5}Results}{38}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{38}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{39}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{39}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{40}{subsection.4.5.4}%
+\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{38}{subsection.4.4.2}%
+\contentsline {section}{\numberline {4.5}Results}{39}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{39}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{40}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{40}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{41}{subsection.4.5.4}%
 \contentsline {section}{\numberline {4.6}Depth Under a Total Passage Budget}{41}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Equal-Allocation Replay}{41}{subsection.4.6.1}%
-\contentsline {paragraph}{Per-question and average budgets.}{41}{paragraph*.44}%
+\contentsline {paragraph}{Per-question and average budgets.}{42}{paragraph*.44}%
 \contentsline {subsection}{\numberline {4.6.2}A Fixed-List Oracle Allocation}{42}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{42}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{43}{subsection.4.6.3}%
 \contentsline {section}{\numberline {4.7}A Cross-Benchmark Fixed-Trace Study}{43}{section.4.7}%
 \contentsline {subsection}{\numberline {4.7.1}Retrieval Regime and Evaluation Population}{43}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{43}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{44}{subsection.4.7.3}%
+\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{44}{subsection.4.7.2}%
+\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{45}{subsection.4.7.3}%
 \contentsline {section}{\numberline {4.8}Discussion and Implications for Optimisation}{45}{section.4.8}%
 \contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{47}{chapter.5}%
 \contentsline {section}{\numberline {5.1}The Optimisation Problem}{48}{section.5.1}%

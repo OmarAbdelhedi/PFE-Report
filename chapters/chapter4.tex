@@ -55,7 +55,8 @@ Backward references make the execution sequential even when the decomposition
 contains conceptually independent branches. The retained implementation returns
 $\widehat y_A$ as the final answer. Each step receives its own retrieved
 context; the final step has no additional synthesis call over the union of all
-earlier passages.
+earlier passages. One such step, a resolved query with its retrieval and its
+reader call, is an arm of the execution.
 
 The number of generated subquestions $A$ may differ from the reference hop
 count $h$. One subquestion can combine several reference information needs.
@@ -304,7 +305,10 @@ a majority vote:
 The lower-quantile threshold favours retaining true ownership assignments.
 Here $\alpha$ specifies the threshold-selection rule. Empirical recall,
 precision and complete-mask agreement quantify the resulting five-model
-procedure. A per-cell quantile rule and a majority vote require additional
+procedure. Recall and precision are computed over mask cells pooled across
+questions, complete-mask agreement is the fraction of questions whose predicted
+mask matches the reference in every cell, and an arm row is exact when the
+prediction matches the reference in every cell of that row. A per-cell quantile rule and a majority vote require additional
 assumptions and analysis to yield a simultaneous guarantee for every assignment
 in a question. The results in this chapter are held-out measurements of the
 specified ensemble.
@@ -450,13 +454,36 @@ the comparison varies.
 
 \subsection{Metrics and Comparison Units}
 
-Answer quality is measured by exact match (EM) and token F1 against the reference
-answer and accepted aliases. Retrieval is measured by complete-evidence
-coverage, union depth and ownership-masked depth. The number of generated arms,
-retrieved passage slots and recorded total model tokens describe resource use.
-Per-arm passage counts charge duplicate passages again when they are sent to
-separate reader calls. Unique passage counts instead describe the pooled
-collection.
+% TODO (before submission): the normalisation rules and the alias source below
+% state what the evaluation script does. Confirm against the script itself.
+Answer quality is measured by exact match (EM) and token F1 against the
+reference answer and its accepted aliases, under the benchmark's answer
+normalisation: lowercasing, removal of articles and punctuation, and collapse
+of whitespace \cite{trivedi2022musique}. Let $t(\cdot)$ denote the token
+multiset of a normalised string, and let $\mathcal{A}(y)$ denote the reference
+answer $y$ together with its accepted aliases. Then
+\begin{equation}
+  \mathrm{EM}(\widehat y,y)=\mathbf{1}\{\widehat y\in\mathcal{A}(y)\},
+  \qquad
+  \mathrm{F1}(\widehat y,y)=\max_{y'\in\mathcal{A}(y)}
+    \frac{2\lvert t(\widehat y)\cap t(y')\rvert}
+         {\lvert t(\widehat y)\rvert+\lvert t(y')\rvert},
+  \label{eq:ch4-answer}
+\end{equation}
+where all compared strings are normalised and $\cap$ is the multiset
+intersection. Both quantities are averaged over the panel; EM is reported as a
+percentage and F1 on a $0$--$100$ scale.
+
+Retrieval is measured by complete-evidence coverage
+(Equation~\ref{eq:ch4-coverage}), union depth (Equation~\ref{eq:ch4-union})
+and ownership-masked depth (Equation~\ref{eq:ch4-masked}), summarised by the
+depth score $J_D$ of Equation~\ref{eq:ch4-credit}. The number of generated arms, retrieved passage
+slots and recorded total model tokens describe resource use. A passage slot is
+one passage delivered to one reader call. Per-arm passage counts therefore
+charge duplicate passages again when they are sent to separate reader calls,
+while unique passage counts describe the pooled collection. Recorded tokens are
+the prompt and completion tokens of the decomposition and reading calls of a
+question.
 
 The reference-answer control records one token total across several execution
 branches. Per-branch costs are therefore unavailable. Generated and direct runs
@@ -535,31 +562,36 @@ assignment with its prediction on those fixed lists.
 
 \subsection{Sensitivity to the Attribution Model}
 
-Table~\ref{tab:ch4-masks} compares two attribution models on the same retrieval
-traces: the earlier token-multiview model and the retained ownership-multiview
-model. The
-baseline generated decomposition receives scores of $52.32$ and $72.19$
-respectively. The analogous atomic-query values are $52.81$ and $66.64$. These
-changes arise from the assigned cells, with the passages and ranks held fixed.
+Table~\ref{tab:ch4-masks} scores the same retrieval traces under two
+attribution models: an earlier predictor built on a different feature set, and
+the retained model of Section~\ref{sec:ch4-ownership}. The baseline generated
+decomposition receives scores of $52.32$ and $72.19$ respectively. The analogous atomic-query values
+are $52.81$ and $66.64$. These changes arise from the assigned cells, with the
+passages and ranks held fixed. On the reference arms with gold bindings the two
+models differ by $24.98$ points, while replacing the retained prediction with
+the exact reference assignment changes the score by $1.63$. The masked-depth
+measurement is therefore more sensitive to the choice of attribution model than
+to the residual error of the retained one.
 
 \begin{table}[htbp]
 \centering
 \caption{Masked-depth measurements under two attribution models on fixed
 GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage
-at $K=200$; score is $J_{D_M}$ from Equation~\ref{eq:ch4-credit}. The last
-row uses the exact reference assignment.}
+at $K=200$; score is $J_{D_M}$ from Equation~\ref{eq:ch4-credit}. The
+passages and their ranks are identical across rows, so only the assigned cells
+differ. The last row uses the exact reference assignment.}
 \label{tab:ch4-masks}
 \small
 \begin{tabular}{llrr}
 \hline
 Decomposition & Attribution & Coverage (\%) & Score \\
 \hline
-Baseline & Token-multiview & 78 & 52.32 \\
-Baseline & Ownership-multiview & 87 & 72.19 \\
-Atomic-query & Token-multiview & 77 & 52.81 \\
-Atomic-query & Ownership-multiview & 81 & 66.64 \\
-Reference, gold bindings & Token-multiview & 88 & 59.86 \\
-Reference, gold bindings & Ownership-multiview & 97 & 84.84 \\
+Baseline & Earlier model & 78 & 52.32 \\
+Baseline & Retained model & 87 & 72.19 \\
+Atomic-query & Earlier model & 77 & 52.81 \\
+Atomic-query & Retained model & 81 & 66.64 \\
+Reference, gold bindings & Earlier model & 88 & 59.86 \\
+Reference, gold bindings & Retained model & 97 & 84.84 \\
 Reference, gold bindings & Reference assignment & 100 & 86.47 \\
 \hline
 \end{tabular}
