@@ -19,7 +19,7 @@ together with their main areas of research. It then presents the broader scienti
 centered on large language models, retrieval-augmented generation, and multi-hop question answering. 
 The progression of the research work is subsequently outlined, from the initial literature exploration and systematic study of 
 trust signals in RAG systems, to the investigation of compositional question difficulty in language model representations,
-and finally to the development of a retrieval-oriented framework for multi-hop question decomposition. 
+and finally to the development and optimisation of a retrieval-oriented framework for multi-hop question decomposition. 
 The chapter concludes by presenting the main objectives, contributions, and research methodology adopted throughout the internship.
 
 \section{Host organisation}
@@ -117,8 +117,7 @@ The work carried out during this internship belongs primarily to this latter res
 multi-hop question answering in retrieval-augmented systems and investigates, from complementary perspectives, 
 how the difficulty of such questions can be understood and how their processing can be made more effective. The 
 research therefore evolved from the study of reliability and actionable signals in RAG systems, to the analysis of 
-compositional question difficulty in the internal representations of large language models, and finally to the 
-development of a retrieval-oriented approach to multi-hop question decomposition.
+compositional question difficulty in the internal representations of large language models, and finally to the development and optimisation of a retrieval-oriented approach to multi-hop question decomposition.
 
 This research environment provided the basis for the successive studies conducted during the internship and for the 
 formulation of the main research problem addressed in this thesis.
@@ -126,6 +125,44 @@ formulation of the main research problem addressed in this thesis.
 \section{Problem statement}
 \label{sec:ch1-problem-statement}
 
+Retrieval-Augmented Generation (RAG) improves the ability of Large Language
+Models (LLMs) to answer knowledge-intensive questions by providing information
+retrieved from an external corpus. However, this paradigm becomes more
+challenging when a question requires several dependent pieces of evidence.
+In multi-hop question answering, the information needed to resolve one part of
+a question may depend on the result of an earlier reasoning step, and some
+supporting passages may have only a weak lexical or semantic relation to the
+original question.
+
+A second difficulty is that multi-hop questions do not all require the same
+amount of reasoning or retrieval. Applying the same computational strategy to
+every question may therefore be inefficient: simple questions may receive
+unnecessary processing, while more compositional questions may require
+additional reasoning or decomposition before their evidence can be retrieved
+effectively. This raises the question of whether the difficulty of a question
+can be anticipated before answer generation and used as a signal for adaptive
+processing.
+
+Question decomposition provides one possible response to difficult
+compositional questions. By converting a complex question into simpler
+subquestions, it makes intermediate information needs explicit and can provide
+more focused retrieval queries. Nevertheless, generating a decomposition does
+not guarantee that the resulting subquestions retrieve all of the evidence
+required by the original question. Moreover, final-answer accuracy alone does
+not reveal whether a failure originated from missing evidence, an inappropriate
+decomposition, an incorrect intermediate answer, or the final reader.
+
+The project therefore addresses two complementary problems. The first concerns
+the input question itself: whether compositional difficulty is already reflected
+in the internal representations of an LLM before it generates an answer. The
+second concerns the processing of a question once decomposition is used: how to
+evaluate whether its subquestions expose the required evidence, and how to
+improve the decomposition and allocation of retrieval resources accordingly.
+
+These two directions define the central problem of this thesis: making
+multi-hop question answering more adaptive and evidence-aware by identifying
+signals of compositional demand and by evaluating and improving the retrieval
+behaviour induced by question decomposition.
 
 
 
@@ -133,17 +170,106 @@ formulation of the main research problem addressed in this thesis.
 \label{sec:ch1-objectives}
 
 
+The general objective of the internship was to investigate how multi-hop
+question answering systems can better adapt their retrieval and reasoning
+behaviour to the compositional requirements of a question. The work was divided
+into three main objectives.
+
+\begin{enumerate}
+    \item \textbf{Investigate compositional difficulty in LLM
+    representations.}
+    Study whether the internal representations produced while an LLM reads a
+    question contain a linearly decodable signal associated with
+    benchmark-defined compositional difficulty, and evaluate the robustness of
+    this signal across models, benchmarks, and validation controls.
+
+    \item \textbf{Develop an evidence-aware evaluation framework for question
+    decomposition.}
+    Design measurements that distinguish final-answer correctness from
+    retrieval success, quantify how deeply supporting evidence must be
+    retrieved, and estimate which subquestions are responsible for retrieving
+    which supporting passages.
+
+    \item \textbf{Study mechanisms for improving decomposition and retrieval
+    allocation.}
+    Use the resulting retrieval-oriented measurements to investigate automated
+    decomposition-instruction search and the allocation of a limited passage
+    budget across the subquestions of a generated decomposition.
+\end{enumerate}
+
+The expected deliverables therefore included an experimental pipeline for
+probing question representations, an evidence-aware framework for analysing
+multi-hop decompositions, an implementation of evidence-ownership estimation,
+experiments on automated prompt search and passage allocation, and a documented
+analysis of their limitations and possible extensions.
+
+The research conducted during the internship also led to scientific
+dissemination through conference work related to the questions investigated in
+this thesis. In particular, the compositional-difficulty probing study presented
+in Chapter~3 was accepted for publication, and the corresponding experimental
+pipeline and analysis form one of the principal research outputs of the
+internship.
+
 \section{Working methodology}
 \label{sec:ch1-methodology}
-% TODO (before submission): list the internship's outputs here, with one line
-% each, and state which ones this report develops and which are only
-% referenced. This is where the Trust Layer survey belongs -- it was
-% deliberately removed from Chapter 2, where nothing depended on it. Its bib
-% entry `heidari2026trustlayer` is still in references.bib and is currently
-% uncited, so it does not appear in the bibliography until it is cited here.
+
+The internship followed an iterative research methodology in which literature
+analysis, experimental implementation, evaluation, and refinement informed one
+another. Rather than starting from a fixed end-to-end architecture, the work
+progressively identified and studied several components required for adaptive
+multi-hop question answering.
+
+The first stage consisted of a review of retrieval-augmented generation,
+reliability and uncertainty in RAG systems, adaptive computation, multi-hop
+reasoning, and question decomposition. This phase helped identify the distinction
+between signals that describe the reliability of an answer and signals that
+describe the structural difficulty of the input question. It motivated the
+first experimental direction of the internship: probing LLM representations for
+compositional difficulty.
+
+The second stage focused on representation analysis. Hidden states were
+extracted from frozen language models for questions of different
+benchmark-defined difficulty levels. Simple linear probes and several validation
+controls were then used to determine whether difficulty-related information was
+decodable before answer generation. The resulting study is presented in
+Chapter~3.
+
+The third stage moved from anticipating difficulty to the execution of
+decomposition. A sequential multi-hop retrieval pipeline was implemented and
+analysed on benchmark questions with annotated supporting evidence. This phase
+led to the development of retrieval-depth and evidence-coverage measurements,
+together with an evidence-ownership estimator for analysing which subquestions
+are associated with which supporting passages. These methods and their
+validation form Chapter~4.
+
+The final stage investigated how the measurements developed in the preceding
+stage could be made actionable. Automated search over decomposition
+instructions was evaluated using a retrieval-oriented objective, and learned
+allocation policies were developed to distribute a fixed passage budget among
+the subquestions of a decomposition. Additional work designed a structured
+evidence-feedback interface for future reflective prompt optimisation. The
+completed optimisation and allocation experiments, together with this
+prospective extension, are presented in Chapter~5.
+
+Throughout the project, experiments were implemented and evaluated
+incrementally. Intermediate results were used to refine the research questions,
+identify additional controls, and distinguish completed empirical findings from
+proposed extensions. This iterative methodology allowed the project to evolve
+from the analysis of a potential adaptive signal to the evaluation and
+optimisation of the retrieval process used after decomposition.
 
 
 \section*{Conclusion}
 \phantomsection
 \addcontentsline{toc}{section}{Conclusion}
+
+
+This chapter presented the institutional and scientific context of the
+internship, the research problem addressed, and the objectives and methodology
+that structured the work. The project focuses on adaptive multi-hop question
+answering from two complementary perspectives: anticipating compositional
+difficulty before answering and improving evidence retrieval once question
+decomposition is used. The next chapter reviews the background and related work
+needed to position these two directions and the experimental contributions that
+follow.
 
