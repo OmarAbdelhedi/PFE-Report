@@ -7,138 +7,138 @@
 \contentsline {chapter}{List of Abbreviations}{xii}{section*.12}%
 \vspace {1.2em}
 \contentsline {chapter}{General Introduction}{1}{section*.14}%
-\contentsline {chapter}{\numberline {1}General Presentation and Context of the Internship}{2}{chapter.1}%
-\contentsline {section}{Introduction}{2}{section*.15}%
-\contentsline {section}{\numberline {1.1}Host organisation}{2}{section.1.1}%
-\contentsline {subsection}{\numberline {1.1.1}Concordia University}{3}{subsection.1.1.1}%
-\contentsline {subsection}{\numberline {1.1.2}Gina Cody School of Engineering and Computer Science}{3}{subsection.1.1.2}%
-\contentsline {subsection}{\numberline {1.1.3}Research group, supervision, and research axes}{4}{subsection.1.1.3}%
-\contentsline {section}{\numberline {1.2}Problem statement}{5}{section.1.2}%
-\contentsline {section}{\numberline {1.3}Objectives and expected deliverables}{5}{section.1.3}%
-\contentsline {section}{\numberline {1.4}Working methodology}{6}{section.1.4}%
-\contentsline {section}{Conclusion}{7}{section*.18}%
-\contentsline {chapter}{\numberline {2}Background and State of the Art}{8}{chapter.2}%
-\contentsline {section}{Introduction}{8}{section*.19}%
-\contentsline {section}{\numberline {2.1}Multi-Hop Question Answering and Retrieval-Augmented Generation}{8}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}Retrieval-Augmented Generation}{8}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}Multi-Hop Question Answering}{9}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}Multi-Hop Question Answering Benchmarks}{9}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Evidence and Supporting Passages}{10}{subsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.1.5}Evidence Coverage and Retrieval Depth}{11}{subsection.2.1.5}%
-\contentsline {section}{\numberline {2.2}Retrieval for Multi-Hop Reasoning}{12}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Sparse Retrieval}{12}{subsection.2.2.1}%
-\contentsline {subsection}{\numberline {2.2.2}Dense Retrieval}{13}{subsection.2.2.2}%
-\contentsline {subsection}{\numberline {2.2.3}Late-Interaction Retrieval and Reranking}{13}{subsection.2.2.3}%
-\contentsline {subsection}{\numberline {2.2.4}Iterative and Multi-Hop Retrieval}{13}{subsection.2.2.4}%
-\contentsline {subsection}{\numberline {2.2.5}Graph-Based Retrieval for Multi-Hop Reasoning}{14}{subsection.2.2.5}%
-\contentsline {section}{\numberline {2.3}Difficulty-Aware and Adaptive Computation}{14}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Probing Internal Representations of Language Models}{16}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Linear Probing and Representation Analysis}{16}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Latent Properties in LLM Representations}{17}{subsection.2.4.2}%
-\contentsline {section}{\numberline {2.5}Question Decomposition for Multi-Hop Reasoning}{17}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}Why Decomposition Helps Multi-Hop Reasoning}{17}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}Earlier Question-Decomposition Approaches}{18}{subsection.2.5.2}%
-\contentsline {subsection}{\numberline {2.5.3}LLM-Based Decomposition}{18}{subsection.2.5.3}%
-\contentsline {section}{\numberline {2.6}Automated Prompt Optimisation for Language Model Programs}{19}{section.2.6}%
-\contentsline {section}{\numberline {2.7}Research Gap and Thesis Positioning}{20}{section.2.7}%
-\contentsline {subsection}{\numberline {2.7.1}Anticipating Compositional Difficulty}{20}{subsection.2.7.1}%
-\contentsline {subsection}{\numberline {2.7.2}Optimising Decomposition for Retrieval Efficiency}{20}{subsection.2.7.2}%
-\contentsline {section}{Conclusion}{21}{section*.23}%
-\contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{22}{chapter.3}%
-\contentsline {section}{Introduction}{22}{section*.24}%
-\contentsline {section}{\numberline {3.1}Research Question and Problem Formulation}{22}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Methodology}{23}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Hidden-State Extraction and Question Representation}{23}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Linear Probe and Layer-Wise Evaluation}{24}{subsection.3.2.2}%
-\contentsline {subsection}{\numberline {3.2.3}Label-Permutation Null}{25}{subsection.3.2.3}%
-\contentsline {subsection}{\numberline {3.2.4}Surface-Feature Control and Residualisation}{25}{subsection.3.2.4}%
-\contentsline {subsection}{\numberline {3.2.5}Ordinality Test}{26}{subsection.3.2.5}%
-\contentsline {subsection}{\numberline {3.2.6}Cross-Dataset Transfer}{26}{subsection.3.2.6}%
-\contentsline {section}{\numberline {3.3}Experimental Setup}{27}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Language Models}{27}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Benchmarks and Difficulty Labels}{27}{subsection.3.3.2}%
-\contentsline {subsection}{\numberline {3.3.3}Evaluation Configuration}{27}{subsection.3.3.3}%
-\contentsline {section}{\numberline {3.4}Results}{27}{section.3.4}%
-\contentsline {subsection}{\numberline {3.4.1}Layer-Wise Decodability of Compositional Difficulty}{27}{subsection.3.4.1}%
-\contentsline {subsection}{\numberline {3.4.2}Robustness Beyond Surface Features}{28}{subsection.3.4.2}%
-\contentsline {subsection}{\numberline {3.4.3}Ordinal Structure of the Difficulty Direction}{30}{subsection.3.4.3}%
-\contentsline {subsection}{\numberline {3.4.4}Cross-Dataset Transfer of the Residualised Difficulty Direction}{31}{subsection.3.4.4}%
-\contentsline {section}{\numberline {3.5}Discussion and Limitations}{32}{section.3.5}%
-\contentsline {subsection}{\numberline {3.5.1}Interpretation and Implications for Adaptive Computation}{32}{subsection.3.5.1}%
-\contentsline {subsection}{\numberline {3.5.2}Limitations and Future Directions}{33}{subsection.3.5.2}%
-\contentsline {paragraph}{Difficulty is partly surface form.}{33}{paragraph*.33}%
-\contentsline {paragraph}{Benchmark labels are heterogeneous proxies.}{33}{paragraph*.34}%
-\contentsline {paragraph}{The evidence is correlational.}{33}{paragraph*.35}%
-\contentsline {paragraph}{The empirical scope is narrow.}{33}{paragraph*.36}%
-\contentsline {section}{Conclusion}{34}{section*.37}%
-\contentsline {chapter}{\numberline {4}Evidence-Aware Evaluation of Question Decomposition}{35}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Problem Formulation}{35}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}Sequential Execution of a Decomposition}{35}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Evaluation Requirements}{36}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}Evidence-Aware Retrieval Measurements}{36}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Evidence Ranks and Union Depth}{36}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Ownership-Masked Depth}{37}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Complete Coverage and the Depth Score}{38}{subsection.4.2.3}%
-\contentsline {section}{\numberline {4.3}Learning Evidence Ownership}{39}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Training Data and Reference Assignments}{39}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Features for Ownership Prediction}{39}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Training, Threshold Selection, and Ensemble Prediction}{40}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Experimental Protocol}{40}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Evaluation Questions, Systems, and Execution Settings}{40}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Compared Configurations and Evaluation Procedure}{40}{subsection.4.4.2}%
-\contentsline {paragraph}{Measurements and comparisons.}{41}{paragraph*.39}%
-\contentsline {section}{\numberline {4.5}Ownership Validation and Decomposition Results}{42}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Ownership Prediction Accuracy}{42}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Sensitivity to Ownership Predictions}{43}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}Decomposition versus Direct Retrieval}{44}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}The Effect of Intermediate Answers}{44}{subsection.4.5.4}%
-\contentsline {paragraph}{Reference and generated queries with BM25.}{45}{paragraph*.45}%
-\contentsline {section}{\numberline {4.6}Evidence Coverage Under a Passage Budget}{45}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Passage-Slot Accounting and Balanced Allocation}{46}{subsection.4.6.1}%
-\contentsline {subsection}{\numberline {4.6.2}Oracle Allocation on Recorded Lists}{46}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Allocation Results on the MuSiQue Panel}{47}{subsection.4.6.3}%
-\contentsline {subsection}{\numberline {4.6.4}Cross-Benchmark BM25 Evaluation}{48}{subsection.4.6.4}%
-\contentsline {paragraph}{Evaluation population and trace generation.}{48}{paragraph*.48}%
-\contentsline {paragraph}{Coverage at a matched budget.}{48}{paragraph*.49}%
-\contentsline {paragraph}{Budgets needed for target coverage.}{49}{paragraph*.51}%
-\contentsline {section}{\numberline {4.7}Discussion and Implications for Optimisation}{49}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Contributions and Implications}{49}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Scope and Limitations}{49}{subsection.4.7.2}%
-\contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{51}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Optimisation Framework}{51}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}The Instruction as an Optimisation Variable}{52}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}The Retrieval Objective}{53}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Answer Quality and Resource Use}{53}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2}Automated Search over Decomposition Instructions}{53}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{54}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Search Procedure and Feedback}{54}{subsection.5.2.2}%
-\contentsline {paragraph}{Examples supplied to the optimiser.}{55}{paragraph*.54}%
-\contentsline {subsection}{\numberline {5.2.3}Progress Across Search Rounds}{55}{subsection.5.2.3}%
-\contentsline {subsection}{\numberline {5.2.4}Retrieval, Answers, and Cost of the Selected Instruction}{55}{subsection.5.2.4}%
-\contentsline {subsection}{\numberline {5.2.5}Choosing between Retrieval and Answer Objectives}{56}{subsection.5.2.5}%
-\contentsline {section}{\numberline {5.3}Learning to Allocate Retrieved Passages}{57}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Allocation Setting and Comparators}{57}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Predicting Per-Arm Depth Targets from Recorded Rankings}{57}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}Segment and Unit-Increment Allocation}{58}{subsection.5.3.3}%
-\contentsline {subsection}{\numberline {5.3.4}Evaluation Population and Cross-Validation}{59}{subsection.5.3.4}%
-\contentsline {subsection}{\numberline {5.3.5}Evidence Coverage and Required Budgets}{60}{subsection.5.3.5}%
-\contentsline {subsection}{\numberline {5.3.6}Paired Final-Answer Evaluation}{61}{subsection.5.3.6}%
-\contentsline {section}{\numberline {5.4}Evidence-Aware Feedback: Design and Diagnostic Validation}{62}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Separating Reward from Diagnostic Information}{62}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Observed Events and Estimated Assignments}{62}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Ownership Diagnostics under Controlled Plan Changes}{63}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}Reflective Search with a Fixed Execution Interface}{64}{subsection.5.4.4}%
-\contentsline {subsection}{\numberline {5.4.5}Proposed Evaluation of Feedback Quality}{65}{subsection.5.4.5}%
-\contentsline {section}{\numberline {5.5}Discussion and Implications}{65}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{65}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{66}{subsection.5.5.2}%
-\contentsline {chapter}{Conclusion and outlook}{67}{section*.64}%
-\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{68}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{68}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{69}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{69}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{70}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{70}{subsection.A.2.3}%
-\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{71}{subsection.A.2.4}%
-\contentsline {chapter}{Bibliography}{72}{section*.67}%
-\contentsline {chapter}{Netography}{76}{section*.69}%
+\contentsline {chapter}{\numberline {1}General Presentation and Context of the Internship}{3}{chapter.1}%
+\contentsline {section}{Introduction}{3}{section*.15}%
+\contentsline {section}{\numberline {1.1}Host organisation}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Concordia University}{4}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Gina Cody School of Engineering and Computer Science}{4}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Research group, supervision, and research axes}{5}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}Problem statement}{6}{section.1.2}%
+\contentsline {section}{\numberline {1.3}Objectives and expected deliverables}{6}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Working methodology}{7}{section.1.4}%
+\contentsline {section}{Conclusion}{8}{section*.18}%
+\contentsline {chapter}{\numberline {2}Background and State of the Art}{9}{chapter.2}%
+\contentsline {section}{Introduction}{9}{section*.19}%
+\contentsline {section}{\numberline {2.1}Multi-Hop Question Answering and Retrieval-Augmented Generation}{9}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}Retrieval-Augmented Generation}{9}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}Multi-Hop Question Answering}{10}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}Multi-Hop Question Answering Benchmarks}{10}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Evidence and Supporting Passages}{11}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}Evidence Coverage and Retrieval Depth}{12}{subsection.2.1.5}%
+\contentsline {section}{\numberline {2.2}Retrieval for Multi-Hop Reasoning}{13}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Sparse Retrieval}{13}{subsection.2.2.1}%
+\contentsline {subsection}{\numberline {2.2.2}Dense Retrieval}{14}{subsection.2.2.2}%
+\contentsline {subsection}{\numberline {2.2.3}Late-Interaction Retrieval and Reranking}{14}{subsection.2.2.3}%
+\contentsline {subsection}{\numberline {2.2.4}Iterative and Multi-Hop Retrieval}{14}{subsection.2.2.4}%
+\contentsline {subsection}{\numberline {2.2.5}Graph-Based Retrieval for Multi-Hop Reasoning}{15}{subsection.2.2.5}%
+\contentsline {section}{\numberline {2.3}Difficulty-Aware and Adaptive Computation}{15}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Probing Internal Representations of Language Models}{17}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Linear Probing and Representation Analysis}{17}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Latent Properties in LLM Representations}{18}{subsection.2.4.2}%
+\contentsline {section}{\numberline {2.5}Question Decomposition for Multi-Hop Reasoning}{18}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Why Decomposition Helps Multi-Hop Reasoning}{18}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Earlier Question-Decomposition Approaches}{19}{subsection.2.5.2}%
+\contentsline {subsection}{\numberline {2.5.3}LLM-Based Decomposition}{19}{subsection.2.5.3}%
+\contentsline {section}{\numberline {2.6}Automated Prompt Optimisation for Language Model Programs}{20}{section.2.6}%
+\contentsline {section}{\numberline {2.7}Research Gap and Thesis Positioning}{21}{section.2.7}%
+\contentsline {subsection}{\numberline {2.7.1}Anticipating Compositional Difficulty}{21}{subsection.2.7.1}%
+\contentsline {subsection}{\numberline {2.7.2}Optimising Decomposition for Retrieval Efficiency}{21}{subsection.2.7.2}%
+\contentsline {section}{Conclusion}{22}{section*.23}%
+\contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{23}{chapter.3}%
+\contentsline {section}{Introduction}{23}{section*.24}%
+\contentsline {section}{\numberline {3.1}Research Question and Problem Formulation}{23}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Methodology}{24}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Hidden-State Extraction and Question Representation}{24}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Linear Probe and Layer-Wise Evaluation}{25}{subsection.3.2.2}%
+\contentsline {subsection}{\numberline {3.2.3}Label-Permutation Null}{26}{subsection.3.2.3}%
+\contentsline {subsection}{\numberline {3.2.4}Surface-Feature Control and Residualisation}{26}{subsection.3.2.4}%
+\contentsline {subsection}{\numberline {3.2.5}Ordinality Test}{27}{subsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.2.6}Cross-Dataset Transfer}{27}{subsection.3.2.6}%
+\contentsline {section}{\numberline {3.3}Experimental Setup}{28}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Language Models}{28}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Benchmarks and Difficulty Labels}{28}{subsection.3.3.2}%
+\contentsline {subsection}{\numberline {3.3.3}Evaluation Configuration}{28}{subsection.3.3.3}%
+\contentsline {section}{\numberline {3.4}Results}{28}{section.3.4}%
+\contentsline {subsection}{\numberline {3.4.1}Layer-Wise Decodability of Compositional Difficulty}{28}{subsection.3.4.1}%
+\contentsline {subsection}{\numberline {3.4.2}Robustness Beyond Surface Features}{29}{subsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.4.3}Ordinal Structure of the Difficulty Direction}{31}{subsection.3.4.3}%
+\contentsline {subsection}{\numberline {3.4.4}Cross-Dataset Transfer of the Residualised Difficulty Direction}{32}{subsection.3.4.4}%
+\contentsline {section}{\numberline {3.5}Discussion and Limitations}{33}{section.3.5}%
+\contentsline {subsection}{\numberline {3.5.1}Interpretation and Implications for Adaptive Computation}{33}{subsection.3.5.1}%
+\contentsline {subsection}{\numberline {3.5.2}Limitations and Future Directions}{34}{subsection.3.5.2}%
+\contentsline {paragraph}{Difficulty is partly surface form.}{34}{paragraph*.33}%
+\contentsline {paragraph}{Benchmark labels are heterogeneous proxies.}{34}{paragraph*.34}%
+\contentsline {paragraph}{The evidence is correlational.}{34}{paragraph*.35}%
+\contentsline {paragraph}{The empirical scope is narrow.}{34}{paragraph*.36}%
+\contentsline {section}{Conclusion}{35}{section*.37}%
+\contentsline {chapter}{\numberline {4}Evidence-Aware Evaluation of Question Decomposition}{36}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Problem Formulation}{36}{section.4.1}%
+\contentsline {subsection}{\numberline {4.1.1}Sequential Execution of a Decomposition}{36}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Evaluation Requirements}{37}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Evidence-Aware Retrieval Measurements}{37}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Evidence Ranks and Union Depth}{37}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Ownership-Masked Depth}{38}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Complete Coverage and the Depth Score}{39}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Learning Evidence Ownership}{40}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Training Data and Reference Assignments}{40}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Features for Ownership Prediction}{40}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Training, Threshold Selection, and Ensemble Prediction}{41}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Experimental Protocol}{41}{section.4.4}%
+\contentsline {subsection}{\numberline {4.4.1}Evaluation Questions, Systems, and Execution Settings}{41}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Compared Configurations and Evaluation Procedure}{41}{subsection.4.4.2}%
+\contentsline {paragraph}{Measurements and comparisons.}{42}{paragraph*.39}%
+\contentsline {section}{\numberline {4.5}Ownership Validation and Decomposition Results}{43}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Ownership Prediction Accuracy}{43}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Sensitivity to Ownership Predictions}{44}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Decomposition versus Direct Retrieval}{45}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}The Effect of Intermediate Answers}{45}{subsection.4.5.4}%
+\contentsline {paragraph}{Reference and generated queries with BM25.}{46}{paragraph*.45}%
+\contentsline {section}{\numberline {4.6}Evidence Coverage Under a Passage Budget}{46}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Passage-Slot Accounting and Balanced Allocation}{47}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Oracle Allocation on Recorded Lists}{47}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Allocation Results on the MuSiQue Panel}{48}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Cross-Benchmark BM25 Evaluation}{49}{subsection.4.6.4}%
+\contentsline {paragraph}{Evaluation population and trace generation.}{49}{paragraph*.48}%
+\contentsline {paragraph}{Coverage at a matched budget.}{49}{paragraph*.49}%
+\contentsline {paragraph}{Budgets needed for target coverage.}{50}{paragraph*.51}%
+\contentsline {section}{\numberline {4.7}Discussion and Implications for Optimisation}{50}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Contributions and Implications}{50}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Scope and Limitations}{50}{subsection.4.7.2}%
+\contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{52}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Optimisation Framework}{52}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}The Instruction as an Optimisation Variable}{53}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}The Retrieval Objective}{54}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Answer Quality and Resource Use}{54}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.2}Automated Search over Decomposition Instructions}{54}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{55}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Search Procedure and Feedback}{55}{subsection.5.2.2}%
+\contentsline {paragraph}{Examples supplied to the optimiser.}{56}{paragraph*.54}%
+\contentsline {subsection}{\numberline {5.2.3}Progress Across Search Rounds}{56}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}Retrieval, Answers, and Cost of the Selected Instruction}{56}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Choosing between Retrieval and Answer Objectives}{57}{subsection.5.2.5}%
+\contentsline {section}{\numberline {5.3}Learning to Allocate Retrieved Passages}{58}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Allocation Setting and Comparators}{58}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Predicting Per-Arm Depth Targets from Recorded Rankings}{58}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Segment and Unit-Increment Allocation}{59}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Evaluation Population and Cross-Validation}{60}{subsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.3.5}Evidence Coverage and Required Budgets}{61}{subsection.5.3.5}%
+\contentsline {subsection}{\numberline {5.3.6}Paired Final-Answer Evaluation}{62}{subsection.5.3.6}%
+\contentsline {section}{\numberline {5.4}Evidence-Aware Feedback: Design and Diagnostic Validation}{63}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Separating Reward from Diagnostic Information}{63}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Observed Events and Estimated Assignments}{63}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Ownership Diagnostics under Controlled Plan Changes}{64}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Reflective Search with a Fixed Execution Interface}{65}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Proposed Evaluation of Feedback Quality}{66}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Discussion and Implications}{66}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{66}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{67}{subsection.5.5.2}%
+\contentsline {chapter}{Conclusion and outlook}{68}{section*.64}%
+\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{69}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{69}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{70}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{70}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{71}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{71}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{72}{subsection.A.2.4}%
+\contentsline {chapter}{Bibliography}{73}{section*.67}%
+\contentsline {chapter}{Netography}{77}{section*.69}%

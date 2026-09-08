@@ -5,3 +5,115 @@
 \markboth{General Introduction}{General Introduction}
 \label{chap:introduction}
 
+Large Language Models (LLMs) have demonstrated strong capabilities across a
+wide range of natural-language tasks. However, their answers remain constrained
+by the knowledge encoded in their parameters and by the information available
+in their input context. Retrieval-Augmented Generation (RAG) addresses this
+limitation by complementing the language model with information retrieved from
+an external corpus. This paradigm is particularly relevant to
+knowledge-intensive question answering, where producing a correct answer
+depends not only on the reasoning capabilities of the model, but also on whether
+the necessary evidence is successfully retrieved and made available to it.
+
+This dependence becomes more challenging in multi-hop question answering.
+Unlike a direct factual question, a multi-hop question requires several
+dependent pieces of information to be identified and combined. Some supporting
+evidence may have only a weak lexical or semantic relation to the original
+question, while information recovered at one reasoning step may be needed to
+formulate the next information need. As a result, a retrieval system operating
+only on the original question may fail to expose all of the evidence required
+for the complete reasoning chain.
+
+Multi-hop questions also differ substantially in their compositional demands.
+Some can be resolved through relatively limited reasoning, whereas others
+require several dependent operations and additional retrieval steps. Applying
+the same processing strategy to every input may therefore be inefficient:
+simple questions may receive unnecessary computation, while more compositional
+questions may require additional reasoning or retrieval mechanisms. This
+motivates adaptive approaches in which the processing strategy can depend on
+the demands of the question.
+
+One possible mechanism for handling compositional questions is question
+decomposition. Instead of processing the original question as a single
+information need, decomposition transforms it into a sequence of simpler
+subquestions whose intermediate answers support later steps. These focused
+subquestions can expose information needs that were implicit in the original
+formulation and can therefore provide more targeted retrieval queries.
+Nevertheless, generating a plausible decomposition does not guarantee that it
+is useful for retrieval. A decomposition may omit an information need, retrieve
+the required evidence only at large depths, or propagate an incorrect
+intermediate answer to subsequent subquestions. Final-answer accuracy alone
+does not reveal which of these events occurred.
+
+This thesis studies adaptive multi-hop question answering from two
+complementary perspectives. First, it investigates whether the compositional
+difficulty of a question is reflected in the internal representations of an LLM
+before answer generation, providing a potential signal about the amount of
+processing the question may require. Then, once decomposition is selected as a
+strategy for handling a compositional question, the thesis focuses on the
+resulting retrieval process: how the generated subquestions can be evaluated
+according to the evidence they retrieve, how decomposition quality can be
+improved, and how a limited retrieval budget can be distributed more
+effectively across the subquestions.
+
+Following this progression, the work presented in this thesis makes three main
+contributions:
+
+\begin{enumerate}
+
+    \item \textbf{Analysis of compositional difficulty in LLM
+    representations.}
+    The thesis investigates whether benchmark-defined compositional difficulty
+    is linearly decodable from the hidden representations produced while a
+    language model processes a question. The analysis is conducted across
+    several language models and multi-hop question-answering benchmarks, and is
+    complemented by controls involving label permutation, surface features,
+    ordinal structure, and cross-dataset transfer.
+
+    \item \textbf{Evidence-aware evaluation of question decomposition.}
+    The thesis develops a retrieval-oriented framework for evaluating generated
+    decompositions independently of final-answer correctness. The framework
+    measures whether the annotated supporting evidence is retrieved, how deeply
+    it appears in the resulting rankings, and how supporting passages can be
+    associated with the subquestions responsible for retrieving them. This
+    enables retrieval failures, decomposition behaviour, and answer-generation
+    failures to be analysed separately.
+
+    \item \textbf{Optimisation of decomposition and retrieval allocation.}
+    The retrieval-oriented measurements are then used to study automated search
+    over decomposition instructions and the allocation of a fixed passage
+    budget across generated subquestions. The thesis further develops a
+    structured evidence-feedback representation that organises retrieval,
+    ownership, and intermediate-answer information for reflective prompt
+    optimisation.
+    
+\end{enumerate}
+
+Together, these contributions approach multi-hop question answering from both
+the question and retrieval sides. The representation study examines whether
+the model exposes information about compositional demand before answering,
+while the decomposition studies examine how additional retrieval and reasoning
+can be organised once decomposition is used. The resulting perspective treats
+adaptation not only as the choice of whether additional processing may be
+needed, but also as the problem of ensuring that this processing exposes the
+required evidence efficiently.
+
+The remainder of this report is organised as follows. Chapter~1 presents the
+institutional and research context of the internship, together with the problem
+statement, objectives, expected deliverables, and working methodology.
+Chapter~2 reviews the background and state of the art in
+retrieval-augmented generation, multi-hop question answering, retrieval
+methods, adaptive computation, probing of internal representations, question
+decomposition, and automated prompt optimisation.
+
+Chapter~3 investigates whether compositional difficulty can be identified from
+LLM representations before answer generation. Building on the need for
+additional processing in compositional questions, Chapter~4 considers the case
+in which question decomposition is used and develops an evidence-aware
+framework for evaluating the retrieval behaviour of the resulting subquestions.
+Chapter~5 then investigates how this behaviour can be improved through
+automated decomposition-instruction search and learned passage allocation, and
+presents a structured evidence-feedback interface for subsequent reflective
+optimisation. Finally, the general conclusion summarises the main findings,
+discusses the limitations of the work, and outlines directions for future
+research.
