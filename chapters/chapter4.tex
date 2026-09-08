@@ -336,9 +336,11 @@ configurations. Its two language-model settings use GPT-4o-mini and
 Llama-3.3-70B-Instruct respectively for decomposition and reading. Retrieval
 uses HippoRAG~2 with NV-Embed-v2 embeddings and the model-specific graph and
 reranking configuration. HippoRAG~2 combines passage information with graph
-retrieval based on personalised PageRank \cite{gutierrez2025hipporag2}. Each reader call
-receives five passages; the retained rankings extend to $200$ passages for
-depth analysis.
+retrieval based on personalised PageRank \cite{gutierrez2025hipporag2}. Retrieval runs
+over the full MuSiQue passage corpus of $11\,656$ passages rather than
+per-question candidate sets.
+Each reader call receives five passages; the retained rankings extend to $200$
+passages for depth analysis.
 
 Three generated-decomposition prompts are compared with direct full-question
 retrieval. The baseline decomposition prompt serves as the reference generated
@@ -822,96 +824,147 @@ for the decisions and intermediate answers needed to obtain the lists.
 
 \subsection{Retrieval Regime and Evaluation Population}
 
-Section~\ref{sec:ch4-budget} measured allocation headroom with one retriever on
-one panel. This section tests whether that result depends on those choices.
-A complementary BM25 study applies the passage-slot accounting to MuSiQue,
-2WikiMultiHopQA~\cite{ho2020constructing} and HotpotQA~\cite{yang2018hotpotqa}. It uses
-separate closed corpora containing $11\,656$, $10\,426$ and $9\,811$
-passages, respectively. Supporting passages are identified from each
-benchmark's annotations. The metric is complete annotated-evidence availability
-in the selected union; it requires the evidence set but no estimated ownership
-mask. The ownership measurement remains relevant when the question is which
-arm has the evidence needed for its own decision.
+Section~\ref{sec:ch4-budget} examined allocation headroom on
+$100$ MuSiQue questions using HippoRAG~2 with NV-Embed-v2.
+For each retrieval call, the system searched the full corpus of
+$11\,656$ passages, supplied the top five passages to the reader,
+and saved the top $200$ for subsequent analysis. This section
+extends the fixed-list analysis to larger question panels and
+three benchmarks using BM25, to examine whether allocation
+headroom also appears under a different retrieval method and
+across datasets.
 
-Each source panel contains $1\,000$ questions. Trace generation was run to the
-compute budget available for this study, retaining $824$ MuSiQue, $977$ 2Wiki
-and $996$ HotpotQA questions. All comparisons, including the full-question
-control, use those retained IDs, so coverage is conditional on obtaining a
-trace rather than a success rate over the full intake. Retention follows
-execution order and per-question cost, not any retrieval or answer outcome. The source
-panels also have historical project exposure, so these results are
-development evidence separate from the frozen comparison in Chapter~5.
+The BM25 study uses separate closed corpora containing
+$11\,656$ passages for MuSiQue, $10\,426$ for
+2WikiMultiHopQA~\cite{ho2020constructing}, and $9\,811$ for
+HotpotQA~\cite{yang2018hotpotqa}. The MuSiQue corpus is the same
+as in the earlier experiment; the number of evaluated questions
+increases. Each source panel contains $1\,000$ questions.
+Within the available compute budget, trace generation retained
+$824$ MuSiQue, $977$ 2WikiMultiHopQA, and $996$ HotpotQA
+questions. All comparisons, including full-question retrieval,
+use the same retained IDs within each benchmark. Reported
+coverage therefore applies to questions with retained traces,
+rather than the full source panels. Retention follows execution
+order and per-question cost, not retrieval or answer outcomes.
+These panels were also used during development, so the results
+constitute development evidence and are separate from the frozen
+comparison in Chapter~5.
 
-The sequential traces use generated subquestions. A GPT-4o-mini reader answers
-each arm from five BM25 passages, and those predicted answers resolve later
-references. Up to $200$ ranks per arm are saved for replay. This is a
-different retriever and execution implementation from the HippoRAG experiments
-above. Every allocation below acts on those saved lists. Its slot budget
-excludes the calls and contexts used to generate the intermediate answers.
+Trace generation follows the sequential execution procedure in
+Section~\ref{sec:ch4-protocol}. Each generated subquestion is
+submitted to BM25 over the full benchmark corpus. A GPT-4o-mini
+reader answers it using the top five passages, and the predicted
+answer is substituted into later subquestions that reference it.
+The top $200$ passages from each ranked list are saved for
+allocation replay. Thus, the five-passage reader context governs
+trace generation, while the longer saved lists support the
+subsequent depth analysis.
 
-Selected slots, unique pooled passages and reader tokens remain distinct.
-Two allocations with the same $\sum_a k_a$ can have different overlap between
-arms and hence different deduplicated context sizes. A subsequent reader over
-the pooled union is an additional policy; its answer quality must be measured
-separately from the coverage frontiers reported here.
+The evaluation measures complete annotated-evidence availability:
+whether the union of selected passages contains all supporting
+passages identified by the benchmark annotations. This measure
+requires no estimated ownership mask, because it assesses the
+pooled evidence rather than whether each arm retrieves the
+evidence needed for its own decision.
+
+All allocations replay the saved lists with their recorded
+queries held fixed. The replay budget counts selected passage
+slots and excludes the reader calls and contexts already used
+to generate intermediate answers. A passage selected by two
+arms counts as two slots but appears only once in the pooled
+set. Passage slots, distinct passages, and reader tokens are
+therefore different cost measures. Answering from the pooled
+set would require a separate reader evaluation; the coverage
+results alone do not establish answer quality or realised
+token savings.
 
 \subsection{Matched Passage-Slot Frontiers}
 
-Table~\ref{tab:ch4-bm25-availability} compares full-question retrieval,
-balanced allocation from Equation~\ref{eq:ch4-budget-allocation}, and the
-fixed-list oracle at $B=8$. The balanced allocation spends the integer
-remainder in execution order. The saved plans contain at most seven arms
-on MuSiQue and HotpotQA and six on 2Wiki, so this budget can allocate at
-least one slot to every arm.
+Table~\ref{tab:ch4-bm25-availability} compares three ways of
+selecting passages under the same per-question budget of $B=8$
+slots. Full-question retrieval selects the top eight passages
+from a single query. Balanced allocation divides the budget
+as evenly as possible among the generated subquestions, using
+Equation~\ref{eq:ch4-budget-allocation} and assigning any
+remaining slots in execution order. The fixed-list oracle uses
+gold evidence ranks to choose the prefix lengths that maximise
+complete evidence coverage within the same budget. The recorded
+plans contain at most seven arms on MuSiQue and HotpotQA and
+six on 2Wiki, so balanced allocation can give every arm at
+least one slot.
 
 \input{tables/ch4_bm25_availability}
 
-The oracle recovers $12.4$, $19.3$ and $7.4$ additional percentage points
-over balanced allocation on MuSiQue, 2Wiki and HotpotQA, respectively.
-These are opportunities within the existing rankings. They preserve the
-recorded queries and reveal how unequal evidence ranks constrain a balanced
-split. The gain from generating better queries is outside this oracle's
-policy class. The headroom measured in Section~\ref{sec:ch4-budget} therefore
-appears under a sparse retriever and on all three benchmarks, rather than only
-on the dense-retrieval MuSiQue panel.
+Balanced allocation achieves higher complete-evidence coverage
+than full-question retrieval on all three benchmarks, and the
+oracle improves coverage further. On MuSiQue, for example,
+coverage rises from $13.6\%$ with full-question retrieval to
+$41.3\%$ with balanced allocation and $53.6\%$ with the oracle.
+The gap between balanced and oracle allocation shows the
+opportunity to improve coverage by distributing the same
+passage budget unevenly across arms. Some lists require deeper
+prefixes to reach supporting evidence, while others can
+contribute their evidence with fewer slots. This allocation
+headroom therefore also appears with BM25 and across all three
+benchmarks.
 
-The subset dynamic program in Equation~\ref{eq:ch4-dynamic-program}
-independently reproduces the saved oracle coverage on all three retained
-panels at the checked budgets. For a fixed panel, its frontier is
+To examine how this opportunity changes with the budget, we
+apply the coverage aggregation in Equation~\ref{eq:ch4-coverage}
+to the minimum oracle budgets $B^*(q)$ defined in
+Equation~\ref{eq:ch4-oracle-budget}. The resulting oracle
+coverage frontier is
 \begin{equation}
-  C^*(B)=\frac{1}{n}\sum_{q=1}^{n}\mathbf{1}\{B^*(q)\leq B\}.
+  C^*(B)=\frac{1}{n}\sum_{q=1}^{n}
+  \mathbf{1}\{B^*(q)\leq B\}.
   \label{eq:ch4-oracle-frontier}
 \end{equation}
-Questions whose lists jointly miss a required passage remain uncovered for
-every allocation. Zero-depth arms are permitted by the oracle, with the
-cost of constructing their saved queries kept outside the objective.
+It gives the fraction of questions whose complete evidence
+can be recovered within $B$ slots under the best prefix
+allocation. The dynamic program in
+Equation~\ref{eq:ch4-dynamic-program} independently reproduces
+the saved oracle coverage on all three panels at the checked
+budgets. If a required passage is absent from every saved
+list, the question remains uncovered at every budget.
 
-A complementary reading fixes coverage and compares the first tested budget
-that reaches it. On the MuSiQue sequential panel, balanced allocation first
-reaches coverage $50\%$, $60\%$ and $70\%$ at $16$, $32$ and $128$ slots.
-The oracle reaches the same targets at $8$, $16$ and $48$ slots. These values
-are minima over the reported budget grid, rather than exact interpolated
-crossings. They quantify allocation headroom and do not constitute achieved
-token or runtime reductions.
+The same comparison can be read in terms of the budget needed
+to reach a coverage target. On the MuSiQue sequential panel,
+balanced allocation first reaches $50\%$, $60\%$, and $70\%$
+coverage at $16$, $32$, and $128$ slots, respectively. The
+oracle reaches these targets at $8$, $16$, and $48$ slots.
+These are the first tested budgets that meet each target,
+rather than exact minimum budgets over all possible values.
 
-Generated arm count also differs from benchmark reasoning depth. Mean arm
-counts are $2.53$, $2.79$ and $2.10$ on the retained MuSiQue, 2Wiki and
-HotpotQA panels. More arms create more allocation choices and can increase
-the cost of a common per-arm depth. They can also reflect redundant splitting
-or a prompt preference. An association between allocation headroom and arm
-count therefore concerns plan structure, rather than establishing that
-semantically harder questions obtain greater savings.
+These results measure allocation opportunities within fixed
+recorded rankings. The oracle may select zero passages from
+an arm, but the intermediate answers and dependent queries
+used to produce all lists remain available. Their generation
+cost is excluded from the replay budget. Consequently, the
+observed gaps do not establish achieved token or runtime
+savings, and improvements from generating different queries
+fall outside this comparison.
+
+Finally, allocation depends on the number of generated arms,
+whose means are $2.53$, $2.79$, and $2.10$ on MuSiQue, 2Wiki,
+and HotpotQA, respectively. More arms provide more allocation
+choices, but may also reflect redundant splitting or prompt
+preferences. Any association between arm count and allocation
+headroom therefore concerns the generated plan structure;
+it does not by itself show that harder questions offer
+greater savings.
 
 \subsection{Reference and Generated Query Regimes}
 
-The MuSiQue artifacts support three retrieval regimes. Reference plans use
-the benchmark decomposition and gold intermediate answers. Sequential plans
-use generated subquestions and the reader's predicted answers. Paraphrased
-queries replace a reference with a noun phrase derived from the referenced
-subquestion, without reading an intermediate answer. Table~\ref{tab:ch4-bm25-regimes}
-reports their balanced coverage at two total slot budgets.
+The previous subsection examined how passage allocation affects coverage
+within recorded retrieval lists. This subsection compares two ways of
+producing those lists on MuSiQue. The reference regime uses the benchmark
+decomposition and substitutes gold intermediate answers into dependent
+subquestions. The generated regime uses model-generated subquestions and
+the reader's predicted intermediate answers.
+Table~\ref{tab:ch4-bm25-regimes} reports complete-evidence coverage for both
+regimes under balanced allocation at total budgets of $8$ and $200$ slots.
 
-\begin{table}[tbp]
+\begin{table}[H]
 \centering
 \small
 \caption{MuSiQue BM25 retrieval regimes. Coverage (\%) is measured on each
@@ -924,92 +977,75 @@ Query regime & $n$ & $B=8$ & $B=200$ \\
 \hline
 Reference plan, gold bindings & $1\,000$ & $59.5$ & $96.2$ \\
 Generated plan, predicted bindings & $824$ & $41.3$ & $73.3$ \\
-Generated plan, paraphrased references & $824$ & $10.9$ & $39.7$ \\
 \hline
 \end{tabular}
 \end{table}
 
-The sequential and paraphrase archives contain the same $824$ question IDs
-and the same arm counts. Their different rankings show that the way
-intermediate references are turned into query text materially changes
-evidence availability. Reference plans provide a separate oracle-assisted
-comparison: they change both the source of the plan and its bindings, and
-their full reported panel has a different size. The three-row comparison
-therefore does not isolate a pure binding intervention. The controlled
-reference-chain comparison earlier in this chapter supplies the narrower
-evidence about predicted versus gold intermediate answers.
+The reference regime achieves higher coverage at both reported budgets,
+reaching $96.2\%$ at $B=200$, compared with $73.3\%$ for the generated
+regime. This provides an oracle-assisted point of comparison, but the gap
+cannot be attributed to intermediate-answer quality alone: the regimes
+also differ in their decompositions and evaluation populations, with
+$1\,000$ reference questions and $824$ retained generated traces.
+The earlier controlled reference-chain experiment provides the more
+direct comparison of predicted and gold intermediate answers by holding
+the reference decomposition fixed.
 
-The distinction also constrains interpretation of allocation. At $B=200$,
-the sequential fixed-list oracle covers $79.5\%$ of the retained MuSiQue
-questions, compared with balanced coverage $73.3\%$. Both results concern
-the selected prefixes of queries already produced with five passages per
-intermediate reader. A changed operational budget can alter those answers
-and later rankings, which requires re-execution to evaluate.
+Allocation can improve coverage within the generated regime, but only
+using evidence present in its saved lists. At $B=200$, the fixed-list
+oracle reaches $79.5\%$ coverage, compared with $73.3\%$ under balanced
+allocation. Both values use queries already produced with five passages
+per intermediate reader call. Changing the contexts during execution
+could change the intermediate answers and subsequent queries, so its
+effect on coverage would require generating and evaluating new traces.
 
 \section{Discussion and Implications for Optimisation}
 \label{sec:ch4-discussion}
 
-The evaluation decomposes a retrieval plan into measurable obligations. Union
-depth measures pooled evidence availability. The ownership mask localises that
-evidence to the subquestion expected to use it. Answer metrics then measure the
-outcome of executing the sequence. These distinctions prevent a shallow union
-from being interpreted as a fully supported reasoning chain and prevent a
-masked-depth change caused by attribution from being attributed to improved
-retrieval.
+Optimising decomposition requires distinguishing evidence availability,
+assignment, and answer accuracy. Union depth measures whether supporting
+passages appear somewhere in the retrieved lists; ownership-masked depth
+measures whether each subquestion retrieves its assigned evidence. Neither
+alone guarantees a correct answer. The gold-answer intervention also shows
+that intermediate answers affect later retrieval and final accuracy, so
+retrieval gains must be assessed alongside the outcome of execution.
 
-The ownership study provides a working measurement model. It recovers the
-reference assignment on $92$ of $100$ complete reference-style masks while retaining
-high cell recall and precision. Its empirical scope is reference-style arms
-with known supporting passages. Generated plans can change the semantic
-structure through fusion, splitting, omission or incorrect dependency
-substitution. Chapter~5 evaluates controlled transformations of reference plans
-to measure sensitivity to several of these changes. Transfer to naturally
-generated plans requires independently labelled assignments from that regime.
+Ownership predictions provide useful feedback, but their reliability limits
+its interpretation. The predictor recovers $92$ of $100$ complete reference
+assignments; naturally generated plans may introduce structures outside that
+evaluation. A missing ownership assignment can reflect an omitted information
+need, an earlier answer error that alters a query, or a prediction error.
+Likewise, masked depth can change through either the rankings or the predicted
+assignments. Chapter~5 tests sensitivity to controlled plan transformations,
+while validation on naturally generated plans requires independently labelled
+assignments.
 
-The answer experiments establish the importance of execution state. Under
-reference decompositions, substituting gold intermediate answers changes both
-retrieval coverage and final accuracy. An unowned passage in the predicted
-mask can therefore have several explanations: a missing information need, an
-altered query following an earlier error, or a classifier disagreement. Feedback
-for optimisation should retain those distinctions. A predicted attribution
-diagnosis is evidence to inspect, rather than a verified causal explanation of
-the failure.
-
-The resource measurements distinguish retrieval depth, total passage slots and
-model tokens. The masked objective rewards shallow completion of assigned
-evidence; the fixed-budget replay measures allocation efficiency on existing
-lists. A prompt that raises the former can still create more arms or consume
-more tokens. Chapter~5 consequently evaluates the optimisation objective
-together with complete-evidence coverage, answer quality and execution cost.
-
-The complementary BM25 study extends the fixed-slot analysis to three
-benchmarks and larger retained panels. Its oracle gaps motivate observable
-allocation policies, while its query-regime comparison establishes the need
-to document how dependent subquestions were resolved. Those results retain
-their closed-corpus, fixed-trace and available-case scope alongside the
-separate attribution and answer measurements.
-
-The current system applies decomposition to every question in these
-experiments. The difficulty probe of Chapter~3 supplies a separate measurement
-and is not used to select or route these executions. Connecting a pre-answer
-difficulty estimate to a decomposition policy requires its own cost and answer
-evaluation.
+The allocation results motivate policies that distribute a total passage
+budget across subquestions. BM25 oracle gains on three benchmarks show room
+to improve on balanced allocation, but concern fixed recorded queries and
+retained questions within the study corpora. They do not establish savings
+from executing a new policy. Similarly, improving masked depth can still
+increase arm count or token use. Chapter~5 therefore evaluates prompt
+optimisation and passage allocation through evidence coverage, answer quality,
+and execution cost.
 
 \section*{Conclusion}
 
-This chapter addressed the evaluation component of the retrieval-efficiency
-question posed in Section~2.6.2. It defined complete evidence availability and
-ownership-masked retrieval depth, trained a textual ownership predictor and
-evaluated its assignments on reference-style decompositions. The predictor
-recovered $269$ of $274$ owner cells and $92$ complete question masks out of
-$100$.
+This chapter showed how question decomposition can improve evidence retrieval
+and final-answer accuracy, while revealing the conditions that shape those
+gains. Its evaluation framework combines evidence ranks with a learned
+ownership model to measure whether each subquestion retrieves the evidence
+it needs and at what depth. On the MuSiQue panel, the baseline GPT-4o-mini
+decomposition raised exact match from $40\%$ to $52\%$. Comparisons across
+models and intermediate-answer conditions further showed how the execution
+of a decomposition influences the benefit obtained from better retrieval.
 
-The retrieval study showed that evidence availability, assignment and answer
-execution vary separately. Generated decompositions increased complete pooled
-retrieval coverage, while the answer gains depended on the model and execution
-state. A fixed-budget analysis also identified room to allocate passage slots
-more selectively across the recorded arms. These findings support an
-evidence-aware optimisation objective while specifying the additional answer
-and cost measurements required to assess its practical effect. Chapter~5 uses
-this evaluation to study decomposition prompt search and learned passage
-allocation.
+The allocation study reveals a further opportunity: the same passage budget
+can recover more complete evidence when distributed unevenly across
+subquestions. Oracle results on three benchmarks establish this potential
+within recorded retrieval lists and motivate evaluating practical allocation
+policies for both answer quality and cost. Together, these findings provide
+an evaluation framework and
+two directions for improvement: generating better retrieval queries and
+allocating passages more effectively. Chapter~5 investigates how to turn
+these opportunities into optimisation policies.

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.30)  8 SEP 2026 09:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.30)  8 SEP 2026 14:57
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1015,28 +1015,28 @@ LaTeX Warning: Reference `chap:guarantees' on page 30 undefined on input line 69
 Chapter 4.
 [32
 
-] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] (./chapters/tables/ch4_bm25_availability.tex) [44] [45]) (./chapters/chapter5.tex [46]
+] [33] [34] [35] [36] [37] [38] [39] [40] [41] [42] [43] (./chapters/tables/ch4_bm25_availability.tex) [44] [45]) (./chapters/chapter5.tex [46] [47]
 Chapter 5.
-[47
+[48
 
 ]
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 52.
  (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [48]
+) [49]
 
-LaTeX Warning: Citation `ch5-opro' on page 49 undefined on input line 131.
+LaTeX Warning: Citation `ch5-opro' on page 50 undefined on input line 131.
 
-[49] [50] [51] [52] [53] (./chapters/tables/ch5_bm25_allocation.tex) [54] [55] (./chapters/tables/ch5_reader_fixed_traces.tex) [56] [57]
+[50] [51] [52] [53] [54] (./chapters/tables/ch5_bm25_allocation.tex) [55] [56] (./chapters/tables/ch5_reader_fixed_traces.tex) [57] [58]
 
-LaTeX Warning: Citation `ch5-gepa' on page 58 undefined on input line 720.
+LaTeX Warning: Citation `ch5-gepa' on page 59 undefined on input line 720.
 
-[58] [59] [60] [61] [62] [63]) (./chapters/conclusion.tex [64]) [65
+[59] [60] [61] [62] [63] [64]) (./chapters/conclusion.tex [65]) [66
 
-] (./main.bbl [66
+] (./main.bbl [67
 
 
-] [67]) [68] (./N.bbl) [69
+] [68]) [69] (./N.bbl) [70
 
 
 ] (./main.aux)
@@ -1231,18 +1231,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 ### semi simple group (level 1) entered at line 171 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 32162 strings out of 476097
- 576447 string characters out of 5793633
+ 32163 strings out of 476097
+ 576454 string characters out of 5793633
  1952975 words of memory out of 5000000
  53096 multiletter control sequences out of 15000+600000
  588777 words of font info for 113 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  84i,12n,93p,612b,2724s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1200.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/arabtex/xnsh14.pfb>
-Output written on main.pdf (82 pages, 1954534 bytes).
+Output written on main.pdf (83 pages, 1955961 bytes).
 PDF statistics:
- 1695 PDF objects out of 1728 (max. 8388607)
- 1503 compressed objects within 16 object streams
- 367 named destinations out of 1000 (max. 500000)
+ 1701 PDF objects out of 1728 (max. 8388607)
+ 1508 compressed objects within 16 object streams
+ 368 named destinations out of 1000 (max. 500000)
  1125 words of extra memory for PDF output out of 10000 (max. 10000000)
 
