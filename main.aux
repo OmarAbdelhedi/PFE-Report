@@ -88,7 +88,6 @@
 \citation{karpukhin2020dpr}
 \citation{khattab2020colbert}
 \citation{xiong2021mdr}
-\citation{khattab2021baleen}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Dense Retrieval}{11}{subsection.2.2.2}\protected@file@percent }
 \newlabel{subsec:dense-retrieval}{{2.2.2}{11}{Dense Retrieval}{subsection.2.2.2}{}}
 \newlabel{eq:dpr}{{2.12}{11}{Dense Retrieval}{equation.2.2.12}{}}
@@ -97,6 +96,7 @@
 \newlabel{eq:colbert}{{2.13}{11}{Late-Interaction Retrieval and Reranking}{equation.2.2.13}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}Iterative and Multi-Hop Retrieval}{11}{subsection.2.2.4}\protected@file@percent }
 \newlabel{subsec:iterative-retrieval}{{2.2.4}{11}{Iterative and Multi-Hop Retrieval}{subsection.2.2.4}{}}
+\citation{khattab2021baleen}
 \citation{trivedi2023interleaving}
 \citation{gutierrez2024hipporag}
 \citation{gutierrez2025hipporag2}
@@ -148,7 +148,7 @@
 \newlabel{subsec:gap-difficulty}{{2.6.1}{17}{Anticipating Compositional Difficulty}{subsection.2.6.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}Optimising Decomposition for Retrieval Efficiency}{17}{subsection.2.6.2}\protected@file@percent }
 \newlabel{subsec:gap-efficient-decomposition}{{2.6.2}{17}{Optimising Decomposition for Retrieval Efficiency}{subsection.2.6.2}{}}
-\@writefile{toc}{\contentsline {section}{Conclusion}{17}{section*.23}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Conclusion}{18}{section*.23}\protected@file@percent }
 \citation{abdelhedi2026probing}
 \@writefile{toc}{\contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{19}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
@@ -159,7 +159,7 @@
 \newlabel{sec:probing-problem}{{3.1}{19}{Research Question and Problem Formulation}{section.3.1}{}}
 \newlabel{eq:probing-dataset}{{3.1}{19}{Research Question and Problem Formulation}{equation.3.1.1}{}}
 \newlabel{eq:probing-question-representation}{{3.2}{19}{Research Question and Problem Formulation}{equation.3.1.2}{}}
-\newlabel{eq:linear-difficulty-score}{{3.3}{19}{Research Question and Problem Formulation}{equation.3.1.3}{}}
+\newlabel{eq:linear-difficulty-score}{{3.3}{20}{Research Question and Problem Formulation}{equation.3.1.3}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Overview of the compositional-difficulty probing protocol}}{20}{figure.caption.25}\protected@file@percent }
 \newlabel{fig:probing-method-overview}{{3.1}{20}{Overview of the compositional-difficulty probing protocol}{figure.caption.25}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3.2}Methodology}{20}{section.3.2}\protected@file@percent }
@@ -244,164 +244,179 @@
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{ch:evidence-aware}{{4}{32}{Evidence-Aware Evaluation of Question Decomposition}{chapter.4}{}}
+\newlabel{chap:empirical-studies}{{4}{32}{Evidence-Aware Evaluation of Question Decomposition}{chapter.4}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.1}Problem Formulation}{32}{section.4.1}\protected@file@percent }
 \newlabel{sec:ch4-problem}{{4.1}{32}{Problem Formulation}{section.4.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}A Decomposition as an Executable Sequence}{32}{subsection.4.1.1}\protected@file@percent }
-\newlabel{eq:ch4-execution}{{4.1}{33}{A Decomposition as an Executable Sequence}{equation.4.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Availability, Assignment and Execution}{33}{subsection.4.1.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {4.2}Retrieval Depth and Evidence Responsibility}{33}{section.4.2}\protected@file@percent }
-\newlabel{sec:ch4-depth}{{4.2}{33}{Retrieval Depth and Evidence Responsibility}{section.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}The Evidence-Rank Matrix}{33}{subsection.4.2.1}\protected@file@percent }
-\newlabel{eq:ch4-ranks}{{4.2}{33}{The Evidence-Rank Matrix}{equation.4.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Union Depth}{34}{subsection.4.2.2}\protected@file@percent }
-\newlabel{eq:ch4-union}{{4.3}{34}{Union Depth}{equation.4.2.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Ownership-Masked Depth}{34}{subsection.4.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}Sequential Execution of a Decomposition}{32}{subsection.4.1.1}\protected@file@percent }
+\newlabel{eq:ch4-execution}{{4.1}{32}{Sequential Execution of a Decomposition}{equation.4.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Evaluation Requirements}{33}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Evidence-Aware Retrieval Measurements}{33}{section.4.2}\protected@file@percent }
+\newlabel{sec:ch4-depth}{{4.2}{33}{Evidence-Aware Retrieval Measurements}{section.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}Evidence Ranks and Union Depth}{33}{subsection.4.2.1}\protected@file@percent }
+\newlabel{eq:ch4-ranks}{{4.2}{33}{Evidence Ranks and Union Depth}{equation.4.2.2}{}}
+\newlabel{eq:ch4-union}{{4.3}{34}{Evidence Ranks and Union Depth}{equation.4.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Ownership-Masked Depth}{34}{subsection.4.2.2}\protected@file@percent }
 \newlabel{eq:ch4-masked}{{4.4}{34}{Ownership-Masked Depth}{equation.4.2.4}{}}
 \newlabel{eq:ch4-all}{{4.5}{34}{Ownership-Masked Depth}{equation.4.2.5}{}}
 \newlabel{eq:ch4-order}{{4.6}{34}{Ownership-Masked Depth}{equation.4.2.6}{}}
 \newlabel{eq:ch4-example}{{4.7}{35}{Ownership-Masked Depth}{equation.4.2.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Coverage and an Aggregate Depth Score}{35}{subsection.4.2.4}\protected@file@percent }
-\newlabel{eq:ch4-coverage}{{4.8}{35}{Coverage and an Aggregate Depth Score}{equation.4.2.8}{}}
-\newlabel{eq:ch4-credit}{{4.9}{35}{Coverage and an Aggregate Depth Score}{equation.4.2.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.3}Learning the Ownership Mask}{35}{section.4.3}\protected@file@percent }
-\newlabel{sec:ch4-ownership}{{4.3}{35}{Learning the Ownership Mask}{section.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Supervision from Reference Decompositions}{35}{subsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Complete Coverage and the Depth Score}{35}{subsection.4.2.3}\protected@file@percent }
+\newlabel{eq:ch4-coverage}{{4.8}{35}{Complete Coverage and the Depth Score}{equation.4.2.8}{}}
+\newlabel{eq:ch4-credit}{{4.9}{35}{Complete Coverage and the Depth Score}{equation.4.2.9}{}}
 \citation{khattab2020colbert}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Textual and Contextual Features}{36}{subsection.4.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Fitting, Threshold Selection and Ensemble Decision}{36}{subsection.4.3.3}\protected@file@percent }
-\newlabel{eq:ch4-threshold}{{4.10}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.10}{}}
-\newlabel{eq:ch4-vote}{{4.11}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Learning Evidence Ownership}{36}{section.4.3}\protected@file@percent }
+\newlabel{sec:ch4-ownership}{{4.3}{36}{Learning Evidence Ownership}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Training Data and Reference Assignments}{36}{subsection.4.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Features for Ownership Prediction}{36}{subsection.4.3.2}\protected@file@percent }
 \citation{gutierrez2025hipporag2}
-\citation{trivedi2022musique}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}How Assignment Error Changes the Depth Measurement}{37}{subsection.4.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Training, Threshold Selection, and Ensemble Prediction}{37}{subsection.4.3.3}\protected@file@percent }
+\newlabel{eq:ch4-threshold}{{4.10}{37}{Training, Threshold Selection, and Ensemble Prediction}{equation.4.3.10}{}}
+\newlabel{eq:ch4-vote}{{4.11}{37}{Training, Threshold Selection, and Ensemble Prediction}{equation.4.3.11}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4.4}Experimental Protocol}{37}{section.4.4}\protected@file@percent }
 \newlabel{sec:ch4-protocol}{{4.4}{37}{Experimental Protocol}{section.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Systems and Retained Executions}{37}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Evaluation Questions, Systems, and Execution Settings}{37}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Compared Configurations and Evaluation Procedure}{37}{subsection.4.4.2}\protected@file@percent }
+\citation{trivedi2022musique}
 \@writefile{lof}{\contentsline {figure}{\numberline {4.1}{\ignorespaces Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted.}}{38}{figure.caption.38}\protected@file@percent }
 \newlabel{fig:ch4-execution-conditions}{{4.1}{38}{Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted}{figure.caption.38}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{38}{subsection.4.4.2}\protected@file@percent }
-\newlabel{eq:ch4-answer}{{4.12}{38}{Metrics and Comparison Units}{equation.4.4.12}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.5}Results}{39}{section.4.5}\protected@file@percent }
-\newlabel{sec:ch4-results}{{4.5}{39}{Results}{section.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{39}{subsection.4.5.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions.}}{39}{table.caption.39}\protected@file@percent }
-\newlabel{tab:ch4-ownership}{{4.1}{39}{Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions}{table.caption.39}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions.}}{39}{table.caption.40}\protected@file@percent }
-\newlabel{tab:ch4-cohorts}{{4.2}{39}{Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions}{table.caption.40}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{40}{subsection.4.5.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment.}}{40}{table.caption.41}\protected@file@percent }
-\newlabel{tab:ch4-masks}{{4.3}{40}{Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment}{table.caption.41}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{40}{subsection.4.5.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes.}}{41}{table.caption.42}\protected@file@percent }
-\newlabel{tab:ch4-system}{{4.4}{41}{Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes}{table.caption.42}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{41}{subsection.4.5.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs.}}{41}{table.caption.43}\protected@file@percent }
-\newlabel{tab:ch4-bindings}{{4.5}{41}{Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs}{table.caption.43}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.6}Depth Under a Total Passage Budget}{41}{section.4.6}\protected@file@percent }
-\newlabel{sec:ch4-budget}{{4.6}{41}{Depth Under a Total Passage Budget}{section.4.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Equal-Allocation Replay}{41}{subsection.4.6.1}\protected@file@percent }
-\newlabel{eq:ch4-budget-allocation}{{4.13}{41}{Equal-Allocation Replay}{equation.4.6.13}{}}
-\@writefile{toc}{\contentsline {paragraph}{Per-question and average budgets.}{42}{paragraph*.44}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.2}A Fixed-List Oracle Allocation}{42}{subsection.4.6.2}\protected@file@percent }
-\newlabel{eq:ch4-oracle-budget}{{4.14}{42}{A Fixed-List Oracle Allocation}{equation.4.6.14}{}}
-\newlabel{eq:ch4-dynamic-program}{{4.15}{42}{A Fixed-List Oracle Allocation}{equation.4.6.15}{}}
+\@writefile{toc}{\contentsline {paragraph}{Measurements and comparisons.}{38}{paragraph*.39}\protected@file@percent }
+\newlabel{eq:ch4-answer}{{4.12}{38}{Measurements and comparisons}{equation.4.4.12}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Ownership Validation and Decomposition Results}{39}{section.4.5}\protected@file@percent }
+\newlabel{sec:ch4-results}{{4.5}{39}{Ownership Validation and Decomposition Results}{section.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Ownership Prediction Accuracy}{39}{subsection.4.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions.}}{39}{table.caption.40}\protected@file@percent }
+\newlabel{tab:ch4-ownership}{{4.1}{39}{Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions}{table.caption.40}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions.}}{40}{table.caption.41}\protected@file@percent }
+\newlabel{tab:ch4-cohorts}{{4.2}{40}{Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions}{table.caption.41}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Sensitivity to Ownership Predictions}{40}{subsection.4.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment.}}{40}{table.caption.42}\protected@file@percent }
+\newlabel{tab:ch4-masks}{{4.3}{40}{Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The passages and their ranks are identical across rows, so only the assigned cells differ. The last row uses the exact reference assignment}{table.caption.42}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Decomposition versus Direct Retrieval}{41}{subsection.4.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes.}}{41}{table.caption.43}\protected@file@percent }
+\newlabel{tab:ch4-system}{{4.4}{41}{Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes}{table.caption.43}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}The Effect of Intermediate Answers}{41}{subsection.4.5.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs.}}{42}{table.caption.44}\protected@file@percent }
+\newlabel{tab:ch4-bindings}{{4.5}{42}{Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs}{table.caption.44}{}}
+\@writefile{toc}{\contentsline {paragraph}{Reference and generated queries with BM25.}{42}{paragraph*.45}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces MuSiQue BM25 retrieval regimes. Coverage (\%) is measured on each retained panel under balanced slot allocation at total budgets $B=8$ and $B=200$. The reference row uses a different plan source and a larger panel.}}{42}{table.caption.46}\protected@file@percent }
+\newlabel{tab:ch4-bm25-regimes}{{4.6}{42}{MuSiQue BM25 retrieval regimes. Coverage (\%) is measured on each retained panel under balanced slot allocation at total budgets $B=8$ and $B=200$. The reference row uses a different plan source and a larger panel}{table.caption.46}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}Evidence Coverage Under a Passage Budget}{42}{section.4.6}\protected@file@percent }
+\newlabel{sec:ch4-budget}{{4.6}{42}{Evidence Coverage Under a Passage Budget}{section.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Passage-Slot Accounting and Balanced Allocation}{43}{subsection.4.6.1}\protected@file@percent }
+\newlabel{eq:ch4-budget-allocation}{{4.13}{43}{Passage-Slot Accounting and Balanced Allocation}{equation.4.6.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.2}Oracle Allocation on Recorded Lists}{43}{subsection.4.6.2}\protected@file@percent }
+\newlabel{eq:ch4-oracle-budget}{{4.14}{43}{Oracle Allocation on Recorded Lists}{equation.4.6.14}{}}
+\newlabel{eq:ch4-dynamic-program}{{4.15}{43}{Oracle Allocation on Recorded Lists}{equation.4.6.15}{}}
+\newlabel{eq:ch4-oracle-frontier}{{4.16}{44}{Oracle Allocation on Recorded Lists}{equation.4.6.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}Allocation Results on the MuSiQue Panel}{44}{subsection.4.6.3}\protected@file@percent }
+\newlabel{sec:ch4-musique-budget}{{4.6.3}{44}{Allocation Results on the MuSiQue Panel}{subsection.4.6.3}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions.}}{44}{table.caption.47}\protected@file@percent }
+\newlabel{tab:ch4-budget}{{4.7}{44}{Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions}{table.caption.47}{}}
 \citation{ho2020constructing}
 \citation{yang2018hotpotqa}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{43}{subsection.4.6.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions.}}{43}{table.caption.45}\protected@file@percent }
-\newlabel{tab:ch4-budget}{{4.6}{43}{Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions}{table.caption.45}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.7}A Cross-Benchmark Fixed-Trace Study}{43}{section.4.7}\protected@file@percent }
-\newlabel{sec:ch4-bm25}{{4.7}{43}{A Cross-Benchmark Fixed-Trace Study}{section.4.7}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Retrieval Regime and Evaluation Population}{43}{subsection.4.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{44}{subsection.4.7.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Complete annotated-evidence coverage (\%) at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel.}}{44}{table.caption.46}\protected@file@percent }
-\newlabel{tab:ch4-bm25-availability}{{4.7}{44}{Complete annotated-evidence coverage (\%) at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel}{table.caption.46}{}}
-\newlabel{eq:ch4-oracle-frontier}{{4.16}{45}{Matched Passage-Slot Frontiers}{equation.4.7.16}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{45}{subsection.4.7.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces MuSiQue BM25 retrieval regimes. Coverage (\%) is measured on each retained panel under balanced slot allocation at total budgets $B=8$ and $B=200$. The reference row uses a different plan source and a larger panel.}}{45}{table.caption.47}\protected@file@percent }
-\newlabel{tab:ch4-bm25-regimes}{{4.8}{45}{MuSiQue BM25 retrieval regimes. Coverage (\%) is measured on each retained panel under balanced slot allocation at total budgets $B=8$ and $B=200$. The reference row uses a different plan source and a larger panel}{table.caption.47}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4.8}Discussion and Implications for Optimisation}{46}{section.4.8}\protected@file@percent }
-\newlabel{sec:ch4-discussion}{{4.8}{46}{Discussion and Implications for Optimisation}{section.4.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.4}Cross-Benchmark BM25 Evaluation}{45}{subsection.4.6.4}\protected@file@percent }
+\newlabel{sec:ch4-bm25}{{4.6.4}{45}{Cross-Benchmark BM25 Evaluation}{subsection.4.6.4}{}}
+\@writefile{toc}{\contentsline {paragraph}{Evaluation population and trace generation.}{45}{paragraph*.48}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Coverage at a matched budget.}{45}{paragraph*.49}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces Complete annotated-evidence coverage (\%) at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel.}}{45}{table.caption.50}\protected@file@percent }
+\newlabel{tab:ch4-bm25-availability}{{4.8}{45}{Complete annotated-evidence coverage (\%) at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel}{table.caption.50}{}}
+\@writefile{toc}{\contentsline {paragraph}{Budgets needed for target coverage.}{46}{paragraph*.51}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}Discussion and Implications for Optimisation}{46}{section.4.7}\protected@file@percent }
+\newlabel{sec:ch4-discussion}{{4.7}{46}{Discussion and Implications for Optimisation}{section.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Contributions and Implications}{46}{subsection.4.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Scope and Limitations}{46}{subsection.4.7.2}\protected@file@percent }
+\newlabel{sec:ch4-limitations}{{4.7.2}{46}{Scope and Limitations}{subsection.4.7.2}{}}
 \@writefile{toc}{\contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{48}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
 \newlabel{chap:optimisation}{{5}{48}{Optimising Question Decomposition and Evidence Allocation}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.1}The Optimisation Problem}{49}{section.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}An Instruction Defines an Executable Policy}{49}{subsection.5.1.1}\protected@file@percent }
-\newlabel{eq:ch5-plan}{{5.1}{49}{An Instruction Defines an Executable Policy}{equation.5.1.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}The Retained Retrieval Objective}{49}{subsection.5.1.2}\protected@file@percent }
-\newlabel{eq:ch5-objective}{{5.2}{49}{The Retained Retrieval Objective}{equation.5.1.2}{}}
-\newlabel{eq:ch5-coverage}{{5.3}{49}{The Retained Retrieval Objective}{equation.5.1.3}{}}
+\newlabel{chap:guarantees}{{5}{48}{Optimising Question Decomposition and Evidence Allocation}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}Optimisation Framework}{48}{section.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Study populations and experimental roles across Chapters~3--5. Counts denote questions unless stated otherwise. All rows report completed work except the prospective feedback comparison.}}{49}{table.caption.52}\protected@file@percent }
+\newlabel{tab:study-populations}{{5.1}{49}{Study populations and experimental roles across Chapters~3--5. Counts denote questions unless stated otherwise. All rows report completed work except the prospective feedback comparison}{table.caption.52}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}The Instruction as an Optimisation Variable}{49}{subsection.5.1.1}\protected@file@percent }
+\newlabel{eq:ch5-plan}{{5.1}{49}{The Instruction as an Optimisation Variable}{equation.5.1.1}{}}
 \citation{ch5-opro}
-\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Configuration of the completed prompt-search pilot.}}{50}{table.caption.48}\protected@file@percent }
-\newlabel{tab:ch5-configuration}{{5.1}{50}{Configuration of the completed prompt-search pilot}{table.caption.48}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}The Retrieval Objective}{50}{subsection.5.1.2}\protected@file@percent }
+\newlabel{eq:ch5-objective}{{5.2}{50}{The Retrieval Objective}{equation.5.1.2}{}}
+\newlabel{eq:ch5-coverage}{{5.3}{50}{The Retrieval Objective}{equation.5.1.3}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}Answer Quality and Resource Use}{50}{subsection.5.1.3}\protected@file@percent }
 \newlabel{eq:ch5-f1}{{5.4}{50}{Answer Quality and Resource Use}{equation.5.1.4}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.2}The Completed OPRO Search}{50}{section.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{50}{subsection.5.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Proposal and Selection Loop}{51}{subsection.5.2.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}The Feedback Supplied to the Optimizer}{51}{subsection.5.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.3}Results of the Pilot}{51}{section.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Progress Across Search Rounds}{51}{subsection.5.3.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel.}}{52}{table.caption.49}\protected@file@percent }
-\newlabel{tab:ch5-rounds}{{5.2}{52}{Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel}{table.caption.49}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.3}{\ignorespaces Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count.}}{52}{table.caption.50}\protected@file@percent }
-\newlabel{tab:ch5-selected}{{5.3}{52}{Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count}{table.caption.50}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}The Selected Instruction}{52}{subsection.5.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}The Optimisation Objective and the Answer Objective}{52}{subsection.5.3.3}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.4}{\ignorespaces Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively.}}{53}{table.caption.51}\protected@file@percent }
-\newlabel{tab:ch5-objectives}{{5.4}{53}{Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively}{table.caption.51}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.4}Learned Allocation on Fixed Retrieval Traces}{53}{section.5.4}\protected@file@percent }
-\newlabel{sec:ch5-allocation}{{5.4}{53}{Learned Allocation on Fixed Retrieval Traces}{section.5.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}The Allocation Intervention}{53}{subsection.5.4.1}\protected@file@percent }
-\newlabel{eq:ch5-slot-budget}{{5.5}{53}{The Allocation Intervention}{equation.5.4.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Predicting Per-Arm Depth Requirements}{54}{subsection.5.4.2}\protected@file@percent }
-\newlabel{eq:ch5-depth-cdf}{{5.6}{54}{Predicting Per-Arm Depth Requirements}{equation.5.4.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Segment and Unit-Increment Allocation}{54}{subsection.5.4.3}\protected@file@percent }
-\newlabel{eq:ch5-allocation-surrogate}{{5.7}{54}{Segment and Unit-Increment Allocation}{equation.5.4.7}{}}
-\newlabel{eq:ch5-unit-gain}{{5.8}{54}{Segment and Unit-Increment Allocation}{equation.5.4.8}{}}
-\newlabel{eq:ch5-envelope-objective}{{5.9}{55}{Segment and Unit-Increment Allocation}{equation.5.4.9}{}}
-\newlabel{eq:ch5-allocation-dp}{{5.10}{55}{Segment and Unit-Increment Allocation}{equation.5.4.10}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Evaluation Population and Cross-Validation}{55}{subsection.5.4.4}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.5}{\ignorespaces Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation.}}{56}{table.caption.52}\protected@file@percent }
-\newlabel{tab:ch5-bm25-allocation}{{5.5}{56}{Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation}{table.caption.52}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.6}{\ignorespaces Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points.}}{56}{table.caption.53}\protected@file@percent }
-\newlabel{tab:ch5-allocation-targets}{{5.6}{56}{Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points}{table.caption.53}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}Coverage and Target Budgets}{56}{subsection.5.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.6}Paired Final-Answer Evaluation}{56}{subsection.5.4.6}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.7}{\ignorespaces Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy.}}{57}{table.caption.54}\protected@file@percent }
-\newlabel{tab:ch5-reader-fixed-traces}{{5.7}{57}{Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy}{table.caption.54}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.7}Exploratory Hidden-State Prediction of Assigned Depth}{57}{subsection.5.4.7}\protected@file@percent }
-\newlabel{sec:ch5-depth-probe}{{5.4.7}{57}{Exploratory Hidden-State Prediction of Assigned Depth}{subsection.5.4.7}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.8}{\ignorespaces Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here.}}{58}{table.caption.55}\protected@file@percent }
-\newlabel{tab:ch5-depth-probe}{{5.8}{58}{Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here}{table.caption.55}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5.5}Evidence-Aware Feedback for Prompt Search}{58}{section.5.5}\protected@file@percent }
-\newlabel{sec:ch5-feedback}{{5.5}{58}{Evidence-Aware Feedback for Prompt Search}{section.5.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Separating Reward from Diagnostic Information}{58}{subsection.5.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}Automated Search over Decomposition Instructions}{50}{section.5.2}\protected@file@percent }
+\newlabel{sec:ch5-prompt-search}{{5.2}{50}{Automated Search over Decomposition Instructions}{section.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{51}{subsection.5.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Configuration of the completed prompt-search pilot.}}{51}{table.caption.53}\protected@file@percent }
+\newlabel{tab:ch5-configuration}{{5.2}{51}{Configuration of the completed prompt-search pilot}{table.caption.53}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Search Procedure and Feedback}{51}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Examples supplied to the optimiser.}{52}{paragraph*.54}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}Progress Across Search Rounds}{52}{subsection.5.2.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.3}{\ignorespaces Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel.}}{52}{table.caption.55}\protected@file@percent }
+\newlabel{tab:ch5-rounds}{{5.3}{52}{Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel}{table.caption.55}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.4}Retrieval, Answers, and Cost of the Selected Instruction}{52}{subsection.5.2.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.4}{\ignorespaces Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count.}}{53}{table.caption.56}\protected@file@percent }
+\newlabel{tab:ch5-selected}{{5.4}{53}{Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count}{table.caption.56}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.5}Choosing between Retrieval and Answer Objectives}{53}{subsection.5.2.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.5}{\ignorespaces Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively.}}{53}{table.caption.57}\protected@file@percent }
+\newlabel{tab:ch5-objectives}{{5.5}{53}{Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively}{table.caption.57}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Learning to Allocate Retrieved Passages}{54}{section.5.3}\protected@file@percent }
+\newlabel{sec:ch5-allocation}{{5.3}{54}{Learning to Allocate Retrieved Passages}{section.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Allocation Setting and Comparators}{54}{subsection.5.3.1}\protected@file@percent }
+\newlabel{eq:ch5-slot-budget}{{5.5}{54}{Allocation Setting and Comparators}{equation.5.3.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}Predicting Per-Arm Depth Targets from Recorded Rankings}{54}{subsection.5.3.2}\protected@file@percent }
+\newlabel{eq:ch5-depth-cdf}{{5.6}{55}{Predicting Per-Arm Depth Targets from Recorded Rankings}{equation.5.3.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}Segment and Unit-Increment Allocation}{55}{subsection.5.3.3}\protected@file@percent }
+\newlabel{eq:ch5-allocation-surrogate}{{5.7}{55}{Segment and Unit-Increment Allocation}{equation.5.3.7}{}}
+\newlabel{eq:ch5-unit-gain}{{5.8}{56}{Segment and Unit-Increment Allocation}{equation.5.3.8}{}}
+\newlabel{eq:ch5-envelope-objective}{{5.9}{56}{Segment and Unit-Increment Allocation}{equation.5.3.9}{}}
+\newlabel{eq:ch5-allocation-dp}{{5.10}{56}{Segment and Unit-Increment Allocation}{equation.5.3.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.4}Evaluation Population and Cross-Validation}{56}{subsection.5.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.5}Evidence Coverage and Required Budgets}{57}{subsection.5.3.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.6}{\ignorespaces Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation.}}{57}{table.caption.58}\protected@file@percent }
+\newlabel{tab:ch5-bm25-allocation}{{5.6}{57}{Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation}{table.caption.58}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.7}{\ignorespaces Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points.}}{57}{table.caption.59}\protected@file@percent }
+\newlabel{tab:ch5-allocation-targets}{{5.7}{57}{Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points}{table.caption.59}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.6}Paired Final-Answer Evaluation}{58}{subsection.5.3.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.8}{\ignorespaces Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy.}}{58}{table.caption.60}\protected@file@percent }
+\newlabel{tab:ch5-reader-fixed-traces}{{5.8}{58}{Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy}{table.caption.60}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Evidence-Aware Feedback: Design and Diagnostic Validation}{59}{section.5.4}\protected@file@percent }
+\newlabel{sec:ch5-feedback}{{5.4}{59}{Evidence-Aware Feedback: Design and Diagnostic Validation}{section.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}Separating Reward from Diagnostic Information}{59}{subsection.5.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Observed Events and Estimated Assignments}{59}{subsection.5.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.9}{\ignorespaces Diagnostic fields supplied by the structured feedback interface.}}{60}{table.caption.61}\protected@file@percent }
+\newlabel{tab:ch5-diagnostics}{{5.9}{60}{Diagnostic fields supplied by the structured feedback interface}{table.caption.61}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Ownership Diagnostics under Controlled Plan Changes}{60}{subsection.5.4.3}\protected@file@percent }
+\newlabel{sec:ch5-ownership-checks}{{5.4.3}{60}{Ownership Diagnostics under Controlled Plan Changes}{subsection.5.4.3}{}}
 \citation{ch5-gepa}
-\@writefile{lot}{\contentsline {table}{\numberline {5.9}{\ignorespaces Diagnostic fields supplied by the structured feedback interface.}}{59}{table.caption.56}\protected@file@percent }
-\newlabel{tab:ch5-diagnostics}{{5.9}{59}{Diagnostic fields supplied by the structured feedback interface}{table.caption.56}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Observed Events and Estimated Assignments}{59}{subsection.5.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}Reflective Search with a Fixed Execution Interface}{59}{subsection.5.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.10}{\ignorespaces Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions.}}{61}{table.caption.62}\protected@file@percent }
+\newlabel{tab:ch5-ownership-stress}{{5.10}{61}{Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions}{table.caption.62}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Reflective Search with a Fixed Execution Interface}{61}{subsection.5.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}Proposed Evaluation of Feedback Quality}{62}{subsection.5.4.5}\protected@file@percent }
+\newlabel{sec:ch5-feedback-evaluation}{{5.4.5}{62}{Proposed Evaluation of Feedback Quality}{subsection.5.4.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Discussion and Implications}{62}{section.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{62}{subsection.5.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{63}{subsection.5.5.2}\protected@file@percent }
+\newlabel{sec:ch5-limitations}{{5.5.2}{63}{Scope and Limitations}{subsection.5.5.2}{}}
+\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{64}{section*.64}\protected@file@percent }
+\newlabel{sec:conclusion}{{}{64}{Conclusion and outlook}{section*.64}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{65}{appendix.A}\protected@file@percent }
+\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\addvspace {10\p@ }}
+\newlabel{app:optimisation-supplement}{{A}{65}{Supplementary Optimisation Studies}{appendix.A}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{65}{section.A.1}\protected@file@percent }
+\newlabel{sec:ch5-depth-probe}{{A.1}{65}{Exploratory Hidden-State Prediction of Assigned Depth}{section.A.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {A.1}{\ignorespaces Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here.}}{65}{table.caption.65}\protected@file@percent }
+\newlabel{tab:ch5-depth-probe}{{A.1}{65}{Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here}{table.caption.65}{}}
 \citation{trivedi2022musique}
-\@writefile{toc}{\contentsline {section}{\numberline {5.6}Independent Evaluation Design}{60}{section.5.6}\protected@file@percent }
-\newlabel{sec:ch5-prospective}{{5.6}{60}{Independent Evaluation Design}{section.5.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}Frozen Data Roles and Corpus Scope}{60}{subsection.5.6.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {5.10}{\ignorespaces Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID.}}{61}{table.caption.57}\protected@file@percent }
-\newlabel{tab:ch5-splits}{{5.10}{61}{Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID}{table.caption.57}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}Comparators and Search Allowances}{61}{subsection.5.6.2}\protected@file@percent }
-\newlabel{eq:ch5-budget}{{5.11}{61}{Comparators and Search Allowances}{equation.5.6.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}Outcome Analysis and Cost Accounting}{62}{subsection.5.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Separating Prompt and Allocation Effects}{62}{subsection.5.6.4}\protected@file@percent }
-\newlabel{eq:ch5-factorial}{{5.12}{62}{Separating Prompt and Allocation Effects}{equation.5.6.12}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5.11}{\ignorespaces Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions.}}{63}{table.caption.58}\protected@file@percent }
-\newlabel{tab:ch5-ownership-stress}{{5.11}{63}{Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions}{table.caption.58}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}Controlled Checks of the Diagnostic Representation}{63}{subsection.5.6.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {5.7}Discussion}{63}{section.5.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.1}What the Completed Experiment Establishes}{63}{subsection.5.7.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.2}The Scope of the Evidence-Feedback Extension}{64}{subsection.5.7.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{66}{section*.60}\protected@file@percent }
-\newlabel{sec:conclusion}{{}{66}{Conclusion and outlook}{section*.60}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{66}{section.A.2}\protected@file@percent }
+\newlabel{sec:ch5-prospective}{{A.2}{66}{Independent Evaluation Design}{section.A.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{66}{subsection.A.2.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {A.2}{\ignorespaces Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID.}}{66}{table.caption.66}\protected@file@percent }
+\newlabel{tab:ch5-splits}{{A.2}{66}{Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID}{table.caption.66}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{67}{subsection.A.2.2}\protected@file@percent }
+\newlabel{eq:ch5-budget}{{A.1}{67}{Comparators and Search Allowances}{equation.A.2.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{67}{subsection.A.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{68}{subsection.A.2.4}\protected@file@percent }
+\newlabel{eq:ch5-factorial}{{A.2}{68}{Separating Prompt and Allocation Effects}{equation.A.2.2}{}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{lewis2020rag}{1}
@@ -415,7 +430,7 @@
 \bibcite{khattab2020colbert}{9}
 \bibcite{xiong2021mdr}{10}
 \bibcite{khattab2021baleen}{11}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{67}{section*.61}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{69}{section*.67}\protected@file@percent }
 \bibcite{trivedi2023interleaving}{12}
 \bibcite{gutierrez2024hipporag}{13}
 \bibcite{gutierrez2025hipporag2}{14}
@@ -437,5 +452,7 @@
 \bibcite{dua2022successive}{30}
 \bibcite{zhou2023leasttomost}{31}
 \bibcite{khot2023decomposed}{32}
-\@writefile{toc}{\contentsline {chapter}{Netography}{70}{section*.63}\protected@file@percent }
-\gdef \@abspage@last{83}
+\bibcite{ch5-opro}{33}
+\bibcite{ch5-gepa}{34}
+\@writefile{toc}{\contentsline {chapter}{Netography}{73}{section*.69}\protected@file@percent }
+\gdef \@abspage@last{86}

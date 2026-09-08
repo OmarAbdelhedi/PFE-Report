@@ -40,6 +40,11 @@ These labels provide operational proxies for compositional difficulty: they
 make the question measurable, but they do not constitute a universal
 definition of difficulty.
 
+A question can require several compositional steps and still be answered
+correctly. The target here is its benchmark-defined difficulty, rather than
+the probability that a particular model fails or the retrieval depth needed
+to find its evidence.
+
 For a frozen language model \(M\), processing question \(q_i\) produces a
 representation
 \begin{equation}
@@ -690,17 +695,20 @@ residualised probe is not proposed as a better predictor---it is deliberately
 handicapped---but as the measurement showing that the part of the signal which
 survives the controls is also the part that generalises.
 
-The implication for the adaptive computation of
-Chapter~\ref{chap:background} is concrete, and this chapter stops short of it.
-A score read from a forward pass that a system already performs could gate
-whether a question is decomposed at all, or how many subquestions are generated
-for it; Chapters~\ref{chap:empirical-studies} and~\ref{chap:guarantees} build
-that decomposition machinery but apply it to every question rather than under
-such a gate. Nothing here calibrates a threshold, routes a query, or measures
-whether using the score improves efficiency or answer quality. Nor does a probe
-show that the model itself consults this direction when allocating computation:
-decodability is not use, and joining the two is a continuation this report does
-not attempt.
+For the adaptive computation discussed in Chapter~\ref{chap:background},
+this finding identifies a potential source of information for deciding how
+to approach a question. A difficulty score available during question
+processing could inform whether to decompose it or how much reasoning to
+allow. Turning that signal into a decision rule calls for calibration against
+answer quality and execution cost.
+
+Once a decision to decompose has been made, the next questions concern the
+plan itself: does it retrieve the evidence its subquestions need, and how
+should a limited passage budget be distributed? Chapter~\ref{ch:evidence-aware}
+develops measurements for these questions, and Chapter~\ref{chap:optimisation}
+uses them to study prompt revision and passage allocation. The thesis thus
+progresses from anticipating compositional demand to evaluating and improving
+the execution of a decomposition.
 
 \subsection{Limitations and Future Directions}
 \label{subsec:probing-limitations}
@@ -750,14 +758,13 @@ This chapter showed that benchmark-defined compositional question difficulty is
 linearly decodable from the question representations of three language models.
 The signal emerges across depth, survives a permutation null and partial control
 for surface form, behaves ordinally, and transfers across benchmarks more
-consistently after surface residualisation. These findings establish a readable
-representational signal, not its causal use or an implemented router.
+consistently after surface residualisation. Together, these findings identify
+a graded, benchmark-general component of compositional difficulty in question
+representations.
 
-This chapter answers the first of the two questions raised in
-Chapter~\ref{chap:background}, at the level of the model's internal
-representation. The chapters that follow address the second at a complementary
-level: instead of asking whether the difficulty of a question can be read
-before retrieval begins, they ask how the retrieval effort that a difficult
-question implies can be reduced once it does. The two studies are deliberately
-independent---no quantity computed here is consumed by what follows---and are
-joined by the problem they share rather than by a shared pipeline.
+Having examined how compositional demand is reflected before answering,
+the thesis turns to what happens once a decision to decompose has been made.
+The challenge is then to construct useful subquestions, retrieve their
+supporting evidence, and distribute the available passage budget effectively.
+Chapter~\ref{ch:evidence-aware} establishes how to evaluate these requirements;
+Chapter~\ref{chap:optimisation} studies how to improve them.

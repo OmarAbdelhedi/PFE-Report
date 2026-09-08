@@ -198,7 +198,7 @@ available instead of inferring retrieval quality solely from the final answer.
 \subsection{Evidence Coverage and Retrieval Depth}
 \label{subsec:coverage-depth}
 
-A multi-hop question is not answerable from part of its evidence. The quantity
+For evidence-oriented evaluation, a question is considered completely covered only when all of its annotated supporting evidence is available. The quantity
 of interest is therefore not how much of \(E(q)\) a ranking contains, but how
 deep the ranking must be read before it contains all of it. For a question whose
 evidence is all present, that depth is fixed by the lowest-ranked required
@@ -327,10 +327,7 @@ structured relations to guide subsequent discovery. These dimensions are not
 mutually exclusive. An iterative retriever may use dense scoring internally, a
 graph-based architecture may use lexical or dense similarity to locate and
 score nodes or passages, and a first-stage sparse or dense search may be
-followed by reranking. Of the mechanisms described below, lexical scoring and
-late interaction are the two used directly in the experiments of
-Chapter~\ref{chap:empirical-studies}, where they serve to decide which
-supporting passage a given subquestion is responsible for. The remainder are
+followed by reranking. Of the mechanisms described below, lexical and late-interaction methods are used directly in the later experiments for different purposes. BM25 provides the retrieval rankings used in the cross-benchmark budget-allocation studies of Chapters 4 and 5, while ColBERT similarities contribute features to the evidence-ownership estimator of Chapter 4. The remaining methods provide the broader retrieval context for the systems studied in this report. The remainder are
 presented because they define the vocabulary in which retrieval behaviour is
 described throughout this report.
 
@@ -785,16 +782,10 @@ and improved specifically as a set of retrieval queries.
 
 \begin{center}
   \fbox{\parbox{0.88\textwidth}{\centering
-    \textbf{Can a decomposition preserve evidence coverage while reducing the
-    maximum depth required to retrieve that evidence?}}}
+    \textbf{Can a decomposition be evaluated and improved so that its subquestions retrieve the required evidence more efficiently?}}}
 \end{center}
 
-Answering this requires three capabilities: determining which evidence each
-subquestion is responsible for, evaluating decompositions jointly through coverage and
-depth, and adapting the decomposition-generation strategy according to those
-metrics. Chapter~\ref{chap:empirical-studies} develops the evidence-aware
-evaluation and attribution required by the first two. Chapter~\ref{chap:guarantees}
-then uses the resulting signal to optimise the decomposition prompt.
+Answering this requires determining which evidence each subquestion is responsible for, evaluating decompositions jointly through evidence coverage and retrieval depth, and controlling how the available retrieval budget is used. Chapter 4 develops the evidence-aware evaluation and attribution required for these measurements. Chapter 5 then applies them to automated decomposition-instruction search and learned passage allocation, while also developing structured evidence feedback for subsequent prompt optimisation.
 % TODO (before submission): this forward reference to prompt optimisation is
 % not yet supported by any background section. Once Chapter 5 is written, add a
 % new SECTION -- not a subsection of Section~\ref{sec:decomposition} -- placed
@@ -825,6 +816,4 @@ opposite sides: one asks whether the amount of reasoning a question requires is
 already visible inside the model, the other asks how the retrieval work that
 this amount implies can be reduced outside it. The first is whether
 compositional difficulty is encoded in the question representation before
-answering, which is investigated in Chapter~\ref{chap:probing}. The second is whether decomposition can be evaluated
-and optimised to preserve evidence coverage while reducing retrieval depth,
-which motivates Chapters~\ref{chap:empirical-studies} and~\ref{chap:guarantees}.
+answering, which is investigated in Chapter~\ref{chap:probing}. The second is whether decomposition can be evaluated and improved to preserve evidence coverage while using retrieval depth and passage budgets more effectively, which motivates Chapters 4 and 5.

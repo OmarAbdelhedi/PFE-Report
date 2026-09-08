@@ -3,47 +3,44 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "ch5-opro"
-Warning--I didn't find a database entry for "ch5-gepa"
-You've used 32 entries,
+You've used 34 entries,
             1876 wiz_defined-function locations,
-            641 strings with 11991 characters,
-and the built_in function-call counts, 11323 in all, are:
-= -- 970
-> -- 643
+            646 strings with 12492 characters,
+and the built_in function-call counts, 11929 in all, are:
+= -- 994
+> -- 719
 < -- 0
-+ -- 225
-- -- 193
-* -- 865
-:= -- 1589
-add.period$ -- 33
-call.type$ -- 32
-change.case$ -- 32
++ -- 251
+- -- 217
+* -- 927
+:= -- 1699
+add.period$ -- 35
+call.type$ -- 34
+change.case$ -- 34
 chr.to.int$ -- 0
-cite$ -- 32
-duplicate$ -- 586
-empty$ -- 1043
-format.name$ -- 193
-if$ -- 2679
+cite$ -- 34
+duplicate$ -- 612
+empty$ -- 1091
+format.name$ -- 217
+if$ -- 2803
 int.to.chr$ -- 0
-int.to.str$ -- 32
-missing$ -- 32
-newline$ -- 100
-num.names$ -- 32
-pop$ -- 198
+int.to.str$ -- 34
+missing$ -- 34
+newline$ -- 106
+num.names$ -- 34
+pop$ -- 214
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 380
+skip$ -- 384
 stack$ -- 0
 substring$ -- 784
-swap$ -- 230
+swap$ -- 232
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 92
-width$ -- 34
-write$ -- 293
-(There were 2 warnings)
+while$ -- 94
+width$ -- 36
+write$ -- 309

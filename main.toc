@@ -42,7 +42,7 @@
 \contentsline {section}{\numberline {2.6}Research Gap and Thesis Positioning}{17}{section.2.6}%
 \contentsline {subsection}{\numberline {2.6.1}Anticipating Compositional Difficulty}{17}{subsection.2.6.1}%
 \contentsline {subsection}{\numberline {2.6.2}Optimising Decomposition for Retrieval Efficiency}{17}{subsection.2.6.2}%
-\contentsline {section}{Conclusion}{17}{section*.23}%
+\contentsline {section}{Conclusion}{18}{section*.23}%
 \contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{19}{chapter.3}%
 \contentsline {section}{Introduction}{19}{section*.24}%
 \contentsline {section}{\numberline {3.1}Research Question and Problem Formulation}{19}{section.3.1}%
@@ -72,70 +72,72 @@
 \contentsline {section}{Conclusion}{31}{section*.37}%
 \contentsline {chapter}{\numberline {4}Evidence-Aware Evaluation of Question Decomposition}{32}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Problem Formulation}{32}{section.4.1}%
-\contentsline {subsection}{\numberline {4.1.1}A Decomposition as an Executable Sequence}{32}{subsection.4.1.1}%
-\contentsline {subsection}{\numberline {4.1.2}Availability, Assignment and Execution}{33}{subsection.4.1.2}%
-\contentsline {section}{\numberline {4.2}Retrieval Depth and Evidence Responsibility}{33}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}The Evidence-Rank Matrix}{33}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Union Depth}{34}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Ownership-Masked Depth}{34}{subsection.4.2.3}%
-\contentsline {subsection}{\numberline {4.2.4}Coverage and an Aggregate Depth Score}{35}{subsection.4.2.4}%
-\contentsline {section}{\numberline {4.3}Learning the Ownership Mask}{35}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Supervision from Reference Decompositions}{35}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Textual and Contextual Features}{36}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Fitting, Threshold Selection and Ensemble Decision}{36}{subsection.4.3.3}%
-\contentsline {subsection}{\numberline {4.3.4}How Assignment Error Changes the Depth Measurement}{37}{subsection.4.3.4}%
+\contentsline {subsection}{\numberline {4.1.1}Sequential Execution of a Decomposition}{32}{subsection.4.1.1}%
+\contentsline {subsection}{\numberline {4.1.2}Evaluation Requirements}{33}{subsection.4.1.2}%
+\contentsline {section}{\numberline {4.2}Evidence-Aware Retrieval Measurements}{33}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Evidence Ranks and Union Depth}{33}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Ownership-Masked Depth}{34}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Complete Coverage and the Depth Score}{35}{subsection.4.2.3}%
+\contentsline {section}{\numberline {4.3}Learning Evidence Ownership}{36}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Training Data and Reference Assignments}{36}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Features for Ownership Prediction}{36}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Training, Threshold Selection, and Ensemble Prediction}{37}{subsection.4.3.3}%
 \contentsline {section}{\numberline {4.4}Experimental Protocol}{37}{section.4.4}%
-\contentsline {subsection}{\numberline {4.4.1}Systems and Retained Executions}{37}{subsection.4.4.1}%
-\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{38}{subsection.4.4.2}%
-\contentsline {section}{\numberline {4.5}Results}{39}{section.4.5}%
-\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{39}{subsection.4.5.1}%
-\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{40}{subsection.4.5.2}%
-\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{40}{subsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{41}{subsection.4.5.4}%
-\contentsline {section}{\numberline {4.6}Depth Under a Total Passage Budget}{41}{section.4.6}%
-\contentsline {subsection}{\numberline {4.6.1}Equal-Allocation Replay}{41}{subsection.4.6.1}%
-\contentsline {paragraph}{Per-question and average budgets.}{42}{paragraph*.44}%
-\contentsline {subsection}{\numberline {4.6.2}A Fixed-List Oracle Allocation}{42}{subsection.4.6.2}%
-\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{43}{subsection.4.6.3}%
-\contentsline {section}{\numberline {4.7}A Cross-Benchmark Fixed-Trace Study}{43}{section.4.7}%
-\contentsline {subsection}{\numberline {4.7.1}Retrieval Regime and Evaluation Population}{43}{subsection.4.7.1}%
-\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{44}{subsection.4.7.2}%
-\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{45}{subsection.4.7.3}%
-\contentsline {section}{\numberline {4.8}Discussion and Implications for Optimisation}{46}{section.4.8}%
+\contentsline {subsection}{\numberline {4.4.1}Evaluation Questions, Systems, and Execution Settings}{37}{subsection.4.4.1}%
+\contentsline {subsection}{\numberline {4.4.2}Compared Configurations and Evaluation Procedure}{37}{subsection.4.4.2}%
+\contentsline {paragraph}{Measurements and comparisons.}{38}{paragraph*.39}%
+\contentsline {section}{\numberline {4.5}Ownership Validation and Decomposition Results}{39}{section.4.5}%
+\contentsline {subsection}{\numberline {4.5.1}Ownership Prediction Accuracy}{39}{subsection.4.5.1}%
+\contentsline {subsection}{\numberline {4.5.2}Sensitivity to Ownership Predictions}{40}{subsection.4.5.2}%
+\contentsline {subsection}{\numberline {4.5.3}Decomposition versus Direct Retrieval}{41}{subsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.5.4}The Effect of Intermediate Answers}{41}{subsection.4.5.4}%
+\contentsline {paragraph}{Reference and generated queries with BM25.}{42}{paragraph*.45}%
+\contentsline {section}{\numberline {4.6}Evidence Coverage Under a Passage Budget}{42}{section.4.6}%
+\contentsline {subsection}{\numberline {4.6.1}Passage-Slot Accounting and Balanced Allocation}{43}{subsection.4.6.1}%
+\contentsline {subsection}{\numberline {4.6.2}Oracle Allocation on Recorded Lists}{43}{subsection.4.6.2}%
+\contentsline {subsection}{\numberline {4.6.3}Allocation Results on the MuSiQue Panel}{44}{subsection.4.6.3}%
+\contentsline {subsection}{\numberline {4.6.4}Cross-Benchmark BM25 Evaluation}{45}{subsection.4.6.4}%
+\contentsline {paragraph}{Evaluation population and trace generation.}{45}{paragraph*.48}%
+\contentsline {paragraph}{Coverage at a matched budget.}{45}{paragraph*.49}%
+\contentsline {paragraph}{Budgets needed for target coverage.}{46}{paragraph*.51}%
+\contentsline {section}{\numberline {4.7}Discussion and Implications for Optimisation}{46}{section.4.7}%
+\contentsline {subsection}{\numberline {4.7.1}Contributions and Implications}{46}{subsection.4.7.1}%
+\contentsline {subsection}{\numberline {4.7.2}Scope and Limitations}{46}{subsection.4.7.2}%
 \contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{48}{chapter.5}%
-\contentsline {section}{\numberline {5.1}The Optimisation Problem}{49}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}An Instruction Defines an Executable Policy}{49}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}The Retained Retrieval Objective}{49}{subsection.5.1.2}%
+\contentsline {section}{\numberline {5.1}Optimisation Framework}{48}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}The Instruction as an Optimisation Variable}{49}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}The Retrieval Objective}{50}{subsection.5.1.2}%
 \contentsline {subsection}{\numberline {5.1.3}Answer Quality and Resource Use}{50}{subsection.5.1.3}%
-\contentsline {section}{\numberline {5.2}The Completed OPRO Search}{50}{section.5.2}%
-\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{50}{subsection.5.2.1}%
-\contentsline {subsection}{\numberline {5.2.2}Proposal and Selection Loop}{51}{subsection.5.2.2}%
-\contentsline {subsection}{\numberline {5.2.3}The Feedback Supplied to the Optimizer}{51}{subsection.5.2.3}%
-\contentsline {section}{\numberline {5.3}Results of the Pilot}{51}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Progress Across Search Rounds}{51}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}The Selected Instruction}{52}{subsection.5.3.2}%
-\contentsline {subsection}{\numberline {5.3.3}The Optimisation Objective and the Answer Objective}{52}{subsection.5.3.3}%
-\contentsline {section}{\numberline {5.4}Learned Allocation on Fixed Retrieval Traces}{53}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}The Allocation Intervention}{53}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Predicting Per-Arm Depth Requirements}{54}{subsection.5.4.2}%
-\contentsline {subsection}{\numberline {5.4.3}Segment and Unit-Increment Allocation}{54}{subsection.5.4.3}%
-\contentsline {subsection}{\numberline {5.4.4}Evaluation Population and Cross-Validation}{55}{subsection.5.4.4}%
-\contentsline {subsection}{\numberline {5.4.5}Coverage and Target Budgets}{56}{subsection.5.4.5}%
-\contentsline {subsection}{\numberline {5.4.6}Paired Final-Answer Evaluation}{56}{subsection.5.4.6}%
-\contentsline {subsection}{\numberline {5.4.7}Exploratory Hidden-State Prediction of Assigned Depth}{57}{subsection.5.4.7}%
-\contentsline {section}{\numberline {5.5}Evidence-Aware Feedback for Prompt Search}{58}{section.5.5}%
-\contentsline {subsection}{\numberline {5.5.1}Separating Reward from Diagnostic Information}{58}{subsection.5.5.1}%
-\contentsline {subsection}{\numberline {5.5.2}Observed Events and Estimated Assignments}{59}{subsection.5.5.2}%
-\contentsline {subsection}{\numberline {5.5.3}Reflective Search with a Fixed Execution Interface}{59}{subsection.5.5.3}%
-\contentsline {section}{\numberline {5.6}Independent Evaluation Design}{60}{section.5.6}%
-\contentsline {subsection}{\numberline {5.6.1}Frozen Data Roles and Corpus Scope}{60}{subsection.5.6.1}%
-\contentsline {subsection}{\numberline {5.6.2}Comparators and Search Allowances}{61}{subsection.5.6.2}%
-\contentsline {subsection}{\numberline {5.6.3}Outcome Analysis and Cost Accounting}{62}{subsection.5.6.3}%
-\contentsline {subsection}{\numberline {5.6.4}Separating Prompt and Allocation Effects}{62}{subsection.5.6.4}%
-\contentsline {subsection}{\numberline {5.6.5}Controlled Checks of the Diagnostic Representation}{63}{subsection.5.6.5}%
-\contentsline {section}{\numberline {5.7}Discussion}{63}{section.5.7}%
-\contentsline {subsection}{\numberline {5.7.1}What the Completed Experiment Establishes}{63}{subsection.5.7.1}%
-\contentsline {subsection}{\numberline {5.7.2}The Scope of the Evidence-Feedback Extension}{64}{subsection.5.7.2}%
-\contentsline {chapter}{Conclusion and outlook}{66}{section*.60}%
-\contentsline {chapter}{Bibliography}{67}{section*.61}%
-\contentsline {chapter}{Netography}{70}{section*.63}%
+\contentsline {section}{\numberline {5.2}Automated Search over Decomposition Instructions}{50}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{51}{subsection.5.2.1}%
+\contentsline {subsection}{\numberline {5.2.2}Search Procedure and Feedback}{51}{subsection.5.2.2}%
+\contentsline {paragraph}{Examples supplied to the optimiser.}{52}{paragraph*.54}%
+\contentsline {subsection}{\numberline {5.2.3}Progress Across Search Rounds}{52}{subsection.5.2.3}%
+\contentsline {subsection}{\numberline {5.2.4}Retrieval, Answers, and Cost of the Selected Instruction}{52}{subsection.5.2.4}%
+\contentsline {subsection}{\numberline {5.2.5}Choosing between Retrieval and Answer Objectives}{53}{subsection.5.2.5}%
+\contentsline {section}{\numberline {5.3}Learning to Allocate Retrieved Passages}{54}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Allocation Setting and Comparators}{54}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Predicting Per-Arm Depth Targets from Recorded Rankings}{54}{subsection.5.3.2}%
+\contentsline {subsection}{\numberline {5.3.3}Segment and Unit-Increment Allocation}{55}{subsection.5.3.3}%
+\contentsline {subsection}{\numberline {5.3.4}Evaluation Population and Cross-Validation}{56}{subsection.5.3.4}%
+\contentsline {subsection}{\numberline {5.3.5}Evidence Coverage and Required Budgets}{57}{subsection.5.3.5}%
+\contentsline {subsection}{\numberline {5.3.6}Paired Final-Answer Evaluation}{58}{subsection.5.3.6}%
+\contentsline {section}{\numberline {5.4}Evidence-Aware Feedback: Design and Diagnostic Validation}{59}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Separating Reward from Diagnostic Information}{59}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Observed Events and Estimated Assignments}{59}{subsection.5.4.2}%
+\contentsline {subsection}{\numberline {5.4.3}Ownership Diagnostics under Controlled Plan Changes}{60}{subsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.4.4}Reflective Search with a Fixed Execution Interface}{61}{subsection.5.4.4}%
+\contentsline {subsection}{\numberline {5.4.5}Proposed Evaluation of Feedback Quality}{62}{subsection.5.4.5}%
+\contentsline {section}{\numberline {5.5}Discussion and Implications}{62}{section.5.5}%
+\contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{62}{subsection.5.5.1}%
+\contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{63}{subsection.5.5.2}%
+\contentsline {chapter}{Conclusion and outlook}{64}{section*.64}%
+\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{65}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{65}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{66}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{66}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{67}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{67}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{68}{subsection.A.2.4}%
+\contentsline {chapter}{Bibliography}{69}{section*.67}%
+\contentsline {chapter}{Netography}{73}{section*.69}%

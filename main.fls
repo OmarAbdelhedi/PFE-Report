@@ -628,6 +628,12 @@ INPUT chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT ./chapters/conclusion.tex
 INPUT chapters/conclusion.tex
+INPUT ./chapters/optimisation-appendix.tex
+INPUT ./chapters/optimisation-appendix.tex
+INPUT chapters/optimisation-appendix.tex
+INPUT ./chapters/optimisation-appendix.tex
+INPUT ./chapters/optimisation-appendix.tex
+INPUT chapters/optimisation-appendix.tex
 INPUT ./main.bbl
 INPUT ./main.bbl
 INPUT main.bbl

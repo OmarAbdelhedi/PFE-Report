@@ -97,4 +97,10 @@ D.~Zhou, N.~Sch{\"a}rli, L.~Hou, J.~Wei, N.~Scales, X.~Wang, D.~Schuurmans, C.~C
 \bibitem{khot2023decomposed}
 T.~Khot, H.~Trivedi, M.~Finlayson, Y.~Fu, K.~Richardson, P.~Clark, and A.~Sabharwal, ``Decomposed prompting: A modular approach for solving complex tasks,'' in {\em International Conference on Learning Representations (ICLR)}, 2023.
 
+\bibitem{ch5-opro}
+C.~Yang, X.~Wang, Y.~Lu, H.~Liu, Q.~V. Le, D.~Zhou, and X.~Chen, ``Large language models as optimizers,'' in {\em International Conference on Learning Representations}, 2024.
+
+\bibitem{ch5-gepa}
+L.~A. Agrawal, S.~Tan, D.~Soylu, N.~Ziems, R.~Khare, K.~Opsahl-Ong, A.~Singhvi, H.~Shandilya, M.~J. Ryan, M.~Jiang, C.~Potts, K.~Sen, A.~G. Dimakis, I.~Stoica, D.~Klein, M.~Zaharia, and O.~Khattab, ``{GEPA}: Reflective prompt evolution can outperform reinforcement learning,'' in {\em International Conference on Learning Representations}, 2026.
+
 \end{thebibliography}

@@ -1,0 +1,227 @@
+% !TEX root = ../main.tex
+\chapter[Supplementary Optimisation Studies]{Supplementary Analyses and Evaluation Protocol}
+\label{app:optimisation-supplement}
+
+This appendix preserves the exploratory depth-prediction study and the detailed
+evaluation protocol supporting Chapter~5. The first reports completed probe
+measurements; the second describes the proposed feedback comparison. The main
+chapter presents the completed prompt-search, allocation, and ownership-check
+results.
+
+\section{Exploratory Hidden-State Prediction of Assigned Depth}
+\label{sec:ch5-depth-probe}
+
+Chapter~3 studies representations of compositional hop count. A separate
+probe examines their association with the assigned depth target $d_a$
+defined in Section~\ref{sec:ch5-allocation}. The panel contains $2\,648$ reference arms from $1\,000$
+MuSiQue questions with BM25 rankings. Supporting passages are assigned to
+the earliest-ranking arm; $31$ arm targets belong to questions whose
+required evidence is unreachable within the retained lists. The binary
+targets are $d_a\leq k$ for $k\in\{2,4,8,16,32\}$.
+
+The frozen models encode the reference subquestion templates as raw text,
+without a chat template. Right-padding-aware last-token pooling supplies
+the features at nine sampled layers per model. Of the $2\,648$ templates,
+$1\,517$ contain unresolved \texttt{\#N} references and differ from the
+gold-resolved queries used for retrieval. The representations therefore
+describe the templates rather than the executed queries.
+
+\begin{table}[H]
+\centering
+\caption{Exploratory depth prediction on the fixed reference panel.
+Mean AUROC averages the five depth thresholds. Each model's layer is
+selected using the same cross-validation results reported here.}
+\label{tab:ch5-depth-probe}
+\begin{tabular}{lrr}
+\hline
+Features & Selected layer & Mean AUROC \\
+\hline
+Qwen2.5-7B-Instruct & 14 & 0.8397 \\
+Llama-3.1-8B-Instruct & 12 & 0.8454 \\
+Mistral-7B-Instruct-v0.3 & 16 & 0.8442 \\
+Surface features and top-ten BM25 scores & n/a & 0.7639 \\
+\hline
+\end{tabular}
+\end{table}
+
+Five-fold cross-validation keeps all arms of a question together. Feature
+standardisation is fitted within each training fold. Logistic regression
+uses inverse regularisation strength $C=0.01$ for hidden states and $C=1$
+for the surface-and-score comparator, so Table~\ref{tab:ch5-depth-probe}
+compares two specified readouts as well as their features. Near-constant
+hidden-state dimensions are filtered using the full panel before splitting.
+
+The split retains substantial source overlap: $1\,557$ test-arm instances
+have an identical template in their training fold, and $755$ test questions
+share a source subproblem with training. Layer selection on the reported
+folds adds selection optimism. All selected-layer activations are finite;
+the Qwen final-layer arrays contain nonfinite activations for $2\,237$ arms,
+which the probe code replaces with zero. That layer is unsuitable for
+interpreting a layer-wise performance decline.
+
+These measurements motivate a component-separated evaluation of template
+representations with nested layer selection and matched readout tuning.
+Their use in an allocator requires a further end-to-end comparison of
+evidence coverage, answer quality and representation-extraction cost.
+
+\section{Independent Evaluation Design}
+\label{sec:ch5-prospective}
+
+\subsection{Frozen Data Roles and Corpus Scope}
+
+The proposed feedback comparison separates questions used for reflection, questions used
+for candidate selection and questions reserved for final confirmation.
+The source is the official answerable MuSiQue development
+release~\cite{trivedi2022musique}. Excluding all composite question IDs in the
+historical thousand-question panel leaves $1\,417$ cases. Removing three
+additional exact normalised question-text matches leaves $1\,414$.
+
+Of those questions, $363$ have every gold supporting passage in the fixed
+$11\,656$-passage corpus. The initial matched-backbone study uses this
+eligible subset. Eligibility is determined before new model outputs, by exact
+passage identity rather than observed retrieval success. It defines a
+corpus-covered target population. Broader MuSiQue performance requires a
+separate evaluation with the additional corpus material included.
+
+Questions sharing any underlying single-hop source ID are grouped before
+the new splits are assigned. The final manifests contain $96$ optimisation,
+$48$ selection and $200$ confirmation questions, with zero shared source
+IDs across these three splits. Table~\ref{tab:ch5-splits} gives their
+composition. Split identities and file hashes are frozen before candidate
+generation.
+
+\begin{table}[H]
+\centering
+\small
+\caption{Frozen question-new splits for the prospective comparison.
+Components connect questions sharing a source single-hop ID.}
+\label{tab:ch5-splits}
+\begin{tabular}{lrrrrr}
+\hline
+Role & Questions & Two-hop & Three-hop & Four-hop & Components \\
+\hline
+Optimisation & $96$ & $23$ & $40$ & $33$ & $29$ \\
+Selection & $48$ & $16$ & $19$ & $13$ & $22$ \\
+Confirmation & $200$ & $73$ & $77$ & $50$ & $65$ \\
+\hline
+\end{tabular}
+\end{table}
+
+All selected composite question IDs and texts differ from the historical
+panel and the ownership classifier's training panel. Historical subproblem
+reuse remains: $343$ of the $344$ selected questions share at least one
+single-hop source with the historical thousand questions. These are new
+compositions under the documented exposure exclusions, rather than wholly
+new atomic facts. There is no source-ID overlap with the classifier's
+training questions. The confirmation set therefore tests transfer to new
+compositions within the corpus-covered regime.
+
+The reflection service accepts only hash-bound optimisation samples. The
+selection set supplies scores for ranking candidates and remains adaptive
+development data. Confirmation question contents and labels stay outside
+the search interface until the final instructions and analysis choices have
+been fixed.
+
+\subsection{Comparators and Search Allowances}
+
+The fresh study includes the unchanged initial instruction, nonadaptive
+instruction sampling, OPRO-style answer-feedback search and three GEPA
+feedback conditions. Nonadaptive proposals are generated from the task and
+initial instruction before their evaluation results are available. The
+OPRO control uses score histories and answer errors. The three GEPA
+conditions share the optimizer, reward and execution interface while varying
+the feedback view.
+
+Each fresh search is assigned a ceiling of $512$ example-level rollout
+evaluations and $24$ candidate proposals. A rollout is an executed
+candidate--question pair. Parent comparisons, proposed-candidate comparisons
+and validation executions count toward that ceiling. The different methods
+allocate their allowance differently, so search progress is measured against
+cumulative evaluations and actual cost.
+
+The nonadaptive schedule screens $24$ instructions on a common set of
+$12$ optimisation questions, then evaluates its four leaders on the $48$
+selection questions. This uses
+\begin{equation}
+  24\times12+4\times48=480
+  \label{eq:ch5-budget}
+\end{equation}
+candidate--question evaluations. The OPRO control uses four rounds of six
+proposals, with a declared twelve-question screen per round and selection
+evaluation for each round's nominee. The reflective search uses its allowance
+for parent and child batches and complete selection evaluations. The number
+of completed mutations is reported explicitly rather than inferred from
+the evaluation ceiling.
+
+Within a search condition, the winner is selected by mean selection F1.
+Ties are resolved by lower mean execution tokens and then instruction hash.
+The fixed initial instruction and the historical OPRO winner are retained
+as identified reference policies. The fresh pipeline may use a different
+API model configuration from the historical Llama pilot; comparisons are
+made within a frozen fresh backbone, and historical scores remain in their
+original regime.
+
+The principal contrast is structured versus answer-only feedback. Structured
+versus raw feedback is required to isolate the effect of diagnostic
+organisation from additional supervision. A second predeclared search seed
+provides a replication of search variability when resources permit. Both
+seeds' trajectories must then be retained.
+
+\subsection{Outcome Analysis and Cost Accounting}
+
+After selection, each final policy is evaluated on the same locked
+confirmation questions. The primary outcome is the question-weighted mean
+paired F1 difference. Exact match, complete evidence in the reader contexts,
+union depth, masked depth, arm count and model tokens are secondary
+measurements. All questions, including fallback executions, contribute to
+the aggregate results.
+
+Paired bootstrap resampling preserves each question's outcomes across
+policies. A complementary component-level bootstrap keeps questions sharing
+a source component together. The confirmation panel contains $65$ such
+components, with at most $20$ questions in one component. Question and
+component resampling describe sensitivity under different sampling units;
+neither supplies a distribution-free generalisation guarantee.
+
+Search cost and inference cost are recorded separately. Search cost includes
+instruction proposals, reflection and candidate evaluation. Inference cost
+includes decomposition, retrieval-associated model calls and every reader
+step for the selected policy. Cached deterministic evaluations count toward
+the logical search allowance while their actual charges are recorded
+separately. A cache hit is reuse of a result, not an independent execution.
+
+The passage-allocation replay in Chapter~4 provides a complementary cost
+diagnostic. On recorded lists it compares balanced total-slot allocation with
+the smallest oracle prefix allocation covering the gold passages. The oracle
+has access to gold identities and frozen rankings. It measures available
+allocation headroom; it is not a learned execution policy. In the sequential
+pipeline, changing an early reader allowance may change its answer and every
+downstream query. Such a policy requires fresh execution before claiming an
+answer-quality or runtime gain.
+
+\subsection{Separating Prompt and Allocation Effects}
+
+The completed studies intervene at different points: the OPRO pilot changes
+the decomposition instruction, while Section~\ref{sec:ch5-allocation}
+changes prefixes selected from fixed rankings. A prospective factorial
+comparison can test their combination. Freeze an initial prompt $p_0$, a
+search-selected prompt $p_1$, balanced allocation $g_0$ and learned
+allocation $g_1$ before final evaluation. Evaluate all four pairs
+$(p_i,g_j)$ on the same questions and reader budget. If $Y_{ij}$ denotes
+mean final-answer F1, the interaction is
+\begin{equation}
+  I=(Y_{11}-Y_{10})-(Y_{01}-Y_{00}).
+  \label{eq:ch5-factorial}
+\end{equation}
+It asks whether the allocation benefit changes under the new prompt.
+Each prompt generates its own traces under the same five-passages-per-hop
+policy; both allocators then act on those traces. This comparison concerns
+pooled context, with trace-generation cost reported separately. Its
+outcomes remain prospective.
+
+A sequential extension must choose each arm's budget using information
+available at that step and reserve resources for later arms. It then
+recomputes intermediate answers and downstream retrieval. The offline
+allocator uses resolved later queries and their score profiles, which
+would give an online policy future information. Step-local allocation
+and re-execution are therefore part of that extension.
