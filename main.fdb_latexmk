@@ -1,22 +1,23 @@
 # Fdb version 4
-["bibtex N"] 1788867698.58615 "N.aux" "N.bbl" "N" 1788872521.42034 0
+["bibtex N"] 1788867698.58615 "N.aux" "N.bbl" "N" 1788875425.54538 0
   "./urls.bib" 1788141630.87046 3272 596561f55d4491d55cbffee4b6c10583 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/ieeetr.bst" 1292289607 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "N.aux" 1788872521.07312 333 b83425da2d314f3d71957f69ce9ad62d "pdflatex"
+  "N.aux" 1788875425.22213 333 b83425da2d314f3d71957f69ce9ad62d "pdflatex"
   (generated)
   "N.bbl"
   "N.blg"
   (rewritten before read)
-["bibtex main"] 1788872519.41798 "main.aux" "main.bbl" "main" 1788872521.42013 0
+["bibtex main"] 1788875423.36444 "main.aux" "main.bbl" "main" 1788875425.54517 0
   "./references.bib" 1788777056.65834 55200 56235e0eb28c0ad7ee211e13f9f91370 ""
   "/usr/share/texlive/texmf-dist/bibtex/bst/base/ieeetr.bst" 1292289607 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "main.aux" 1788872521.06149 50439 47ca5846a3896bb8d16f5ba158f6e0ec "pdflatex"
+  "main.aux" 1788875425.21073 50544 613c7f3bf05e5c672307e73465cefc6b "pdflatex"
   (generated)
   "main.bbl"
   "main.blg"
   (rewritten before read)
-["pdflatex"] 1788872519.4666 "main.tex" "main.pdf" "main" 1788872521.4204 0
+["pdflatex"] 1788875423.41958 "/home/omar/work/PFE/report/main.tex" "main.pdf" "main" 1788875425.54545 0
   "/etc/texmf/web2c/texmf.cnf" 1786474450.27537 475 c0e671620eb5563b2130f56340a5fde8 ""
+  "/home/omar/work/PFE/report/main.tex" 1788765205.5552 10700 7f7e4f2bec065c15ca0e1f32a87358d8 ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx0800.tfm" 1136768653 3584 269b66e921ba58750c12f7f1c8ea3ebd ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/jknappen/ec/ecbx1000.tfm" 1136768653 3584 2d666ecf6d466d8b007246bc2f94d9da ""
@@ -316,7 +317,7 @@
   "/usr/share/texmf/web2c/texmf.cnf" 1707919699 40399 f2c302f7d2af602abb742093540a5834 ""
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1788121398.6424 5352775 637ca601b51e878992d7615da0781813 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1788121409 6831434 47b397a9e7e146f2f041d9fbda898eb1 ""
-  "N.aux" 1788872521.07312 333 b83425da2d314f3d71957f69ce9ad62d "pdflatex"
+  "N.aux" 1788875425.22213 333 b83425da2d314f3d71957f69ce9ad62d "pdflatex"
   "N.bbl" 1788867698.63876 1572 8b272cb53ef201788f73bddbcf9b876a "bibtex N"
   "chapters/0-i-signature.tex" 1788126318.43335 354 957539dda0db759f5ae6504561be0dd1 ""
   "chapters/0-ii-Dedications.tex" 1788126318.43341 179 623cee202b2ae172cee8f0b2809d897e ""
@@ -327,12 +328,12 @@
   "chapters/1-first-chapter.tex" 1788470669.19739 8888 eae08d5adf013ccf79bbbc0efd15518f ""
   "chapters/2-second-chapter.tex" 1788476974.76123 44018 f99cf0f199a68320ccc87b3d9a2a989a ""
   "chapters/3-third-chapter.tex" 1788391081.11842 39471 58d554f1dcb5531333f14f79732f9f4f ""
-  "chapters/chapter4.tex" 1788872513.24209 48848 e982c3e1fee4ab4a478be45d41c2143b ""
+  "chapters/chapter4.tex" 1788875418.81328 49882 839e36a64cd621909b30d3252a898ce9 ""
   "chapters/chapter5.tex" 1788777056.657 53361 621a418f2b598872f8632ce3b4653a64 ""
   "chapters/conclusion.tex" 1788126318.43538 239 64972474321c51fe39f8ce7354832d42 ""
   "chapters/cover-arabic.tex" 1787936728 2126 671c4a29982555365b8b0168aa26d6c4 ""
   "chapters/pg-EPT.tex" 1788473759.72303 1853 b2852c935251b3f4a96a787f30f98249 ""
-  "chapters/tables/ch4_bm25_availability.tex" 1788760120 581 6f7c08bf8602b0a3e4714ecfa6e4e9fb ""
+  "chapters/tables/ch4_bm25_availability.tex" 1788874672.06901 563 4797fb65c60da7159a9110c58c7f0bbe ""
   "chapters/tables/ch5_bm25_allocation.tex" 1788760576 920 75b40fe05191679930acd4fab1dc6805 ""
   "chapters/tables/ch5_reader_fixed_traces.tex" 1788761198 883 2bc1c5aac7efb131073670b0c14e28ab ""
   "images/EPT_logo.png" 1787935271 3396 1d5751a83f1832806cc7247fbc497746 ""
@@ -343,13 +344,13 @@
   "images/chapter3/surface-control.png" 1788369371.9719 74695 9ef305837e49d21e2b5c844c9ff94d66 ""
   "images/concordia.png" 1786315616 86245 76e90feeb37683820475e8cd5a5f42ef ""
   "images/ev-building.jpg" 1786387718 560129 31b8fc11b8f65cee5602451b1a26fc00 ""
-  "main.aux" 1788872521.06149 50439 47ca5846a3896bb8d16f5ba158f6e0ec "pdflatex"
-  "main.bbl" 1788872519.46178 9457 2efd09665601213d3d13386b2c943c3d "bibtex main"
-  "main.lof" 1788872521.07312 1937 93cbb082eb038e216fddc6e0b438b9c0 "pdflatex"
-  "main.lot" 1788872521.07312 5742 ac6061b23cb53d937d60545bfab81745 "pdflatex"
-  "main.out" 1788872521.07149 30721 015058aed8e0aa1a81d9614b9fe6ef46 "pdflatex"
+  "main.aux" 1788875425.21073 50544 613c7f3bf05e5c672307e73465cefc6b "pdflatex"
+  "main.bbl" 1788875423.41437 9273 db12e36eef616667411065455fac7bbe "bibtex main"
+  "main.lof" 1788875425.22213 1937 93cbb082eb038e216fddc6e0b438b9c0 "pdflatex"
+  "main.lot" 1788875425.22213 5787 4f19ddac8cbd04247d1c2792fd802976 "pdflatex"
+  "main.out" 1788875425.22073 30721 015058aed8e0aa1a81d9614b9fe6ef46 "pdflatex"
   "main.tex" 1788765205.5552 10700 7f7e4f2bec065c15ca0e1f32a87358d8 ""
-  "main.toc" 1788872521.07312 13492 9a2a460251aa7110da25387fdbeb0b56 "pdflatex"
+  "main.toc" 1788875425.22213 13492 9a2a460251aa7110da25387fdbeb0b56 "pdflatex"
   (generated)
   "N.aux"
   "main.aux"

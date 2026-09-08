@@ -3,13 +3,11 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "ch4-2wiki"
-Warning--I didn't find a database entry for "ch4-hotpot"
 Warning--I didn't find a database entry for "ch5-opro"
 Warning--I didn't find a database entry for "ch5-gepa"
 You've used 32 entries,
             1876 wiz_defined-function locations,
-            643 strings with 12010 characters,
+            641 strings with 11991 characters,
 and the built_in function-call counts, 11323 in all, are:
 = -- 970
 > -- 643
@@ -48,4 +46,4 @@ warning$ -- 0
 while$ -- 92
 width$ -- 34
 write$ -- 293
-(There were 4 warnings)
+(There were 2 warnings)
