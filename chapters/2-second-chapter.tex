@@ -14,11 +14,12 @@ questions may require very different amounts of retrieval and reasoning.
 
 This chapter introduces the concepts needed for the remainder of the thesis. It
 first presents RAG and multi-hop question answering, then reviews retrieval
-methods and the notions of evidence coverage and retrieval depth. It subsequently
-discusses adaptive computation, probing of internal model representations, and
-question decomposition, before focusing on decomposition as a means of making
-evidence easier to retrieve. The chapter ends by identifying the two research
-gaps addressed in the following chapters.
+methods and the notions of evidence coverage and retrieval depth. It subsequently discusses adaptive computation, probing of internal model
+representations, question decomposition, and automated prompt optimisation.
+These strands provide the background for treating decomposition both as a
+retrieval strategy and as an object that can be evaluated and improved. The
+chapter ends by identifying the two research gaps addressed in the following
+chapters.
 
 \section[Multi-Hop Question Answering and Retrieval-Augmented Generation]
 {Multi-Hop Question Answering and\\Retrieval-Augmented Generation}
@@ -524,6 +525,21 @@ vary independently: a difficult question may be answered confidently when all
 the necessary evidence is available, and an easy one may remain uncertain
 because retrieval failed.
 
+A second axis of adaptation concerns how much retrieved context is exposed once
+retrieval has been selected. Increasing the retrieved set can improve the chance
+that the required evidence is available, but larger contexts also increase
+reading cost and do not guarantee that the model will use the added information
+effectively. Liu et al.\ show that language-model performance can depend strongly
+on the position of relevant information within a long context
+~\cite{liu2024lost}. Joren et al.\ introduce the complementary notion of
+\emph{sufficient context}, distinguishing cases in which the retrieved material
+contains enough information to answer a question from cases in which the
+retrieval itself is insufficient~\cite{joren2025sufficient}. These observations
+motivate treating the amount of retrieved context as an adaptive resource rather
+than as a fixed constant. For a decomposed multi-hop question, this raises a
+more specific allocation problem: under a fixed total passage budget, different
+subquestions may require different retrieval depths.
+
 Existing routing approaches establish that question complexity is actionable,
 and they estimate it from surface characteristics with a separate classifier.
 That raises a representational question: could the target model itself already
@@ -746,12 +762,70 @@ tasks, while also making the quality of the prompt and of the generated
 intermediate structure consequential for all subsequent reasoning and
 retrieval.
 
+\section{Automated Prompt Optimisation for Language Model Programs}
+\label{sec:prompt-optimisation}
+
+Once an LLM's behaviour is controlled through natural-language instructions,
+the instruction itself can be treated as an optimisation variable rather than
+being fixed entirely by manual prompt engineering. The model parameters remain
+unchanged; instead, candidate instructions are generated, executed, evaluated
+according to a downstream objective, and revised according to the observed
+performance. This view is particularly relevant to multi-stage language-model
+programs, where changing one instruction can affect several downstream calls
+and where the useful objective may concern the behaviour of the complete
+pipeline rather than the quality of an isolated generation.
+
+Optimization by PROmpting (OPRO) is a representative score-driven approach.
+Yang et al.\ use an LLM as an optimiser by presenting it with previously tested
+candidate solutions together with their objective values and asking it to
+propose new candidates~\cite{ch5-opro}. Applied to prompt optimisation, the
+candidate solutions are natural-language instructions and the objective is a
+task-level performance measure. OPRO therefore provides a general mechanism for
+turning a scalar evaluation signal into iterative instruction search without
+updating the parameters of the model being prompted.
+
+Prompt optimisation has also been extended from individual instructions to
+multi-stage language-model programs. Opsahl-Ong et al.\ introduce MIPRO, which
+optimises free-form instructions and few-shot demonstrations for multiple
+language-model modules against a downstream metric
+~\cite{opsahlong2024mipro}. Their approach uses program- and data-aware
+instruction proposals together with evaluation of candidate configurations,
+addressing the credit-assignment problem that arises when the quality of one
+prompt is observed mainly through the final behaviour of a larger pipeline.
+This program-level perspective is relevant to decomposition systems, where the
+decomposer, retriever, and reader interact sequentially and an instruction
+change can alter all later retrieval and answering steps.
+
+A scalar objective can rank candidate prompts but provides limited information
+about why one execution succeeds or fails. A complementary family of methods
+therefore uses natural-language feedback to guide revision. TextGrad treats
+LLM-generated critiques as textual ``gradients'' that can be propagated through
+a computation graph and used to update prompts or other textual variables
+~\cite{yuksekgonul2025textgrad}. More recently, GEPA uses execution trajectories
+and natural-language reflection to diagnose failures, propose prompt mutations,
+and retain complementary candidates through Pareto-based selection
+~\cite{ch5-gepa}. These approaches shift prompt optimisation from scalar
+selection alone toward feedback that describes how the behaviour of a system
+could be improved.
+
+The distinction between scalar reward and diagnostic feedback is important for
+the retrieval-oriented setting of this thesis. A decomposition instruction can
+be evaluated through final-answer quality, but it can also be evaluated through
+properties of its execution, such as whether the required evidence is retrieved
+and how deeply it appears in the resulting rankings. Chapter~4 develops these
+decomposition-specific measurements. Chapter~5 then uses them in a completed
+OPRO-style instruction-search experiment and develops a structured
+evidence-feedback representation for reflective prompt optimisation. The latter
+is evaluated diagnostically in this thesis, while its comparative effect on
+prompt-search performance remains prospective.
+
+
 \section{Research Gap and Thesis Positioning}
 \label{sec:research-gap}
 
 The preceding literature connects complex questions to adaptive computation,
-probing, and decomposition, but leaves two questions that structure the
-experimental chapters of this thesis.
+probing, decomposition, and automated prompt optimisation, but leaves two
+questions that structure the experimental chapters of this thesis.
 
 \subsection{Anticipating Compositional Difficulty}
 \label{subsec:gap-difficulty}
@@ -786,18 +860,7 @@ and improved specifically as a set of retrieval queries.
 \end{center}
 
 Answering this requires determining which evidence each subquestion is responsible for, evaluating decompositions jointly through evidence coverage and retrieval depth, and controlling how the available retrieval budget is used. Chapter 4 develops the evidence-aware evaluation and attribution required for these measurements. Chapter 5 then applies them to automated decomposition-instruction search and learned passage allocation, while also developing structured evidence feedback for subsequent prompt optimisation.
-% TODO (before submission): this forward reference to prompt optimisation is
-% not yet supported by any background section. Once Chapter 5 is written, add a
-% new SECTION -- not a subsection of Section~\ref{sec:decomposition} -- placed
-% after it and immediately before Section~\ref{sec:research-gap}, covering the
-% prompt-optimisation family actually used (e.g. DSPy/MIPROv2, OPRO, TextGrad).
-% Rationale: it is the second half of the foundation for the second research
-% question, as Section~\ref{sec:probing-representations} is for the first, and
-% it is a distinct literature from decomposition. Size it to what Chapter 5
-% actually uses. Worth connecting back to the signal-to-action frame of
-% Section~\ref{sec:adaptive-computation}: there the signal is question
-% difficulty and the action is routing; in Chapter 5 the signal is the
-% coverage-depth metric and the action is a prompt update.
+
 
 \section*{Conclusion}
 \phantomsection
@@ -806,10 +869,10 @@ Answering this requires determining which evidence each subquestion is responsib
 This chapter presented the background necessary for the experimental work in
 the remainder of the thesis. Multi-hop question answering requires both
 reasoning across several pieces of evidence and retrieval mechanisms capable of
-exposing that evidence efficiently. Existing work approaches these demands
-through improved retrieval, adaptive computation, and question decomposition,
-while probing provides a means of identifying internal signals that may support
-such adaptation.
+exposing that evidence efficiently. Existing work approaches these demands through improved retrieval, adaptive
+computation, question decomposition, and automated prompt optimisation, while
+probing provides a means of identifying internal signals that may support such
+adaptation.
 
 Two questions remain central, and they approach the same difficulty from
 opposite sides: one asks whether the amount of reasoning a question requires is

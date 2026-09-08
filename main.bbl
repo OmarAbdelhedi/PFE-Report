@@ -52,6 +52,12 @@ Z.~Jiang, F.~Xu, L.~Gao, Z.~Sun, Q.~Liu, J.~Dwivedi-Yu, Y.~Yang, J.~Callan, and 
 \bibitem{asai2023selfrag}
 A.~Asai, Z.~Wu, Y.~Wang, A.~Sil, and H.~Hajishirzi, ``{Self-RAG}: Learning to retrieve, generate, and critique through self-reflection,'' in {\em International Conference on Learning Representations (ICLR)}, 2024.
 
+\bibitem{liu2024lost}
+N.~F. Liu, K.~Lin, J.~Hewitt, A.~Paranjape, M.~Bevilacqua, F.~Petroni, and P.~Liang, ``Lost in the middle: How language models use long contexts,'' {\em Transactions of the Association for Computational Linguistics}, vol.~12, pp.~157--173, 2024.
+
+\bibitem{joren2025sufficient}
+H.~Joren, J.~Zhang, C.-S. Ferng, D.-C. Juan, A.~Taly, and C.~Rashtchian, ``Sufficient context: A new lens on retrieval augmented generation systems,'' in {\em International Conference on Learning Representations (ICLR)}, 2025.
+
 \bibitem{alain2016probes}
 G.~Alain and Y.~Bengio, ``Understanding intermediate layers using linear classifier probes,'' {\em arXiv preprint arXiv:1610.01644}, 2016.
 
@@ -99,6 +105,12 @@ T.~Khot, H.~Trivedi, M.~Finlayson, Y.~Fu, K.~Richardson, P.~Clark, and A.~Sabhar
 
 \bibitem{ch5-opro}
 C.~Yang, X.~Wang, Y.~Lu, H.~Liu, Q.~V. Le, D.~Zhou, and X.~Chen, ``Large language models as optimizers,'' in {\em International Conference on Learning Representations}, 2024.
+
+\bibitem{opsahlong2024mipro}
+K.~Opsahl-Ong, M.~J. Ryan, J.~Purtell, D.~Broman, C.~Potts, M.~Zaharia, and O.~Khattab, ``Optimizing instructions and demonstrations for multi-stage language model programs,'' in {\em Proceedings of the 2024 Conference on Empirical Methods in Natural Language Processing}, pp.~9340--9366, Association for Computational Linguistics, 2024.
+
+\bibitem{yuksekgonul2025textgrad}
+M.~Yuksekgonul, F.~Bianchi, J.~Boen, S.~Liu, P.~Lu, Z.~Huang, C.~Guestrin, and J.~Zou, ``Optimizing generative ai by backpropagating language model feedback,'' {\em Nature}, vol.~639, pp.~609--616, 2025.
 
 \bibitem{ch5-gepa}
 L.~A. Agrawal, S.~Tan, D.~Soylu, N.~Ziems, R.~Khare, K.~Opsahl-Ong, A.~Singhvi, H.~Shandilya, M.~J. Ryan, M.~Jiang, C.~Potts, K.~Sen, A.~G. Dimakis, I.~Stoica, D.~Klein, M.~Zaharia, and O.~Khattab, ``{GEPA}: Reflective prompt evolution can outperform reinforcement learning,'' in {\em International Conference on Learning Representations}, 2026.
