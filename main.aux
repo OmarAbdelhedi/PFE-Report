@@ -9,9 +9,9 @@
 \@writefile{toc}{\contentsline {chapter}{Abstract / R\'esum\'e}{ii}{section*.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{Dedications}{iii}{section*.3}\protected@file@percent }
 \@writefile{toc}{\contentsline {chapter}{Acknowledgements}{iv}{section*.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Figures}{vii}{section*.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Tables}{viii}{section*.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{List of Abbreviations}{ix}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Figures}{ix}{section*.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Tables}{x}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{List of Abbreviations}{xii}{section*.12}\protected@file@percent }
 \@writefile{toc}{\vspace {1.2em}}
 \@writefile{toc}{\contentsline {chapter}{General Introduction}{1}{section*.14}\protected@file@percent }
 \newlabel{chap:introduction}{{}{1}{General Introduction}{section*.14}{}}
@@ -55,135 +55,349 @@
 \newlabel{eq:rag-generation}{{2.3}{6}{Retrieval-Augmented Generation}{equation.2.1.3}{}}
 \citation{yang2018hotpotqa}
 \citation{ho2020constructing}
+\citation{trivedi2022musique}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.1}{\ignorespaces Separation of retrieval and generation in RAG}}{7}{figure.caption.20}\protected@file@percent }
 \newlabel{fig:rag-pipeline}{{2.1}{7}{Separation of retrieval and generation in RAG}{figure.caption.20}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Multi-Hop Question Answering}{7}{subsection.2.1.2}\protected@file@percent }
 \newlabel{subsec:multihop-qa}{{2.1.2}{7}{Multi-Hop Question Answering}{subsection.2.1.2}{}}
 \newlabel{eq:reasoning-chain}{{2.4}{7}{Multi-Hop Question Answering}{equation.2.1.4}{}}
-\newlabel{eq:hops-not-depth}{{2.5}{7}{Multi-Hop Question Answering}{equation.2.1.5}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.3}Multi-Hop Question Answering Benchmarks}{7}{subsection.2.1.3}\protected@file@percent }
 \newlabel{subsec:multihop-benchmarks}{{2.1.3}{7}{Multi-Hop Question Answering Benchmarks}{subsection.2.1.3}{}}
-\citation{trivedi2022musique}
 \citation{abdelhedi2026probing}
 \@writefile{lof}{\contentsline {figure}{\numberline {2.2}{\ignorespaces Multi-hop reasoning through a bridge entity}}{8}{figure.caption.21}\protected@file@percent }
 \newlabel{fig:multihop-chain}{{2.2}{8}{Multi-hop reasoning through a bridge entity}{figure.caption.21}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1.4}Evidence and Supporting Passages}{8}{subsection.2.1.4}\protected@file@percent }
 \newlabel{subsec:evidence}{{2.1.4}{8}{Evidence and Supporting Passages}{subsection.2.1.4}{}}
-\newlabel{eq:gold-evidence}{{2.6}{8}{Evidence and Supporting Passages}{equation.2.1.6}{}}
-\newlabel{eq:retrieval-ranking}{{2.7}{8}{Evidence and Supporting Passages}{equation.2.1.7}{}}
+\newlabel{eq:gold-evidence}{{2.5}{8}{Evidence and Supporting Passages}{equation.2.1.5}{}}
+\newlabel{eq:retrieval-ranking}{{2.6}{8}{Evidence and Supporting Passages}{equation.2.1.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.5}Evidence Coverage and Retrieval Depth}{9}{subsection.2.1.5}\protected@file@percent }
+\newlabel{subsec:coverage-depth}{{2.1.5}{9}{Evidence Coverage and Retrieval Depth}{subsection.2.1.5}{}}
+\newlabel{eq:min-complete-depth}{{2.7}{9}{Evidence Coverage and Retrieval Depth}{equation.2.1.7}{}}
+\newlabel{eq:coverage-at-k}{{2.8}{9}{Evidence Coverage and Retrieval Depth}{equation.2.1.8}{}}
+\newlabel{eq:k-alpha}{{2.9}{9}{Evidence Coverage and Retrieval Depth}{equation.2.1.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Per-question retrieval depth and cohort coverage}}{9}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:ranked-evidence}{{2.3}{9}{Per-question retrieval depth and cohort coverage}{figure.caption.22}{}}
 \citation{salton1988term}
 \citation{robertson2009bm25}
+\@writefile{toc}{\contentsline {section}{\numberline {2.2}Retrieval for Multi-Hop Reasoning}{10}{section.2.2}\protected@file@percent }
+\newlabel{sec:retrieval}{{2.2}{10}{Retrieval for Multi-Hop Reasoning}{section.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Sparse Retrieval}{10}{subsection.2.2.1}\protected@file@percent }
+\newlabel{subsec:sparse-retrieval}{{2.2.1}{10}{Sparse Retrieval}{subsection.2.2.1}{}}
+\newlabel{eq:tfidf}{{2.10}{10}{Sparse Retrieval}{equation.2.2.10}{}}
+\newlabel{eq:bm25}{{2.11}{10}{Sparse Retrieval}{equation.2.2.11}{}}
 \citation{karpukhin2020dpr}
 \citation{khattab2020colbert}
-\@writefile{toc}{\contentsline {section}{\numberline {2.2}Retrieval for Multi-Hop Reasoning}{9}{section.2.2}\protected@file@percent }
-\newlabel{sec:retrieval}{{2.2}{9}{Retrieval for Multi-Hop Reasoning}{section.2.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Sparse Retrieval}{9}{subsection.2.2.1}\protected@file@percent }
-\newlabel{subsec:sparse-retrieval}{{2.2.1}{9}{Sparse Retrieval}{subsection.2.2.1}{}}
-\newlabel{eq:tfidf}{{2.8}{9}{Sparse Retrieval}{equation.2.2.8}{}}
-\newlabel{eq:bm25}{{2.9}{9}{Sparse Retrieval}{equation.2.2.9}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Dense Retrieval}{9}{subsection.2.2.2}\protected@file@percent }
-\newlabel{subsec:dense-retrieval}{{2.2.2}{9}{Dense Retrieval}{subsection.2.2.2}{}}
-\newlabel{eq:dpr}{{2.10}{9}{Dense Retrieval}{equation.2.2.10}{}}
 \citation{xiong2021mdr}
 \citation{khattab2021baleen}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.2}Dense Retrieval}{11}{subsection.2.2.2}\protected@file@percent }
+\newlabel{subsec:dense-retrieval}{{2.2.2}{11}{Dense Retrieval}{subsection.2.2.2}{}}
+\newlabel{eq:dpr}{{2.12}{11}{Dense Retrieval}{equation.2.2.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Late-Interaction Retrieval and Reranking}{11}{subsection.2.2.3}\protected@file@percent }
+\newlabel{subsec:late-interaction}{{2.2.3}{11}{Late-Interaction Retrieval and Reranking}{subsection.2.2.3}{}}
+\newlabel{eq:colbert}{{2.13}{11}{Late-Interaction Retrieval and Reranking}{equation.2.2.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}Iterative and Multi-Hop Retrieval}{11}{subsection.2.2.4}\protected@file@percent }
+\newlabel{subsec:iterative-retrieval}{{2.2.4}{11}{Iterative and Multi-Hop Retrieval}{subsection.2.2.4}{}}
 \citation{trivedi2023interleaving}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.3}Late-Interaction Retrieval and Reranking}{10}{subsection.2.2.3}\protected@file@percent }
-\newlabel{subsec:late-interaction}{{2.2.3}{10}{Late-Interaction Retrieval and Reranking}{subsection.2.2.3}{}}
-\newlabel{eq:colbert}{{2.11}{10}{Late-Interaction Retrieval and Reranking}{equation.2.2.11}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.4}Iterative and Multi-Hop Retrieval}{10}{subsection.2.2.4}\protected@file@percent }
-\newlabel{subsec:iterative-retrieval}{{2.2.4}{10}{Iterative and Multi-Hop Retrieval}{subsection.2.2.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Evidence Coverage and Retrieval Depth}{10}{subsection.2.2.5}\protected@file@percent }
-\newlabel{subsec:coverage-depth}{{2.2.5}{10}{Evidence Coverage and Retrieval Depth}{subsection.2.2.5}{}}
-\newlabel{eq:coverage-at-k}{{2.12}{10}{Evidence Coverage and Retrieval Depth}{equation.2.2.12}{}}
+\citation{gutierrez2024hipporag}
+\citation{gutierrez2025hipporag2}
 \citation{jeong2024adaptiverag}
-\newlabel{eq:complete-at-k}{{2.13}{11}{Evidence Coverage and Retrieval Depth}{equation.2.2.13}{}}
-\newlabel{eq:min-complete-depth}{{2.14}{11}{Evidence Coverage and Retrieval Depth}{equation.2.2.14}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.3}{\ignorespaces Evidence coverage and minimum complete retrieval depth}}{11}{figure.caption.22}\protected@file@percent }
-\newlabel{fig:ranked-evidence}{{2.3}{11}{Evidence coverage and minimum complete retrieval depth}{figure.caption.22}{}}
-\newlabel{eq:coverage-depth-goal}{{2.15}{11}{Evidence Coverage and Retrieval Depth}{equation.2.2.15}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.3}Difficulty-Aware and Adaptive Computation}{11}{section.2.3}\protected@file@percent }
-\newlabel{sec:adaptive-computation}{{2.3}{11}{Difficulty-Aware and Adaptive Computation}{section.2.3}{}}
-\newlabel{eq:signal-action}{{2.16}{11}{Difficulty-Aware and Adaptive Computation}{equation.2.3.16}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.5}Graph-Based Retrieval for Multi-Hop Reasoning}{12}{subsection.2.2.5}\protected@file@percent }
+\newlabel{subsec:graph-retrieval}{{2.2.5}{12}{Graph-Based Retrieval for Multi-Hop Reasoning}{subsection.2.2.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.3}Difficulty-Aware and Adaptive Computation}{12}{section.2.3}\protected@file@percent }
+\newlabel{sec:adaptive-computation}{{2.3}{12}{Difficulty-Aware and Adaptive Computation}{section.2.3}{}}
 \citation{jiang2023flare}
 \citation{asai2023selfrag}
-\citation{heidari2026trustlayer}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.1}Query Complexity and Routing}{12}{subsection.2.3.1}\protected@file@percent }
-\newlabel{subsec:complexity-routing}{{2.3.1}{12}{Query Complexity and Routing}{subsection.2.3.1}{}}
-\newlabel{eq:difficulty-routing}{{2.17}{12}{Query Complexity and Routing}{equation.2.3.17}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.2}Adaptive Retrieval During Generation}{12}{subsection.2.3.2}\protected@file@percent }
-\newlabel{subsec:adaptive-generation}{{2.3.2}{12}{Adaptive Retrieval During Generation}{subsection.2.3.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3.3}Difficulty and Uncertainty}{12}{subsection.2.3.3}\protected@file@percent }
-\newlabel{subsec:difficulty-uncertainty}{{2.3.3}{12}{Difficulty and Uncertainty}{subsection.2.3.3}{}}
-\newlabel{eq:difficulty-not-uncertainty}{{2.18}{12}{Difficulty and Uncertainty}{equation.2.3.18}{}}
+\newlabel{eq:difficulty-routing}{{2.14}{13}{Difficulty-Aware and Adaptive Computation}{equation.2.3.14}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.4}Probing Internal Representations of Language Models}{13}{section.2.4}\protected@file@percent }
+\newlabel{sec:probing-representations}{{2.4}{13}{Probing Internal Representations of Language Models}{section.2.4}{}}
+\citation{alain2016probes}
+\citation{park2024linear}
+\citation{hewitt2019control}
+\citation{kadavath2022know}
+\citation{burns2023discovering}
+\citation{marks2024geometry}
+\citation{azaria2023internal}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Linear Probing and Representation Analysis}{14}{subsection.2.4.1}\protected@file@percent }
+\newlabel{subsec:linear-probing}{{2.4.1}{14}{Linear Probing and Representation Analysis}{subsection.2.4.1}{}}
+\newlabel{eq:question-representation}{{2.15}{14}{Linear Probing and Representation Analysis}{equation.2.4.15}{}}
+\newlabel{eq:probe-readout}{{2.16}{14}{Linear Probing and Representation Analysis}{equation.2.4.16}{}}
+\newlabel{eq:linear-probe}{{2.17}{14}{Linear Probing and Representation Analysis}{equation.2.4.17}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}Latent Properties in LLM Representations}{14}{subsection.2.4.2}\protected@file@percent }
+\newlabel{subsec:latent-properties}{{2.4.2}{14}{Latent Properties in LLM Representations}{subsection.2.4.2}{}}
+\citation{moreno2025noanswer}
+\citation{yang2024latent}
 \citation{press2023compositionality}
-\@writefile{toc}{\contentsline {section}{\numberline {2.4}Question Decomposition for Multi-Hop Reasoning}{13}{section.2.4}\protected@file@percent }
-\newlabel{sec:decomposition}{{2.4}{13}{Question Decomposition for Multi-Hop Reasoning}{section.2.4}{}}
-\newlabel{eq:decomposition}{{2.19}{13}{Question Decomposition for Multi-Hop Reasoning}{equation.2.4.19}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.1}Dependency-Aware Decomposition}{13}{subsection.2.4.1}\protected@file@percent }
-\newlabel{subsec:dependency-aware}{{2.4.1}{13}{Dependency-Aware Decomposition}{subsection.2.4.1}{}}
-\newlabel{eq:chained-decomposition}{{2.20}{13}{Dependency-Aware Decomposition}{equation.2.4.20}{}}
-\newlabel{eq:decomposition-dag}{{2.21}{13}{Dependency-Aware Decomposition}{equation.2.4.21}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.4}{\ignorespaces Dependency-aware question decomposition as a DAG}}{13}{figure.caption.23}\protected@file@percent }
-\newlabel{fig:decomposition-dag}{{2.4}{13}{Dependency-aware question decomposition as a DAG}{figure.caption.23}{}}
+\newlabel{eq:latent-versus-required-reasoning}{{2.18}{15}{Latent Properties in LLM Representations}{equation.2.4.18}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {2.5}Question Decomposition for Multi-Hop Reasoning}{15}{section.2.5}\protected@file@percent }
+\newlabel{sec:decomposition}{{2.5}{15}{Question Decomposition for Multi-Hop Reasoning}{section.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}Why Decomposition Helps Multi-Hop Reasoning}{15}{subsection.2.5.1}\protected@file@percent }
+\newlabel{subsec:why-decomposition-helps}{{2.5.1}{15}{Why Decomposition Helps Multi-Hop Reasoning}{subsection.2.5.1}{}}
 \citation{min2019multihop}
 \citation{perez2020unsupervised}
+\citation{press2023compositionality}
 \citation{dua2022successive}
 \citation{zhou2023leasttomost}
 \citation{khot2023decomposed}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.2}The Compositionality Gap}{14}{subsection.2.4.2}\protected@file@percent }
-\newlabel{subsec:compositionality-gap}{{2.4.2}{14}{The Compositionality Gap}{subsection.2.4.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.3}Earlier Question-Decomposition Approaches}{14}{subsection.2.4.3}\protected@file@percent }
-\newlabel{subsec:earlier-decomposition}{{2.4.3}{14}{Earlier Question-Decomposition Approaches}{subsection.2.4.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.4}LLM-Based Decomposition}{14}{subsection.2.4.4}\protected@file@percent }
-\newlabel{subsec:llm-decomposition}{{2.4.4}{14}{LLM-Based Decomposition}{subsection.2.4.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4.5}From Answer-Oriented to Retrieval-Oriented Decomposition}{14}{subsection.2.4.5}\protected@file@percent }
-\newlabel{subsec:retrieval-oriented-decomposition}{{2.4.5}{14}{From Answer-Oriented to Retrieval-Oriented Decomposition}{subsection.2.4.5}{}}
-\citation{press2023compositionality}
-\citation{trivedi2023interleaving}
-\citation{trivedi2022musique}
-\newlabel{eq:rank-improvement-example}{{2.22}{15}{From Answer-Oriented to Retrieval-Oriented Decomposition}{equation.2.4.22}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {2.5}Adaptive Decomposition and Efficient Evidence Retrieval}{15}{section.2.5}\protected@file@percent }
-\newlabel{sec:adaptive-decomposition}{{2.5}{15}{Adaptive Decomposition and Efficient Evidence Retrieval}{section.2.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.1}The Evidence-Responsibility Problem}{15}{subsection.2.5.1}\protected@file@percent }
-\newlabel{subsec:evidence-responsibility}{{2.5.1}{15}{The Evidence-Responsibility Problem}{subsection.2.5.1}{}}
-\newlabel{eq:responsibility}{{2.23}{15}{The Evidence-Responsibility Problem}{equation.2.5.23}{}}
-\newlabel{eq:arm-evidence}{{2.24}{15}{The Evidence-Responsibility Problem}{equation.2.5.24}{}}
-\newlabel{eq:arm-depth}{{2.25}{15}{The Evidence-Responsibility Problem}{equation.2.5.25}{}}
-\newlabel{eq:decomposition-depth}{{2.26}{15}{The Evidence-Responsibility Problem}{equation.2.5.26}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Coverage--Depth Trade-Off}{16}{subsection.2.5.2}\protected@file@percent }
-\newlabel{subsec:coverage-depth-tradeoff}{{2.5.2}{16}{Coverage--Depth Trade-Off}{subsection.2.5.2}{}}
-\newlabel{eq:multiobjective}{{2.27}{16}{Coverage--Depth Trade-Off}{equation.2.5.27}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2.5}{\ignorespaces Conceptual coverage--depth trade-off}}{16}{figure.caption.24}\protected@file@percent }
-\newlabel{fig:coverage-depth-tradeoff}{{2.5}{16}{Conceptual coverage--depth trade-off}{figure.caption.24}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}Evaluating the Quality of a Decomposition}{16}{subsection.2.5.3}\protected@file@percent }
-\newlabel{subsec:decomposition-quality}{{2.5.3}{16}{Evaluating the Quality of a Decomposition}{subsection.2.5.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.2}Earlier Question-Decomposition Approaches}{16}{subsection.2.5.2}\protected@file@percent }
+\newlabel{subsec:earlier-decomposition}{{2.5.2}{16}{Earlier Question-Decomposition Approaches}{subsection.2.5.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5.3}LLM-Based Decomposition}{16}{subsection.2.5.3}\protected@file@percent }
+\newlabel{subsec:llm-based-decomposition}{{2.5.3}{16}{LLM-Based Decomposition}{subsection.2.5.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2.6}Research Gap and Thesis Positioning}{17}{section.2.6}\protected@file@percent }
 \newlabel{sec:research-gap}{{2.6}{17}{Research Gap and Thesis Positioning}{section.2.6}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.6.1}Anticipating Compositional Difficulty}{17}{subsection.2.6.1}\protected@file@percent }
 \newlabel{subsec:gap-difficulty}{{2.6.1}{17}{Anticipating Compositional Difficulty}{subsection.2.6.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}Optimizing Decomposition for Retrieval Efficiency}{17}{subsection.2.6.2}\protected@file@percent }
-\newlabel{subsec:gap-efficient-decomposition}{{2.6.2}{17}{Optimizing Decomposition for Retrieval Efficiency}{subsection.2.6.2}{}}
-\@writefile{toc}{\contentsline {section}{Conclusion}{17}{section*.25}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {3}A Systematic Survey of the Trust Layer of RAG}{18}{chapter.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6.2}Optimising Decomposition for Retrieval Efficiency}{17}{subsection.2.6.2}\protected@file@percent }
+\newlabel{subsec:gap-efficient-decomposition}{{2.6.2}{17}{Optimising Decomposition for Retrieval Efficiency}{subsection.2.6.2}{}}
+\@writefile{toc}{\contentsline {section}{Conclusion}{17}{section*.23}\protected@file@percent }
+\citation{abdelhedi2026probing}
+\@writefile{toc}{\contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{19}{chapter.3}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:survey}{{3}{18}{A Systematic Survey of the Trust Layer of RAG}{chapter.3}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{18}{section*.26}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{18}{section*.27}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {4}chapter 4}{19}{chapter.4}\protected@file@percent }
+\newlabel{chap:probing}{{3}{19}{Probing Compositional Question Difficulty in Language Model Representations}{chapter.3}{}}
+\@writefile{toc}{\contentsline {section}{Introduction}{19}{section*.24}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3.1}Research Question and Problem Formulation}{19}{section.3.1}\protected@file@percent }
+\newlabel{sec:probing-problem}{{3.1}{19}{Research Question and Problem Formulation}{section.3.1}{}}
+\newlabel{eq:probing-dataset}{{3.1}{19}{Research Question and Problem Formulation}{equation.3.1.1}{}}
+\newlabel{eq:probing-question-representation}{{3.2}{19}{Research Question and Problem Formulation}{equation.3.1.2}{}}
+\newlabel{eq:linear-difficulty-score}{{3.3}{19}{Research Question and Problem Formulation}{equation.3.1.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.1}{\ignorespaces Overview of the compositional-difficulty probing protocol}}{20}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:probing-method-overview}{{3.1}{20}{Overview of the compositional-difficulty probing protocol}{figure.caption.25}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.2}Methodology}{20}{section.3.2}\protected@file@percent }
+\newlabel{sec:probing-methodology}{{3.2}{20}{Methodology}{section.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.1}Hidden-State Extraction and Question Representation}{20}{subsection.3.2.1}\protected@file@percent }
+\newlabel{subsec:hidden-state-extraction}{{3.2.1}{20}{Hidden-State Extraction and Question Representation}{subsection.3.2.1}{}}
+\newlabel{eq:last-token-pooling}{{3.4}{21}{Hidden-State Extraction and Question Representation}{equation.3.2.4}{}}
+\newlabel{eq:layer-representation-matrix}{{3.5}{21}{Hidden-State Extraction and Question Representation}{equation.3.2.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.2}Linear Probe and Layer-Wise Evaluation}{21}{subsection.3.2.2}\protected@file@percent }
+\newlabel{subsec:linear-layerwise-probe}{{3.2.2}{21}{Linear Probe and Layer-Wise Evaluation}{subsection.3.2.2}{}}
+\newlabel{eq:fold-standardisation}{{3.6}{21}{Linear Probe and Layer-Wise Evaluation}{equation.3.2.6}{}}
+\newlabel{eq:diagonal-lda-probe}{{3.7}{21}{Linear Probe and Layer-Wise Evaluation}{equation.3.2.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.3}Label-Permutation Null}{22}{subsection.3.2.3}\protected@file@percent }
+\newlabel{subsec:permutation-null}{{3.2.3}{22}{Label-Permutation Null}{subsection.3.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.4}Surface-Feature Control and Residualisation}{22}{subsection.3.2.4}\protected@file@percent }
+\newlabel{subsec:surface-residualisation}{{3.2.4}{22}{Surface-Feature Control and Residualisation}{subsection.3.2.4}{}}
+\newlabel{eq:surface-residualisation}{{3.8}{22}{Surface-Feature Control and Residualisation}{equation.3.2.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.5}Ordinality Test}{23}{subsection.3.2.5}\protected@file@percent }
+\newlabel{subsec:ordinality-test}{{3.2.5}{23}{Ordinality Test}{subsection.3.2.5}{}}
+\newlabel{eq:ordinality-fraction}{{3.9}{23}{Ordinality Test}{equation.3.2.9}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2.6}Cross-Dataset Transfer}{23}{subsection.3.2.6}\protected@file@percent }
+\newlabel{subsec:cross-dataset-transfer}{{3.2.6}{23}{Cross-Dataset Transfer}{subsection.3.2.6}{}}
+\newlabel{eq:transfer-retention}{{3.10}{23}{Cross-Dataset Transfer}{equation.3.2.10}{}}
+\citation{ho2020constructing}
+\citation{yang2018hotpotqa}
+\citation{trivedi2022musique}
+\@writefile{toc}{\contentsline {section}{\numberline {3.3}Experimental Setup}{24}{section.3.3}\protected@file@percent }
+\newlabel{sec:probing-experimental-setup}{{3.3}{24}{Experimental Setup}{section.3.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.1}Language Models}{24}{subsection.3.3.1}\protected@file@percent }
+\newlabel{subsec:probing-models}{{3.3.1}{24}{Language Models}{subsection.3.3.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.2}Benchmarks and Difficulty Labels}{24}{subsection.3.3.2}\protected@file@percent }
+\newlabel{subsec:probing-benchmarks}{{3.3.2}{24}{Benchmarks and Difficulty Labels}{subsection.3.3.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3.3}Evaluation Configuration}{24}{subsection.3.3.3}\protected@file@percent }
+\newlabel{subsec:probing-evaluation}{{3.3.3}{24}{Evaluation Configuration}{subsection.3.3.3}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.4}Results}{24}{section.3.4}\protected@file@percent }
+\newlabel{sec:probing-results}{{3.4}{24}{Results}{section.3.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.1}Layer-Wise Decodability of Compositional Difficulty}{24}{subsection.3.4.1}\protected@file@percent }
+\newlabel{subsec:probing-depth-results}{{3.4.1}{24}{Layer-Wise Decodability of Compositional Difficulty}{subsection.3.4.1}{}}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\@writefile{lot}{\contentsline {table}{\numberline {3.1}{\ignorespaces Layer-wise difficulty decoding and surface controls}}{25}{table.caption.26}\protected@file@percent }
+\newlabel{tab:probing-main-results}{{3.1}{25}{Layer-wise difficulty decoding and surface controls}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.2}Robustness Beyond Surface Features}{25}{subsection.3.4.2}\protected@file@percent }
+\newlabel{subsec:probing-control-results}{{3.4.2}{25}{Robustness Beyond Surface Features}{subsection.3.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.2}{\ignorespaces Difficulty decoding across model depth}}{26}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:probe-auc-depth}{{3.2}{26}{Difficulty decoding across model depth}{figure.caption.27}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.3}{\ignorespaces Label-permutation null across depth}}{26}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:probing-permutation-null}{{3.3}{26}{Label-permutation null across depth}{figure.caption.28}{}}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.4}{\ignorespaces Raw, surface-only, and residualised difficulty decoding}}{27}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:probing-surface-control}{{3.4}{27}{Raw, surface-only, and residualised difficulty decoding}{figure.caption.29}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.3}Ordinal Structure of the Difficulty Direction}{27}{subsection.3.4.3}\protected@file@percent }
+\newlabel{subsec:probing-ordinal-results}{{3.4.3}{27}{Ordinal Structure of the Difficulty Direction}{subsection.3.4.3}{}}
+\citation{abdelhedi2026probing}
+\citation{abdelhedi2026probing}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.5}{\ignorespaces Ordinality of the decoded MuSiQue difficulty direction}}{28}{figure.caption.30}\protected@file@percent }
+\newlabel{fig:probing-ordinality}{{3.5}{28}{Ordinality of the decoded MuSiQue difficulty direction}{figure.caption.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4.4}Cross-Dataset Transfer of the Residualised Difficulty Direction}{28}{subsection.3.4.4}\protected@file@percent }
+\newlabel{subsec:probing-transfer-results}{{3.4.4}{28}{Cross-Dataset Transfer of the Residualised Difficulty Direction}{subsection.3.4.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3.6}{\ignorespaces Cross-benchmark transfer to MuSiQue}}{28}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:probing-cross-benchmark-transfer}{{3.6}{28}{Cross-benchmark transfer to MuSiQue}{figure.caption.32}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3.2}{\ignorespaces Leave-one-benchmark-out transfer of the difficulty axis}}{29}{table.caption.31}\protected@file@percent }
+\newlabel{tab:probing-transfer-results}{{3.2}{29}{Leave-one-benchmark-out transfer of the difficulty axis}{table.caption.31}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {3.5}Discussion and Limitations}{29}{section.3.5}\protected@file@percent }
+\newlabel{sec:probing-discussion}{{3.5}{29}{Discussion and Limitations}{section.3.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.1}Interpretation and Implications for Adaptive Computation}{29}{subsection.3.5.1}\protected@file@percent }
+\newlabel{subsec:probing-interpretation}{{3.5.1}{29}{Interpretation and Implications for Adaptive Computation}{subsection.3.5.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5.2}Limitations and Future Directions}{30}{subsection.3.5.2}\protected@file@percent }
+\newlabel{subsec:probing-limitations}{{3.5.2}{30}{Limitations and Future Directions}{subsection.3.5.2}{}}
+\@writefile{toc}{\contentsline {paragraph}{Difficulty is partly surface form.}{30}{paragraph*.33}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Benchmark labels are heterogeneous proxies.}{30}{paragraph*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The evidence is correlational.}{30}{paragraph*.35}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{The empirical scope is narrow.}{30}{paragraph*.36}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{Conclusion}{31}{section*.37}\protected@file@percent }
+\citation{trivedi2022musique}
+\@writefile{toc}{\contentsline {chapter}{\numberline {4}Evidence-Aware Evaluation of Question Decomposition}{32}{chapter.4}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:empirical-studies}{{4}{19}{chapter 4}{chapter.4}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{19}{section*.28}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{19}{section*.29}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{\numberline {5}chapter 5}{20}{chapter.5}\protected@file@percent }
+\newlabel{ch:evidence-aware}{{4}{32}{Evidence-Aware Evaluation of Question Decomposition}{chapter.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.1}Problem Formulation}{32}{section.4.1}\protected@file@percent }
+\newlabel{sec:ch4-problem}{{4.1}{32}{Problem Formulation}{section.4.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.1}A Decomposition as an Executable Sequence}{32}{subsection.4.1.1}\protected@file@percent }
+\newlabel{eq:ch4-execution}{{4.1}{33}{A Decomposition as an Executable Sequence}{equation.4.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1.2}Availability, Assignment and Execution}{33}{subsection.4.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.2}Retrieval Depth and Evidence Responsibility}{33}{section.4.2}\protected@file@percent }
+\newlabel{sec:ch4-depth}{{4.2}{33}{Retrieval Depth and Evidence Responsibility}{section.4.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.1}The Evidence-Rank Matrix}{33}{subsection.4.2.1}\protected@file@percent }
+\newlabel{eq:ch4-ranks}{{4.2}{33}{The Evidence-Rank Matrix}{equation.4.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.2}Union Depth}{34}{subsection.4.2.2}\protected@file@percent }
+\newlabel{eq:ch4-union}{{4.3}{34}{Union Depth}{equation.4.2.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.3}Ownership-Masked Depth}{34}{subsection.4.2.3}\protected@file@percent }
+\newlabel{eq:ch4-masked}{{4.4}{34}{Ownership-Masked Depth}{equation.4.2.4}{}}
+\newlabel{eq:ch4-all}{{4.5}{34}{Ownership-Masked Depth}{equation.4.2.5}{}}
+\newlabel{eq:ch4-order}{{4.6}{34}{Ownership-Masked Depth}{equation.4.2.6}{}}
+\newlabel{eq:ch4-example}{{4.7}{35}{Ownership-Masked Depth}{equation.4.2.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2.4}Coverage and an Aggregate Depth Score}{35}{subsection.4.2.4}\protected@file@percent }
+\newlabel{eq:ch4-coverage}{{4.8}{35}{Coverage and an Aggregate Depth Score}{equation.4.2.8}{}}
+\newlabel{eq:ch4-credit}{{4.9}{35}{Coverage and an Aggregate Depth Score}{equation.4.2.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.3}Learning the Ownership Mask}{35}{section.4.3}\protected@file@percent }
+\newlabel{sec:ch4-ownership}{{4.3}{35}{Learning the Ownership Mask}{section.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.1}Supervision from Reference Decompositions}{35}{subsection.4.3.1}\protected@file@percent }
+\citation{khattab2020colbert}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.2}Textual and Contextual Features}{36}{subsection.4.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.3}Fitting, Threshold Selection and Ensemble Decision}{36}{subsection.4.3.3}\protected@file@percent }
+\newlabel{eq:ch4-threshold}{{4.10}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.10}{}}
+\newlabel{eq:ch4-vote}{{4.11}{36}{Fitting, Threshold Selection and Ensemble Decision}{equation.4.3.11}{}}
+\citation{gutierrez2025hipporag2}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3.4}How Assignment Error Changes the Depth Measurement}{37}{subsection.4.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.4}Experimental Protocol}{37}{section.4.4}\protected@file@percent }
+\newlabel{sec:ch4-protocol}{{4.4}{37}{Experimental Protocol}{section.4.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.1}Systems and Retained Executions}{37}{subsection.4.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4.2}Metrics and Comparison Units}{37}{subsection.4.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.5}Results}{38}{section.4.5}\protected@file@percent }
+\newlabel{sec:ch4-results}{{4.5}{38}{Results}{section.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.1}Ownership Recovery on Reference-Style Arms}{38}{subsection.4.5.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.1}{\ignorespaces Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions.}}{38}{table.caption.38}\protected@file@percent }
+\newlabel{tab:ch4-ownership}{{4.1}{38}{Ownership prediction on the reference-style decomposition control. Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is measured over the $100$ questions}{table.caption.38}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.2}{\ignorespaces Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions.}}{39}{table.caption.39}\protected@file@percent }
+\newlabel{tab:ch4-cohorts}{{4.2}{39}{Ownership errors by reference hop count. TP, FN, FP and TN count individual cells, while $n$ counts questions}{table.caption.39}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.2}Sensitivity to the Attribution Model}{39}{subsection.4.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.3}{\ignorespaces Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The last row uses the exact reference assignment.}}{39}{table.caption.40}\protected@file@percent }
+\newlabel{tab:ch4-masks}{{4.3}{39}{Masked-depth measurements under two attribution models on fixed GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage at $K=200$; score is $J_{D_M}$ from Equation~\ref {eq:ch4-credit}. The last row uses the exact reference assignment}{table.caption.40}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.3}Evidence Availability and Final Answers}{39}{subsection.4.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.4}{\ignorespaces Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes.}}{40}{table.caption.41}\protected@file@percent }
+\newlabel{tab:ch4-system}{{4.4}{40}{Recorded execution results on $100$ MuSiQue questions. EM and F1 are percentages. $C_U(5)$ is complete union coverage at five passages per arm. Arms and tokens are per-question means. Retrieved evidence and final answers are separate outcomes}{table.caption.41}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5.4}The Role of Intermediate Bindings}{40}{subsection.4.5.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.5}{\ignorespaces Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs.}}{40}{table.caption.42}\protected@file@percent }
+\newlabel{tab:ch4-bindings}{{4.5}{40}{Reference-decomposition controls with GPT-4o-mini. Gold bindings supply reference intermediate answers when constructing downstream queries. Predicted bindings use the reader's earlier outputs}{table.caption.42}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.6}Depth Under a Total Passage Budget}{40}{section.4.6}\protected@file@percent }
+\newlabel{sec:ch4-budget}{{4.6}{40}{Depth Under a Total Passage Budget}{section.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.1}Equal-Allocation Replay}{40}{subsection.4.6.1}\protected@file@percent }
+\newlabel{eq:ch4-budget-allocation}{{4.12}{41}{Equal-Allocation Replay}{equation.4.6.12}{}}
+\@writefile{toc}{\contentsline {paragraph}{Per-question and average budgets.}{41}{paragraph*.43}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.2}A Fixed-List Oracle Allocation}{41}{subsection.4.6.2}\protected@file@percent }
+\newlabel{eq:ch4-oracle-budget}{{4.13}{41}{A Fixed-List Oracle Allocation}{equation.4.6.13}{}}
+\newlabel{eq:ch4-dynamic-program}{{4.14}{41}{A Fixed-List Oracle Allocation}{equation.4.6.14}{}}
+\citation{ch4-2wiki}
+\citation{ch4-hotpot}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6.3}Allocation Headroom on the Recorded Lists}{42}{subsection.4.6.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.6}{\ignorespaces Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions.}}{42}{table.caption.44}\protected@file@percent }
+\newlabel{tab:ch4-budget}{{4.6}{42}{Complete evidence coverage (\%) at a total budget of $15$ passage slots on fixed recorded lists. The oracle chooses prefixes using gold evidence and is a reference allocation rather than a deployed policy. Each row contains $100$ questions}{table.caption.44}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4.7}A Cross-Benchmark Fixed-Trace Study}{42}{section.4.7}\protected@file@percent }
+\newlabel{sec:ch4-bm25}{{4.7}{42}{A Cross-Benchmark Fixed-Trace Study}{section.4.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.1}Retrieval Regime and Evaluation Population}{42}{subsection.4.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.2}Matched Passage-Slot Frontiers}{43}{subsection.4.7.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4.7}{\ignorespaces Complete annotated-evidence coverage at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel.}}{43}{table.caption.45}\protected@file@percent }
+\newlabel{tab:ch4-bm25-availability}{{4.7}{43}{Complete annotated-evidence coverage at a ceiling of eight selected passage slots. BM25 results use fixed predicted-binding traces; the oracle uses gold evidence ranks. Counts are retained questions from each original 1,000-question panel}{table.caption.45}{}}
+\newlabel{eq:ch4-oracle-frontier}{{4.15}{43}{Matched Passage-Slot Frontiers}{equation.4.7.15}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4.8}{\ignorespaces MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel.}}{44}{table.caption.46}\protected@file@percent }
+\newlabel{tab:ch4-bm25-regimes}{{4.8}{44}{MuSiQue BM25 retrieval regimes. Coverage is measured on each retained panel under balanced slot allocation. The reference row uses a different plan source and a larger panel}{table.caption.46}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.7.3}Reference and Generated Query Regimes}{44}{subsection.4.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {4.8}Discussion and Implications for Optimisation}{44}{section.4.8}\protected@file@percent }
+\newlabel{sec:ch4-discussion}{{4.8}{44}{Discussion and Implications for Optimisation}{section.4.8}{}}
+\@writefile{toc}{\contentsline {chapter}{\numberline {5}Optimising Question Decomposition and Evidence Allocation}{46}{chapter.5}\protected@file@percent }
 \@writefile{lof}{\addvspace {10\p@ }}
 \@writefile{lot}{\addvspace {10\p@ }}
-\newlabel{chap:guarantees}{{5}{20}{chapter 5}{chapter.5}{}}
-\@writefile{toc}{\contentsline {section}{Introduction}{20}{section*.30}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{Conclusion}{20}{section*.31}\protected@file@percent }
-\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{21}{section*.33}\protected@file@percent }
-\newlabel{sec:conclusion}{{}{21}{Conclusion and outlook}{section*.33}{}}
+\newlabel{chap:optimisation}{{5}{46}{Optimising Question Decomposition and Evidence Allocation}{chapter.5}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.1}The Optimisation Problem}{47}{section.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.1}An Instruction Defines an Executable Policy}{47}{subsection.5.1.1}\protected@file@percent }
+\newlabel{eq:ch5-plan}{{5.1}{47}{An Instruction Defines an Executable Policy}{equation.5.1.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.2}The Retained Retrieval Objective}{47}{subsection.5.1.2}\protected@file@percent }
+\newlabel{eq:ch5-objective}{{5.2}{47}{The Retained Retrieval Objective}{equation.5.1.2}{}}
+\newlabel{eq:ch5-coverage}{{5.3}{47}{The Retained Retrieval Objective}{equation.5.1.3}{}}
+\citation{ch5-opro}
+\@writefile{lot}{\contentsline {table}{\numberline {5.1}{\ignorespaces Configuration of the completed prompt-search pilot.}}{48}{table.caption.47}\protected@file@percent }
+\newlabel{tab:ch5-configuration}{{5.1}{48}{Configuration of the completed prompt-search pilot}{table.caption.47}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1.3}Answer Quality and Resource Use}{48}{subsection.5.1.3}\protected@file@percent }
+\newlabel{eq:ch5-f1}{{5.4}{48}{Answer Quality and Resource Use}{equation.5.1.4}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.2}The Completed OPRO Search}{48}{section.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.1}Search Configuration}{48}{subsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.2}Proposal and Selection Loop}{49}{subsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2.3}The Feedback Supplied to the Optimizer}{49}{subsection.5.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.3}Results of the Pilot}{49}{section.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.1}Progress Across Search Rounds}{49}{subsection.5.3.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.2}{\ignorespaces Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel.}}{50}{table.caption.48}\protected@file@percent }
+\newlabel{tab:ch5-rounds}{{5.2}{50}{Masked-depth score during the completed search. The retained best includes all earlier rounds. Values are on the shared development panel}{table.caption.48}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.3}{\ignorespaces Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count.}}{50}{table.caption.49}\protected@file@percent }
+\newlabel{tab:ch5-selected}{{5.3}{50}{Initial and selected instructions on the $100$ development questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the five-per-arm allowance derived from the observed arm count}{table.caption.49}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.2}The Selected Instruction}{50}{subsection.5.3.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3.3}The Optimisation Objective and the Answer Objective}{50}{subsection.5.3.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.4}{\ignorespaces Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively.}}{51}{table.caption.50}\protected@file@percent }
+\newlabel{tab:ch5-objectives}{{5.4}{51}{Different objectives select different candidates from the same development search. The F1-leading candidate is identified retrospectively}{table.caption.50}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.4}Learned Allocation on Fixed Retrieval Traces}{51}{section.5.4}\protected@file@percent }
+\newlabel{sec:ch5-allocation}{{5.4}{51}{Learned Allocation on Fixed Retrieval Traces}{section.5.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.1}The Allocation Intervention}{51}{subsection.5.4.1}\protected@file@percent }
+\newlabel{eq:ch5-slot-budget}{{5.5}{51}{The Allocation Intervention}{equation.5.4.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.2}Predicting Per-Arm Depth Requirements}{52}{subsection.5.4.2}\protected@file@percent }
+\newlabel{eq:ch5-depth-cdf}{{5.6}{52}{Predicting Per-Arm Depth Requirements}{equation.5.4.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.3}Segment and Unit-Increment Allocation}{52}{subsection.5.4.3}\protected@file@percent }
+\newlabel{eq:ch5-allocation-surrogate}{{5.7}{52}{Segment and Unit-Increment Allocation}{equation.5.4.7}{}}
+\newlabel{eq:ch5-unit-gain}{{5.8}{52}{Segment and Unit-Increment Allocation}{equation.5.4.8}{}}
+\newlabel{eq:ch5-envelope-objective}{{5.9}{53}{Segment and Unit-Increment Allocation}{equation.5.4.9}{}}
+\newlabel{eq:ch5-allocation-dp}{{5.10}{53}{Segment and Unit-Increment Allocation}{equation.5.4.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.4}Evaluation Population and Cross-Validation}{53}{subsection.5.4.4}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.5}{\ignorespaces Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation.}}{54}{table.caption.51}\protected@file@percent }
+\newlabel{tab:ch5-bm25-allocation}{{5.5}{54}{Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation}{table.caption.51}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.6}{\ignorespaces Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points.}}{54}{table.caption.52}\protected@file@percent }
+\newlabel{tab:ch5-allocation-targets}{{5.6}{54}{Smallest tested passage-slot budget reaching a coverage target on the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks and permits zero-depth arms. Ratios compare discrete operating points}{table.caption.52}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.5}Coverage and Target Budgets}{54}{subsection.5.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.6}Paired Final-Answer Evaluation}{54}{subsection.5.4.6}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.7}{\ignorespaces Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy.}}{55}{table.caption.53}\protected@file@percent }
+\newlabel{tab:ch5-reader-fixed-traces}{{5.7}{55}{Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy}{table.caption.53}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4.7}Exploratory Hidden-State Prediction of Assigned Depth}{55}{subsection.5.4.7}\protected@file@percent }
+\newlabel{sec:ch5-depth-probe}{{5.4.7}{55}{Exploratory Hidden-State Prediction of Assigned Depth}{subsection.5.4.7}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.8}{\ignorespaces Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here.}}{56}{table.caption.54}\protected@file@percent }
+\newlabel{tab:ch5-depth-probe}{{5.8}{56}{Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here}{table.caption.54}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5.5}Evidence-Aware Feedback for Prompt Search}{56}{section.5.5}\protected@file@percent }
+\newlabel{sec:ch5-feedback}{{5.5}{56}{Evidence-Aware Feedback for Prompt Search}{section.5.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.1}Separating Reward from Diagnostic Information}{56}{subsection.5.5.1}\protected@file@percent }
+\citation{ch5-gepa}
+\@writefile{lot}{\contentsline {table}{\numberline {5.9}{\ignorespaces Diagnostic fields supplied by the structured feedback interface.}}{57}{table.caption.55}\protected@file@percent }
+\newlabel{tab:ch5-diagnostics}{{5.9}{57}{Diagnostic fields supplied by the structured feedback interface}{table.caption.55}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.2}Observed Events and Estimated Assignments}{57}{subsection.5.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5.3}Reflective Search with a Fixed Execution Interface}{57}{subsection.5.5.3}\protected@file@percent }
+\citation{trivedi2022musique}
+\@writefile{toc}{\contentsline {section}{\numberline {5.6}Independent Evaluation Design}{58}{section.5.6}\protected@file@percent }
+\newlabel{sec:ch5-prospective}{{5.6}{58}{Independent Evaluation Design}{section.5.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.1}Frozen Data Roles and Corpus Scope}{58}{subsection.5.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5.10}{\ignorespaces Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID.}}{59}{table.caption.56}\protected@file@percent }
+\newlabel{tab:ch5-splits}{{5.10}{59}{Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID}{table.caption.56}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.2}Comparators and Search Allowances}{59}{subsection.5.6.2}\protected@file@percent }
+\newlabel{eq:ch5-budget}{{5.11}{59}{Comparators and Search Allowances}{equation.5.6.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.3}Outcome Analysis and Cost Accounting}{60}{subsection.5.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.4}Separating Prompt and Allocation Effects}{60}{subsection.5.6.4}\protected@file@percent }
+\newlabel{eq:ch5-factorial}{{5.12}{60}{Separating Prompt and Allocation Effects}{equation.5.6.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5.11}{\ignorespaces Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions.}}{61}{table.caption.57}\protected@file@percent }
+\newlabel{tab:ch5-ownership-stress}{{5.11}{61}{Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions}{table.caption.57}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6.5}Controlled Checks of the Diagnostic Representation}{61}{subsection.5.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5.7}Discussion}{61}{section.5.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.1}What the Completed Experiment Establishes}{61}{subsection.5.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7.2}The Scope of the Evidence-Feedback Extension}{62}{subsection.5.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Conclusion and outlook}{64}{section*.59}\protected@file@percent }
+\newlabel{sec:conclusion}{{}{64}{Conclusion and outlook}{section*.59}{}}
 \bibstyle{ieeetr}
 \bibdata{references}
 \bibcite{lewis2020rag}{1}
@@ -197,17 +411,27 @@
 \bibcite{khattab2020colbert}{9}
 \bibcite{xiong2021mdr}{10}
 \bibcite{khattab2021baleen}{11}
-\@writefile{toc}{\contentsline {chapter}{Bibliography}{22}{section*.34}\protected@file@percent }
+\@writefile{toc}{\contentsline {chapter}{Bibliography}{65}{section*.60}\protected@file@percent }
 \bibcite{trivedi2023interleaving}{12}
-\bibcite{jeong2024adaptiverag}{13}
-\bibcite{jiang2023flare}{14}
-\bibcite{asai2023selfrag}{15}
-\bibcite{heidari2026trustlayer}{16}
-\bibcite{press2023compositionality}{17}
-\bibcite{min2019multihop}{18}
-\bibcite{perez2020unsupervised}{19}
-\bibcite{dua2022successive}{20}
-\bibcite{zhou2023leasttomost}{21}
-\bibcite{khot2023decomposed}{22}
-\@writefile{toc}{\contentsline {chapter}{Netography}{25}{section*.36}\protected@file@percent }
-\gdef \@abspage@last{35}
+\bibcite{gutierrez2024hipporag}{13}
+\bibcite{gutierrez2025hipporag2}{14}
+\bibcite{jeong2024adaptiverag}{15}
+\bibcite{jiang2023flare}{16}
+\bibcite{asai2023selfrag}{17}
+\bibcite{alain2016probes}{18}
+\bibcite{park2024linear}{19}
+\bibcite{hewitt2019control}{20}
+\bibcite{kadavath2022know}{21}
+\bibcite{burns2023discovering}{22}
+\bibcite{marks2024geometry}{23}
+\bibcite{azaria2023internal}{24}
+\bibcite{moreno2025noanswer}{25}
+\bibcite{yang2024latent}{26}
+\bibcite{press2023compositionality}{27}
+\bibcite{min2019multihop}{28}
+\bibcite{perez2020unsupervised}{29}
+\bibcite{dua2022successive}{30}
+\bibcite{zhou2023leasttomost}{31}
+\bibcite{khot2023decomposed}{32}
+\@writefile{toc}{\contentsline {chapter}{Netography}{68}{section*.62}\protected@file@percent }
+\gdef \@abspage@last{81}

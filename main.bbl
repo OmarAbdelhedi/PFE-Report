@@ -1,134 +1,100 @@
 \begin{thebibliography}{10}
 
 \bibitem{lewis2020rag}
-P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal,
-  H.~K{\"u}ttler, M.~Lewis, W.-t. Yih, T.~Rockt{\"a}schel, S.~Riedel, and
-  D.~Kiela, ``Retrieval-augmented generation for knowledge-intensive {NLP}
-  tasks,'' in {\em Advances in Neural Information Processing Systems
-  (NeurIPS)}, vol.~33, pp.~9459--9474, 2020.
+P.~Lewis, E.~Perez, A.~Piktus, F.~Petroni, V.~Karpukhin, N.~Goyal, H.~K{\"u}ttler, M.~Lewis, W.-t. Yih, T.~Rockt{\"a}schel, S.~Riedel, and D.~Kiela, ``Retrieval-augmented generation for knowledge-intensive {NLP} tasks,'' in {\em Advances in Neural Information Processing Systems (NeurIPS)}, vol.~33, pp.~9459--9474, 2020.
 
 \bibitem{yang2018hotpotqa}
-Z.~Yang, P.~Qi, S.~Zhang, Y.~Bengio, W.~W. Cohen, R.~Salakhutdinov, and C.~D.
-  Manning, ``{HotpotQA}: A dataset for diverse, explainable multi-hop question
-  answering,'' in {\em Proceedings of the 2018 Conference on Empirical Methods
-  in Natural Language Processing}, pp.~2369--2380, 2018.
+Z.~Yang, P.~Qi, S.~Zhang, Y.~Bengio, W.~W. Cohen, R.~Salakhutdinov, and C.~D. Manning, ``{HotpotQA}: A dataset for diverse, explainable multi-hop question answering,'' in {\em Proceedings of the 2018 Conference on Empirical Methods in Natural Language Processing}, pp.~2369--2380, 2018.
 
 \bibitem{ho2020constructing}
-X.~Ho, A.-K.~D. Nguyen, S.~Sugawara, and A.~Aizawa, ``Constructing a multi-hop
-  {QA} dataset for comprehensive evaluation of reasoning steps,'' in {\em
-  Proceedings of the 28th International Conference on Computational
-  Linguistics}, pp.~6609--6625, 2020.
+X.~Ho, A.-K.~D. Nguyen, S.~Sugawara, and A.~Aizawa, ``Constructing a multi-hop {QA} dataset for comprehensive evaluation of reasoning steps,'' in {\em Proceedings of the 28th International Conference on Computational Linguistics}, pp.~6609--6625, 2020.
 
 \bibitem{trivedi2022musique}
-H.~Trivedi, N.~Balasubramanian, T.~Khot, and A.~Sabharwal, ``{MuSiQue}:
-  Multihop questions via single-hop question composition,'' {\em Transactions
-  of the Association for Computational Linguistics (TACL)}, vol.~10,
-  pp.~539--554, 2022.
+H.~Trivedi, N.~Balasubramanian, T.~Khot, and A.~Sabharwal, ``{MuSiQue}: Multihop questions via single-hop question composition,'' {\em Transactions of the Association for Computational Linguistics (TACL)}, vol.~10, pp.~539--554, 2022.
 
 \bibitem{abdelhedi2026probing}
-O.~Abdelhedi, O.~R. Heidari, S.~Chaari, X.~{Chen Zhu}, M.~Hamed, D.~Azzam, and
-  Y.~Yaakoubi, ``Probing compositional question difficulty in language model
-  representations,'' in {\em IEEE AIDIST 2026 Conference}, 2026.
+O.~Abdelhedi, O.~R. Heidari, S.~Chaari, X.~{Chen Zhu}, M.~Hamed, D.~Azzam, and Y.~Yaakoubi, ``Probing compositional question difficulty in language model representations,'' in {\em IEEE AIDIST 2026 Conference}, 2026.
 \newblock Accepted, to appear.
 
 \bibitem{salton1988term}
-G.~Salton and C.~Buckley, ``Term-weighting approaches in automatic text
-  retrieval,'' {\em Information Processing \& Management}, vol.~24, no.~5,
-  pp.~513--523, 1988.
+G.~Salton and C.~Buckley, ``Term-weighting approaches in automatic text retrieval,'' {\em Information Processing \& Management}, vol.~24, no.~5, pp.~513--523, 1988.
 
 \bibitem{robertson2009bm25}
-S.~Robertson and H.~Zaragoza, ``The probabilistic relevance framework: {BM25}
-  and beyond,'' {\em Foundations and Trends in Information Retrieval}, vol.~3,
-  no.~4, pp.~333--389, 2009.
+S.~Robertson and H.~Zaragoza, ``The probabilistic relevance framework: {BM25} and beyond,'' {\em Foundations and Trends in Information Retrieval}, vol.~3, no.~4, pp.~333--389, 2009.
 
 \bibitem{karpukhin2020dpr}
-V.~Karpukhin, B.~O{\u{g}}uz, S.~Min, P.~Lewis, L.~Wu, S.~Edunov, D.~Chen, and
-  W.-t. Yih, ``Dense passage retrieval for open-domain question answering,'' in
-  {\em Proceedings of the 2020 Conference on Empirical Methods in Natural
-  Language Processing (EMNLP)}, pp.~6769--6781, 2020.
+V.~Karpukhin, B.~O{\u{g}}uz, S.~Min, P.~Lewis, L.~Wu, S.~Edunov, D.~Chen, and W.-t. Yih, ``Dense passage retrieval for open-domain question answering,'' in {\em Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, pp.~6769--6781, 2020.
 
 \bibitem{khattab2020colbert}
-O.~Khattab and M.~Zaharia, ``{ColBERT}: Efficient and effective passage search
-  via contextualized late interaction over {BERT},'' in {\em Proceedings of the
-  43rd International ACM SIGIR Conference on Research and Development in
-  Information Retrieval}, pp.~39--48, 2020.
+O.~Khattab and M.~Zaharia, ``{ColBERT}: Efficient and effective passage search via contextualized late interaction over {BERT},'' in {\em Proceedings of the 43rd International ACM SIGIR Conference on Research and Development in Information Retrieval}, pp.~39--48, 2020.
 
 \bibitem{xiong2021mdr}
-W.~Xiong, X.~L. Li, S.~Iyer, J.~Du, P.~Lewis, W.~Y. Wang, Y.~Mehdad, W.-t. Yih,
-  S.~Riedel, D.~Kiela, and B.~O{\u{g}}uz, ``Answering complex open-domain
-  questions with multi-hop dense retrieval,'' in {\em International Conference
-  on Learning Representations (ICLR)}, 2021.
+W.~Xiong, X.~L. Li, S.~Iyer, J.~Du, P.~Lewis, W.~Y. Wang, Y.~Mehdad, W.-t. Yih, S.~Riedel, D.~Kiela, and B.~O{\u{g}}uz, ``Answering complex open-domain questions with multi-hop dense retrieval,'' in {\em International Conference on Learning Representations (ICLR)}, 2021.
 
 \bibitem{khattab2021baleen}
-O.~Khattab, C.~Potts, and M.~Zaharia, ``{Baleen}: Robust multi-hop reasoning at
-  scale via condensed retrieval,'' in {\em Advances in Neural Information
-  Processing Systems (NeurIPS)}, vol.~34, 2021.
+O.~Khattab, C.~Potts, and M.~Zaharia, ``{Baleen}: Robust multi-hop reasoning at scale via condensed retrieval,'' in {\em Advances in Neural Information Processing Systems (NeurIPS)}, vol.~34, 2021.
 
 \bibitem{trivedi2023interleaving}
-H.~Trivedi, N.~Balasubramanian, T.~Khot, and A.~Sabharwal, ``Interleaving
-  retrieval with chain-of-thought reasoning for knowledge-intensive multi-step
-  questions,'' in {\em Proceedings of the 61st Annual Meeting of the
-  Association for Computational Linguistics (Volume 1: Long Papers)},
-  pp.~10014--10037, 2023.
+H.~Trivedi, N.~Balasubramanian, T.~Khot, and A.~Sabharwal, ``Interleaving retrieval with chain-of-thought reasoning for knowledge-intensive multi-step questions,'' in {\em Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)}, pp.~10014--10037, 2023.
+
+\bibitem{gutierrez2024hipporag}
+B.~J. Guti{\'e}rrez, Y.~Shu, Y.~Gu, M.~Yasunaga, and Y.~Su, ``{HippoRAG}: Neurobiologically inspired long-term memory for large language models,'' in {\em Advances in Neural Information Processing Systems (NeurIPS)}, 2024.
+
+\bibitem{gutierrez2025hipporag2}
+B.~J. Guti{\'e}rrez, Y.~Shu, W.~Qi, S.~Zhou, and Y.~Su, ``From {RAG} to memory: Non-parametric continual learning for large language models,'' in {\em Proceedings of the 42nd International Conference on Machine Learning}, vol.~267 of {\em Proceedings of Machine Learning Research}, pp.~21497--21515, PMLR, 2025.
 
 \bibitem{jeong2024adaptiverag}
-S.~Jeong, J.~Baek, S.~Cho, S.~J. Hwang, and J.~C. Park, ``{Adaptive-RAG}:
-  Learning to adapt retrieval-augmented large language models through question
-  complexity,'' in {\em Proceedings of the 2024 Conference of the North
-  American Chapter of the Association for Computational Linguistics: Human
-  Language Technologies (Volume 1: Long Papers)}, pp.~7036--7050, 2024.
+S.~Jeong, J.~Baek, S.~Cho, S.~J. Hwang, and J.~C. Park, ``{Adaptive-RAG}: Learning to adapt retrieval-augmented large language models through question complexity,'' in {\em Proceedings of the 2024 Conference of the North American Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)}, pp.~7036--7050, 2024.
 
 \bibitem{jiang2023flare}
-Z.~Jiang, F.~Xu, L.~Gao, Z.~Sun, Q.~Liu, J.~Dwivedi-Yu, Y.~Yang, J.~Callan, and
-  G.~Neubig, ``Active retrieval augmented generation,'' in {\em Proceedings of
-  the 2023 Conference on Empirical Methods in Natural Language Processing},
-  pp.~7969--7992, 2023.
+Z.~Jiang, F.~Xu, L.~Gao, Z.~Sun, Q.~Liu, J.~Dwivedi-Yu, Y.~Yang, J.~Callan, and G.~Neubig, ``Active retrieval augmented generation,'' in {\em Proceedings of the 2023 Conference on Empirical Methods in Natural Language Processing}, pp.~7969--7992, 2023.
 
 \bibitem{asai2023selfrag}
-A.~Asai, Z.~Wu, Y.~Wang, A.~Sil, and H.~Hajishirzi, ``{Self-RAG}: Learning to
-  retrieve, generate, and critique through self-reflection,'' in {\em
-  International Conference on Learning Representations (ICLR)}, 2024.
+A.~Asai, Z.~Wu, Y.~Wang, A.~Sil, and H.~Hajishirzi, ``{Self-RAG}: Learning to retrieve, generate, and critique through self-reflection,'' in {\em International Conference on Learning Representations (ICLR)}, 2024.
 
-\bibitem{heidari2026trustlayer}
-O.~R. Heidari, S.~Chaari, O.~Abdelhedi, D.~Azzam, M.~Hamed, X.~{Chen Zhu}, and
-  Y.~Yaakoubi, ``The trust layer of retrieval-augmented generation: A
-  systematic survey of uncertainty quantification, verification, and
-  guarantees,'' in {\em IEEE AIDIST 2026 Conference}, 2026.
-\newblock Accepted, to appear.
+\bibitem{alain2016probes}
+G.~Alain and Y.~Bengio, ``Understanding intermediate layers using linear classifier probes,'' {\em arXiv preprint arXiv:1610.01644}, 2016.
+
+\bibitem{park2024linear}
+K.~Park, Y.~J. Choe, and V.~Veitch, ``The linear representation hypothesis and the geometry of large language models,'' in {\em Proceedings of the 41st International Conference on Machine Learning}, vol.~235 of {\em Proceedings of Machine Learning Research}, pp.~39643--39666, PMLR, 2024.
+
+\bibitem{hewitt2019control}
+J.~Hewitt and P.~Liang, ``Designing and interpreting probes with control tasks,'' in {\em Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP)}, pp.~2733--2743, Association for Computational Linguistics, 2019.
+
+\bibitem{kadavath2022know}
+S.~Kadavath, T.~Conerly, A.~Askell, T.~Henighan, D.~Drain, E.~Perez, N.~Schiefer, Z.~Hatfield-Dodds, N.~DasSarma, E.~Tran-Johnson, S.~Johnston, S.~El-Showk, A.~Jones, N.~Elhage, T.~Hume, A.~Chen, Y.~Bai, S.~Bowman, S.~Fort, D.~Ganguli, D.~Hernandez, J.~Jacobson, J.~Kernion, S.~Kravec, L.~Lovitt, K.~Ndousse, C.~Olsson, S.~Ringer, D.~Amodei, T.~Brown, J.~Clark, N.~Joseph, B.~Mann, S.~McCandlish, C.~Olah, and J.~Kaplan, ``Language models (mostly) know what they know,'' {\em arXiv preprint arXiv:2207.05221}, 2022.
+
+\bibitem{burns2023discovering}
+C.~Burns, H.~Ye, D.~Klein, and J.~Steinhardt, ``Discovering latent knowledge in language models without supervision,'' in {\em The Eleventh International Conference on Learning Representations}, 2023.
+
+\bibitem{marks2024geometry}
+S.~Marks and M.~Tegmark, ``The geometry of truth: Emergent linear structure in large language model representations of true/false datasets,'' in {\em First Conference on Language Modeling}, 2024.
+
+\bibitem{azaria2023internal}
+A.~Azaria and T.~Mitchell, ``The internal state of an {LLM} knows when it's lying,'' in {\em Findings of the Association for Computational Linguistics: EMNLP 2023}, pp.~967--976, Association for Computational Linguistics, 2023.
+
+\bibitem{moreno2025noanswer}
+I.~V. Moreno~Cencerrado, A.~Padr{\'e}s~Masdemont, A.~Gonzalvez~Hawthorne, D.~D. Africa, and L.~Pacchiardi, ``No answer needed: Predicting {LLM} answer accuracy from question-only linear probes,'' {\em arXiv preprint arXiv:2509.10625}, 2025.
+
+\bibitem{yang2024latent}
+S.~Yang, E.~Gribovskaya, N.~Kassner, M.~Geva, and S.~Riedel, ``Do large language models latently perform multi-hop reasoning?,'' in {\em Proceedings of the 62nd Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)}, pp.~10210--10229, 2024.
 
 \bibitem{press2023compositionality}
-O.~Press, M.~Zhang, S.~Min, L.~Schmidt, N.~A. Smith, and M.~Lewis, ``Measuring
-  and narrowing the compositionality gap in language models,'' in {\em Findings
-  of the Association for Computational Linguistics: EMNLP 2023},
-  pp.~5687--5711, 2023.
+O.~Press, M.~Zhang, S.~Min, L.~Schmidt, N.~A. Smith, and M.~Lewis, ``Measuring and narrowing the compositionality gap in language models,'' in {\em Findings of the Association for Computational Linguistics: EMNLP 2023}, pp.~5687--5711, 2023.
 
 \bibitem{min2019multihop}
-S.~Min, V.~Zhong, L.~Zettlemoyer, and H.~Hajishirzi, ``Multi-hop reading
-  comprehension through question decomposition and rescoring,'' in {\em
-  Proceedings of the 57th Annual Meeting of the Association for Computational
-  Linguistics}, pp.~6097--6109, 2019.
+S.~Min, V.~Zhong, L.~Zettlemoyer, and H.~Hajishirzi, ``Multi-hop reading comprehension through question decomposition and rescoring,'' in {\em Proceedings of the 57th Annual Meeting of the Association for Computational Linguistics}, pp.~6097--6109, 2019.
 
 \bibitem{perez2020unsupervised}
-E.~Perez, P.~Lewis, W.-t. Yih, K.~Cho, and D.~Kiela, ``Unsupervised question
-  decomposition for question answering,'' in {\em Proceedings of the 2020
-  Conference on Empirical Methods in Natural Language Processing (EMNLP)},
-  pp.~8864--8880, 2020.
+E.~Perez, P.~Lewis, W.-t. Yih, K.~Cho, and D.~Kiela, ``Unsupervised question decomposition for question answering,'' in {\em Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)}, pp.~8864--8880, 2020.
 
 \bibitem{dua2022successive}
-D.~Dua, S.~Gupta, S.~Singh, and M.~Gardner, ``Successive prompting for
-  decomposing complex questions,'' in {\em Proceedings of the 2022 Conference
-  on Empirical Methods in Natural Language Processing}, pp.~1251--1265, 2022.
+D.~Dua, S.~Gupta, S.~Singh, and M.~Gardner, ``Successive prompting for decomposing complex questions,'' in {\em Proceedings of the 2022 Conference on Empirical Methods in Natural Language Processing}, pp.~1251--1265, 2022.
 
 \bibitem{zhou2023leasttomost}
-D.~Zhou, N.~Sch{\"a}rli, L.~Hou, J.~Wei, N.~Scales, X.~Wang, D.~Schuurmans,
-  C.~Cui, O.~Bousquet, Q.~V. Le, and E.~H. Chi, ``Least-to-most prompting
-  enables complex reasoning in large language models,'' in {\em International
-  Conference on Learning Representations (ICLR)}, 2023.
+D.~Zhou, N.~Sch{\"a}rli, L.~Hou, J.~Wei, N.~Scales, X.~Wang, D.~Schuurmans, C.~Cui, O.~Bousquet, Q.~V. Le, and E.~H. Chi, ``Least-to-most prompting enables complex reasoning in large language models,'' in {\em International Conference on Learning Representations (ICLR)}, 2023.
 
 \bibitem{khot2023decomposed}
-T.~Khot, H.~Trivedi, M.~Finlayson, Y.~Fu, K.~Richardson, P.~Clark, and
-  A.~Sabharwal, ``Decomposed prompting: A modular approach for solving complex
-  tasks,'' in {\em International Conference on Learning Representations
-  (ICLR)}, 2023.
+T.~Khot, H.~Trivedi, M.~Finlayson, Y.~Fu, K.~Richardson, P.~Clark, and A.~Sabharwal, ``Decomposed prompting: A modular approach for solving complex tasks,'' in {\em International Conference on Learning Representations (ICLR)}, 2023.
 
 \end{thebibliography}

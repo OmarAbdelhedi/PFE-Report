@@ -1,0 +1,1063 @@
+\chapter{Optimising Question Decomposition and Evidence Allocation}
+\label{chap:optimisation}
+
+\section*{Introduction}
+
+Chapter~4 introduced an evidence-aware evaluation of a generated decomposition.
+The ownership mask assigns supporting passages to subquestions, and the resulting
+depth score measures how early those passages can be retrieved by their assigned
+queries. This chapter uses that score to optimise the instruction that generates
+the decomposition. It addresses the question posed in Section~2.6.2: can the
+generation strategy preserve evidence coverage while reducing retrieval depth?
+
+The completed experiment applies an OPRO-style search to one system instruction.
+It evaluates twenty-four proposed instructions and the initial instruction on
+the same hundred MuSiQue questions. The selected instruction raises the masked
+depth score from $66.30$ to $67.20$, with unchanged exact match of $44\%$.
+These measurements describe prompt selection on the development panel. They
+also motivate a distinction between improving a retrieval objective and
+improving the answers produced by the complete system.
+
+The chapter presents two complementary interventions. Prompt search changes
+the questions issued by the system. Learned allocation changes the passage
+prefix selected from each arm of a recorded execution. The completed allocation
+study uses predicted-binding BM25 traces on MuSiQue, 2Wiki and HotpotQA. At a
+budget of eight passage slots, its largest observed coverage increase is
+$6.3$ percentage points on 2Wiki. These are retrieval-coverage measurements
+on retained traces, distinct from the pilot's final-answer measurements.
+A paired $700$-question MuSiQue experiment also evaluates the answers
+produced from balanced and segment-policy pooled contexts. The later
+unit-increment policy is evaluated separately on retrieval coverage.
+
+The chapter then specifies an evidence-feedback extension that separates observed retrieval
+and dependency information from estimated ownership. A comparison with
+answer-only and information-matched raw feedback is defined on frozen
+optimisation, selection and confirmation splits. The extension has an
+implemented feedback and search interface; its comparative answer-quality
+evaluation remains prospective. The empirical conclusions concern the
+completed OPRO pilot, fixed-trace allocation study and controlled ownership
+stress tests.
+
+\section{The Optimisation Problem}
+
+\subsection{An Instruction Defines an Executable Policy}
+
+Let $p$ denote the decomposer's system instruction and let $q$ be an input
+question. With fixed demonstrations and generation settings, the decomposer
+produces an ordered plan
+\begin{equation}
+  \pi_p(q)=(u_1,\ldots,u_{A_p(q)}),
+  \label{eq:ch5-plan}
+\end{equation}
+where $A_p(q)$ is the number of subquestions. A reference \texttt{\#i} in
+$u_a$ refers to the answer of an earlier arm, so valid references satisfy
+$i<a$. The executor substitutes its predicted intermediate answers, retrieves
+passages and reads them for each arm in sequence. The answer of the last arm
+is the final answer $\widehat y_p(q)$.
+
+This interface constrains useful prompt changes. Each arm must be phrased as a
+retrieval question, references must be executable in order, and the final arm
+must target the answer requested by $q$. A plan that retrieves relevant facts
+but ends with an intermediate entity can have adequate evidence coverage and
+an incorrect final answer. The optimisation therefore acts on a program of
+retrieval and reading steps, rather than on a list of paraphrases alone.
+
+The historical experiment changes $p$ while keeping the demonstrations,
+retriever, reader and ownership estimator fixed. It uses one generated plan
+per question. The six instructions proposed in a search round are six policy
+candidates, not six plans combined at inference time.
+
+\subsection{The Retained Retrieval Objective}
+
+For each executed plan, let $D_{M,p}(q)$ be the ownership-masked depth defined
+in Chapter~4. It is the greatest passage rank among the assigned arm--evidence
+pairs, with infinite depth when required evidence has no predicted owner or
+falls outside the retained ranked lists. With cutoff $K=200$, the search
+objective is
+\begin{equation}
+  J_M(p;\mathcal D)=\frac{100}{|\mathcal D|}
+       \sum_{q\in\mathcal D}v_K\!\left(D_{M,p}(q)\right),
+  \qquad
+  v_K(d)=
+  \begin{cases}
+     1-\dfrac{\log d}{\log K},&1\leq d\leq K,\\[1mm]
+     0,&d=+\infty.
+  \end{cases}
+  \label{eq:ch5-objective}
+\end{equation}
+All questions remain in the denominator. The objective rewards early complete
+retrieval under the predicted assignment and gives zero credit to a censored
+question. Its companion coverage statistic is
+\begin{equation}
+  C_M(K;p)=\frac{1}{|\mathcal D|}\sum_{q\in\mathcal D}
+             \mathbf{1}\{D_{M,p}(q)\leq K\}.
+  \label{eq:ch5-coverage}
+\end{equation}
+Depth $K$ receives zero logarithmic credit but counts as finite coverage.
+Reporting both quantities distinguishes complete evidence near the search
+limit from incomplete evidence.
+
+The score depends on the ownership estimator. An assignment error can change
+which ranks enter the maximum, as discussed in Chapter~4. The estimator is
+therefore frozen during search. Evidence coverage computed directly from the
+gold passage set remains a separate diagnostic.
+
+\subsection{Answer Quality and Resource Use}
+
+The end-to-end outcomes are exact match and token F1 against the benchmark
+reference answers. For a fixed evaluation panel, define
+\begin{equation}
+  J_{\mathrm{F1}}(p)=\frac{1}{|\mathcal D|}
+       \sum_{q\in\mathcal D}\mathrm{F1}(\widehat y_p(q),y_q).
+  \label{eq:ch5-f1}
+\end{equation}
+The retrieval objective in Equation~\ref{eq:ch5-objective} and the answer
+objective in Equation~\ref{eq:ch5-f1} measure different properties. Retrieved
+evidence must still be read, intermediate answers must bind correctly, and the
+last arm must produce the requested answer.
+
+The historical reader consumes five passages per arm. Its nominal passage-slot
+allowance is consequently $5A_p(q)$, with repeated passages charged to each
+arm that reads them. Unique passages, reader tokens and model calls are
+additional cost measurements. The masked-depth objective contains no direct
+penalty for arm count, so a higher objective value alone establishes neither
+lower total reading cost nor higher answer accuracy.
+
+\section{The Completed OPRO Search}
+
+\subsection{Search Configuration}
+
+OPRO uses a language model to propose solutions from a history of candidates
+and their measured scores~\cite{ch5-opro}. Here, a candidate is the text of
+the decomposer's system instruction. GPT-4o proposes instructions, and the
+Llama-3.3-70B pipeline executes them on the development questions.
+Table~\ref{tab:ch5-configuration} records the retained configuration.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Configuration of the completed prompt-search pilot.}
+\label{tab:ch5-configuration}
+\begin{tabular}{p{0.36\textwidth}p{0.55\textwidth}}
+\hline
+Component & Setting \\
+\hline
+Evaluation panel & The same $100$ MuSiQue questions for every candidate \\
+Initialisations & One initial instruction \\
+Search rounds & Four, with six new instructions per round \\
+Candidate total & $25$, including the initial instruction \\
+Proposal model & GPT-4o, temperature $1.0$ \\
+Execution model & Llama-3.3-70B, one plan per question \\
+Reader context & Five passages per executed arm \\
+Retrieval scoring & Up to $200$ retained ranks per arm \\
+Search reward & Ownership-masked logarithmic depth score \\
+History in feedback & At most $20$ prior instructions and their rounded scores \\
+Example feedback & Three cases from the current leading instruction \\
+\hline
+\end{tabular}
+\end{table}
+
+The executor uses temperature-zero generation with cached model calls. Exact
+duplicate instruction hashes are filtered. The retained leaderboard contains
+twenty-five successfully evaluated candidates and zero rejected candidates.
+This amounts to $2\,500$ candidate--question evaluations. That count describes
+logical evaluations; cached calls can reduce the number of billable model
+requests.
+
+The baseline is the seed instruction and its executions recorded within this
+search. The separately recorded prompt variants in Chapter~4 provide context
+for the pipeline, rather than substituting for this paired baseline.
+
+\subsection{Proposal and Selection Loop}
+
+The search begins by executing the initial instruction on all hundred
+questions. At each round, the optimizer receives the retained instruction
+history, the corresponding aggregate depth scores and three examples from
+the current leader. It proposes six replacement instructions. Each is
+executed through the same retrieval and reading pipeline, assigned an
+ownership mask and scored using Equation~\ref{eq:ch5-objective}. The updated
+leaderboard retains the highest-scoring instruction across all completed
+rounds.
+
+The full-precision score determines the leaderboard order, while the
+meta-prompt displays integer-rounded scores. Twelve of the twenty-five
+candidates are displayed in the same score-$64$ bucket. This reduces the
+resolution of the numerical information available to the proposer, even
+though their stored scores remain distinct.
+
+The initial and selected instructions share the same planning policy: use
+complete natural-language questions, preserve independent branches, require
+backward references and split compound lookups into simpler arms. The selected
+instruction adds an explicit check that the necessary facts of the original
+question are covered. These are observed differences in instruction text.
+The experiment changes several clauses together, so the measured score change
+cannot be assigned to that coverage clause alone.
+
+\subsection{The Feedback Supplied to the Optimizer}
+
+The historical feedback prioritises questions with predicted unowned
+evidence, then questions with the greatest masked depth. It selects the
+unowned cases in stored question order. This gives the optimizer examples of
+poorly scored executions, but repeatedly drawing from the current leader and
+a fixed ordering can concentrate attention on a small part of the panel.
+
+The example description attributes failures to facts that the plan failed to
+ask for. That interpretation is stronger than the underlying measurements.
+A passage may be assigned to an appropriate query yet appear at a large
+retrieval rank. Conversely, an unowned passage is an estimator output whose
+correctness depends on the ownership model. Both cases can lower the depth
+score, while suggesting different changes to the instruction. This motivates
+the typed feedback in Section~\ref{sec:ch5-feedback}.
+
+\section{Results of the Pilot}
+
+\subsection{Progress Across Search Rounds}
+
+Table~\ref{tab:ch5-rounds} separates the best proposal in each round from the
+best instruction retained so far. The overall winner appears in the second
+round. The third and fourth rounds produce lower-scoring candidates, while
+the stored best score remains $67.20$.
+
+\begin{table}[tbp]
+\centering
+\caption{Masked-depth score during the completed search. The retained best
+includes all earlier rounds. Values are on the shared development panel.}
+\label{tab:ch5-rounds}
+\begin{tabular}{lrrr}
+\hline
+Stage & New candidates & Best in stage & Retained best \\
+\hline
+Initial instruction & $1$ & $66.3017$ & $66.3017$ \\
+Round $1$ & $6$ & $66.5975$ & $66.5975$ \\
+Round $2$ & $6$ & $67.2042$ & $67.2042$ \\
+Round $3$ & $6$ & $65.2557$ & $67.2042$ \\
+Round $4$ & $6$ & $66.0482$ & $67.2042$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The increase from the initial instruction is $0.9025$ score points. A plateau
+over the final two rounds describes this trajectory and its proposal budget.
+Broader search, different initial instructions and alternative feedback are
+separate experimental choices. The four-round trajectory does not determine
+their attainable performance.
+
+\subsection{The Selected Instruction}
+
+Table~\ref{tab:ch5-selected} compares the selected instruction with the seed
+on the quantities available for both. Finite masked coverage remains at
+$80\%$. Thus the higher aggregate score is not accompanied by a higher
+aggregate count of questions with finite masked depth. Question-level
+successes can still change identity.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Initial and selected instructions on the $100$ development
+questions. F1 is displayed on a $0$--$100$ scale. Passage slots are the
+five-per-arm allowance derived from the observed arm count.}
+\label{tab:ch5-selected}
+\begin{tabular}{lrrr}
+\hline
+Measurement & Initial & Selected & Change \\
+\hline
+Masked-depth score & $66.3017$ & $67.2042$ & $+0.9025$ \\
+Finite masked coverage (\%) & $80$ & $80$ & $0$ \\
+Exact match (\%) & $44$ & $44$ & $0$ \\
+Token F1 & $52.3682$ & $52.4847$ & $+0.1165$ \\
+Mean generated arms & $3.00$ & $3.13$ & $+0.13$ \\
+Mean passage-slot allowance & $15.00$ & $15.65$ & $+0.65$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Exact match is unchanged at $44\%$: two questions change from incorrect to
+correct and two change in the opposite direction. Mean F1 increases by
+$0.1165$ points on the $0$--$100$ scale. The selected instruction generates
+$0.13$ additional arms per question, corresponding to a $4.3\%$ increase in
+the mean passage-slot allowance. Its measured benefit is therefore specific
+to the masked-depth score, with broadly similar final-answer quality and a
+slightly larger nominal reading allowance.
+
+A paired bootstrap over the hundred questions gives a descriptive $95\%$
+interval of $[-1.80,3.90]$ points for the masked-depth-score difference and
+$[-3.60,4.00]$ points for the F1 difference. The exact-match difference has
+an interval of $[-4,4]$ percentage points. These intervals condition on the
+selected pair of instructions. The same panel supplied feedback and selected
+the winner, so the intervals describe sensitivity to the sampled questions;
+they are not an independent assessment of selection generalisation.
+
+\subsection{The Optimisation Objective and the Answer Objective}
+
+Across the twenty-five evaluated instructions, the Spearman correlation
+between masked-depth score and mean answer F1 is $0.413$. The candidates are
+adaptively related and share their evaluation questions, so this is a
+description of the retained candidate set. It is useful for inspecting
+whether the objective ranks these instructions like answer quality does.
+
+The highest-F1 candidate occurs in the third round. It achieves F1 $53.88$
+and exact match $46\%$, with masked-depth score $64.10$. The depth-selected
+winner has F1 $52.48$ and exact match $44\%$, with score $67.20$.
+Table~\ref{tab:ch5-objectives} shows the resulting reversal. The highest-F1
+candidate is a retrospective comparator, not a second independently selected
+test winner.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Different objectives select different candidates from the same
+development search. The F1-leading candidate is identified retrospectively.}
+\label{tab:ch5-objectives}
+\begin{tabular}{lrrr}
+\hline
+Instruction & Depth score & F1 & Exact match (\%) \\
+\hline
+Initial & $66.30$ & $52.37$ & $44$ \\
+Highest depth score & $67.20$ & $52.48$ & $44$ \\
+Highest answer F1 & $64.10$ & $53.88$ & $46$ \\
+\hline
+\end{tabular}
+\end{table}
+
+This result supports reporting retrieval quality and answer quality together.
+An evidence-depth objective remains appropriate when the task is to bring
+assigned evidence earlier in the ranked lists. For a claim about improved
+question answering, final answers provide the direct selection criterion.
+Objective choice and feedback choice should therefore be varied separately.
+
+\section{Learned Allocation on Fixed Retrieval Traces}
+\label{sec:ch5-allocation}
+
+\subsection{The Allocation Intervention}
+
+Prompt optimisation changes a plan and its resulting rankings. Allocation
+holds those rankings fixed and chooses how much evidence to retain from each
+arm. For a question with $A$ recorded arms, let $k_a$ be the prefix length
+selected from arm $a$. Its passage-slot budget is
+\begin{equation}
+  \sum_{a=1}^{A}k_a\leq B.
+  \label{eq:ch5-slot-budget}
+\end{equation}
+Complete coverage means that every annotated supporting passage occurs in
+at least one selected prefix. This is the union criterion from Chapter~4.
+An occurrence in two arms is charged twice in Equation~\ref{eq:ch5-slot-budget},
+although a pooled reader may later deduplicate it.
+
+The learned policy is evaluated on BM25 rankings generated by a sequential
+execution. Each subquestion is answered using its first five retrieved
+passages; that predicted answer resolves references in later subquestions.
+The run retains $200$ ranks per arm. Allocation replays these saved lists.
+Changing $B$ therefore preserves the intermediate answers and downstream
+queries from the five-passages-per-hop trace-generation policy. The experiment
+measures context selection conditional on that policy, rather than a fresh
+budget-dependent execution of the reasoning chain.
+
+The balanced comparator assigns $\lfloor B/A\rfloor$ slots to every arm and
+distributes the remainder to the earliest arms. The learned rule also starts
+with one slot per arm. Both comparisons use the same total budget when
+$B\geq A$. The retained traces contain at most seven arms, so the budgets
+$8$, $16$ and $32$ reported below satisfy that condition. Zero-depth arms
+are allowed in the gold-informed oracle from Chapter~4; it is a reference
+with a broader feasible set than these floor-constrained policies.
+
+\subsection{Predicting Per-Arm Depth Requirements}
+
+Training assigns each supporting passage to the arm that ranks it earliest,
+breaking ties by arm order. An arm's target depth $d_a$ is the largest rank
+among its assigned passages, with target one for an empty assignment. If
+any required passage is absent from every retained list, all arm targets
+for that question are censored beyond the maximum depth. This convention
+couples the training labels across arms.
+
+For each threshold in
+\[
+  \mathcal K=\{1,2,3,4,6,8,12,16,24,32,48,64,96,128,200\},
+\]
+a binary gradient-boosted classifier predicts
+\begin{equation}
+  \widehat S_a(k)=\widehat{\Pr}(d_a\leq k\mid x_a).
+  \label{eq:ch5-depth-cdf}
+\end{equation}
+The implementation fits separate threshold classifiers and then applies a
+running maximum over their predictions. This creates non-decreasing
+cumulative curves. It is an upward monotone envelope, with probability
+calibration remaining a separate property to assess.
+
+Features describe arm text, position, arm count and the first ten BM25
+scores. The score features include their spread, concentration, selected
+gaps and decay. They are computed from the saved rankings before prefix
+selection. Their acquisition is outside the passage-slot accounting in
+Equation~\ref{eq:ch5-slot-budget}. The reported budget therefore measures
+selected context, rather than total retrieval work, latency or model cost.
+On sequential traces, later resolved query text also depends on the earlier
+five-passage reader calls.
+
+\subsection{Segment and Unit-Increment Allocation}
+
+The allocation score is the separable surrogate
+\begin{equation}
+  \max_{k_a\geq1,\ \sum_a k_a\leq B}
+       \sum_{a=1}^{A}\log\widehat S_a(k_a).
+  \label{eq:ch5-allocation-surrogate}
+\end{equation}
+It treats satisfaction of the assigned arm requirements as conditionally
+independent. Union coverage remains the evaluation criterion: evidence
+retrieved by another arm can satisfy the question even when the assigned
+arm misses it.
+
+The segment policy forms an upper concave envelope of each log curve.
+It takes affordable whole envelope segments in descending gain-per-slot
+order, then distributes unused slots to arms with the largest remaining
+probability mass. This fills the budget, subject to the retained-depth cap.
+It is a heuristic for Equation~\ref{eq:ch5-allocation-surrogate}, including
+when the original log curves are concave. For example, on depths
+$\{1,2,3\}$, log curves $(-4,-3.5,-3)$ and $(-3,-2,-1)$ with $B=3$
+produce allocation $(2,1)$ and score $-6.5$, while $(1,2)$ achieves $-6$.
+The remainder rule chooses the lower-confidence arm rather than the larger
+next marginal gain.
+
+The unit-increment policy instead allocates one slot at a time. Let $h_a$
+be the piecewise-linear upper concave envelope of
+$\{(k,\log\widehat S_a(k)):k\in\mathcal K\}$. Starting from $k_a=1$
+for every arm, select an uncapped arm maximising
+\begin{equation}
+  \Delta_a(k_a)=h_a(k_a+1)-h_a(k_a)
+  \label{eq:ch5-unit-gain}
+\end{equation}
+and increment its depth. The retained cap is $200$. Once every marginal
+gain is zero, additional slots can be assigned to any uncapped arm without
+changing the objective. With the non-decreasing predicted curves, this rule
+solves
+\begin{equation}
+  \max_{k_a\in\{1,\ldots,200\},\ \sum_a k_a\leq B}
+       \sum_{a=1}^{A}h_a(k_a), \qquad B\geq A.
+  \label{eq:ch5-envelope-objective}
+\end{equation}
+
+Concavity makes each arm's successive unit gains non-increasing. Every
+allocation corresponds to taking a prefix of those gains from each arm.
+Selecting the greatest available gain at each step therefore selects the
+greatest remaining gain overall while preserving the prefix constraint.
+An exchange of any smaller selected gain with a larger available gain
+cannot reduce the objective. Repeating this exchange gives the greedy
+allocation and establishes its optimality for
+Equation~\ref{eq:ch5-envelope-objective}.
+
+This exactness concerns the interpolated envelope. The envelope can lie
+above the original log curve even at a measured depth. For example, on
+depths $\{1,2,3\}$, curves $(-4,-3.9,-1)$ and $(-3,-2,-1)$ with $B=3$
+give unit allocation $(2,1)$. Its original log score is $-6.9$, whereas
+$(1,2)$ achieves $-6$. The interpolated and original objectives therefore
+remain distinct, and both differ from complete union coverage.
+
+An exact finite-grid alternative is available through dynamic programming.
+Let $V_a(b)$ be the best surrogate score for the first $a$ arms with at most
+$b$ slots. Then
+\begin{equation}
+  V_a(b)=\max_{k\in\mathcal K,\ k\leq b}
+       \left\{V_{a-1}(b-k)+\log\widehat S_a(k)\right\},
+  \label{eq:ch5-allocation-dp}
+\end{equation}
+with $V_0(b)=0$ for $b\geq0$ and infeasible states equal to $-\infty$.
+This costs $O(AB|\mathcal K|)$ and optimises the declared discrete
+surrogate. The coverage measurements below compare the segment and
+unit-increment policies; dynamic programming remains an alternative for
+the original grid objective.
+Surrogate optimisation and the gold-informed union oracle solve different
+allocation problems.
+
+\subsection{Evaluation Population and Cross-Validation}
+
+The saved sequential evaluations retain $824$ MuSiQue, $977$ 2Wiki and
+$996$ HotpotQA questions from the corresponding thousand-question panels.
+The missing trace counts are $176$, $23$ and $4$, respectively. Results
+condition on the available traces, whose inclusion can depend on successful
+generation and execution. Chapter~4 records this population and the
+fixed-trace baselines.
+
+Five-fold cross-validation splits by question. Every arm of a held-out
+question is predicted by classifiers trained on the other folds, including
+the feature standardisation. Shared atomic subproblems and supporting
+documents may recur across folds. Method choices were developed on these
+panels, so the resulting point estimates describe a development study
+rather than locked confirmation. They are distinct from the
+source-component-separated evaluation in
+Section~\ref{sec:ch5-prospective}.
+
+Reference-decomposition results use benchmark subquestions and form a
+separate regime. Tables~\ref{tab:ch5-bm25-allocation}
+and~\ref{tab:ch5-allocation-targets} use only generated sequential traces
+with predicted bindings. The generated-plan assignment labels are obtained
+from earliest passage ranks rather than an assumed alignment between arm
+indices and benchmark hop indices.
+
+\subsection{Coverage and Target Budgets}
+
+\input{tables/ch5_bm25_allocation}
+
+At $B=8$, unit-increment allocation raises complete-evidence coverage from
+$0.688$ to $0.751$ on 2Wiki and from $0.413$ to $0.460$ on MuSiQue.
+The corresponding segment-policy coverages are $0.746$ and $0.445$.
+On HotpotQA, unit-increment coverage is $0.770$ against the balanced
+$0.762$ at eight slots, and falls below balanced coverage at sixteen and
+thirty-two slots. Exact optimisation of the envelope thus has
+budget-dependent effects on measured union coverage. A position-weighted
+allocation reaches $0.437$ on MuSiQue at $B=8$, compared with the learned
+segment policy's $0.445$; its corresponding 2Wiki coverage is $0.625$. These
+comparators help distinguish the benefit of predicting depth from that of
+using a simple uneven split.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Smallest tested passage-slot budget reaching a coverage target on
+the fixed generated sequential traces, using the segment policy. The oracle uses gold passage ranks
+and permits zero-depth arms. Ratios compare discrete operating points.}
+\label{tab:ch5-allocation-targets}
+\begin{tabular}{llrrrr}
+\hline
+Dataset & Target & Balanced & Segment & Oracle & Balanced/segment \\
+\hline
+2Wiki & $0.70$ & $10$ & $8$ & $6$ & $1.25$ \\
+      & $0.90$ & $24$ & $20$ & $10$ & $1.20$ \\
+MuSiQue & $0.50$ & $16$ & $12$ & $8$ & $1.33$ \\
+        & $0.60$ & $32$ & $32$ & $16$ & $1.00$ \\
+        & $0.70$ & $128$ & $96$ & $48$ & $1.33$ \\
+HotpotQA & $0.75$ & $8$ & $8$ & $6$ & $1.00$ \\
+         & $0.90$ & $32$ & $32$ & $20$ & $1.00$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The target budgets in Table~\ref{tab:ch5-allocation-targets} are first
+crossings on the tested grid, rather than interpolated minimum costs.
+For example, MuSiQue reaches $50\%$ coverage at budget $12$ under segment
+allocation and $16$ under balanced allocation. This is a selected-slot
+ratio of $1.33$ at that target. Its interpretation excludes the common
+trace-generation cost and makes no assumption about final-answer accuracy.
+
+\subsection{Paired Final-Answer Evaluation}
+
+The completed reader experiment takes the first $700$ retained MuSiQue
+traces and refits the segment-policy allocator using five-fold question-level
+cross-validation within those $700$ cases. Its coverage values therefore
+refer to a different subset and fitted models from the $824$-question
+frontier. Each budget--policy pair is evaluated on every selected question,
+giving $4\,200$ completed final-reader calls.
+These outcomes were generated before the unit-increment revision and
+measure the segment policy throughout.
+
+Both policies deduplicate and interleave their selected prefixes. The same
+GPT-4o-mini reader, requested through the API's model alias at temperature
+zero, answers the original question from that pooled context.
+Table~\ref{tab:ch5-reader-fixed-traces} reports the paired outcomes.
+
+\input{tables/ch5_reader_fixed_traces}
+
+At $B=8$, segment allocation raises F1 from $0.4244$ to $0.4455$ and
+exact match from $0.3443$ to $0.3543$. The paired F1 difference is
+$0.0211$, with a descriptive $95\%$ interval of $[0.0038,0.0385]$ from
+$10\,000$ question-level bootstrap resamples. The corresponding F1
+differences at $B=16$ and $B=32$ are $0.0098$ and $-0.0144$, with
+intervals $[-0.0076,0.0270]$ and $[-0.0309,0.0014]$. These are
+pointwise intervals over the recorded pairs, without adjustment across
+budgets or separation of shared source components. They describe the
+development-panel comparison rather than independent confirmation.
+
+Every allocation spends its declared prefix budget. Deduplication leaves
+mean context sizes of $7.37$ versus $7.39$ passages at $B=8$, and $30.04$
+versus $30.31$ at $B=32$. Thus the matched quantity is selected slots,
+with unique passages and token lengths free to differ. The observed answer
+gain at the smaller budget concerns this pooled-context intervention.
+Changing an intermediate reading budget requires regeneration of its
+dependent queries to test a sequential execution policy.
+
+\subsection{Exploratory Hidden-State Prediction of Assigned Depth}
+\label{sec:ch5-depth-probe}
+
+Chapter~3 studies representations of compositional hop count. A separate
+probe examines their association with the assigned depth target $d_a$
+defined above. The panel contains $2\,648$ reference arms from $1\,000$
+MuSiQue questions with BM25 rankings. Supporting passages are assigned to
+the earliest-ranking arm; $31$ arm targets belong to questions whose
+required evidence is unreachable within the retained lists. The binary
+targets are $d_a\leq k$ for $k\in\{2,4,8,16,32\}$.
+
+The frozen models encode the reference subquestion templates as raw text,
+without a chat template. Right-padding-aware last-token pooling supplies
+the features at nine sampled layers per model. Of the $2\,648$ templates,
+$1\,517$ contain unresolved \texttt{\#N} references and differ from the
+gold-resolved queries used for retrieval. The representations therefore
+describe the templates rather than the executed queries.
+
+\begin{table}[htbp]
+\centering
+\caption{Exploratory depth prediction on the fixed reference panel.
+Mean AUROC averages the five depth thresholds. Each model's layer is
+selected using the same cross-validation results reported here.}
+\label{tab:ch5-depth-probe}
+\begin{tabular}{lrr}
+\hline
+Features & Selected layer & Mean AUROC \\
+\hline
+Qwen2.5-7B-Instruct & 14 & 0.8397 \\
+Llama-3.1-8B-Instruct & 12 & 0.8454 \\
+Mistral-7B-Instruct-v0.3 & 16 & 0.8442 \\
+Surface features and top-ten BM25 scores & n/a & 0.7639 \\
+\hline
+\end{tabular}
+\end{table}
+
+Five-fold cross-validation keeps all arms of a question together. Feature
+standardisation is fitted within each training fold. Logistic regression
+uses inverse regularisation strength $C=0.01$ for hidden states and $C=1$
+for the surface-and-score comparator, so Table~\ref{tab:ch5-depth-probe}
+compares two specified readouts as well as their features. Near-constant
+hidden-state dimensions are filtered using the full panel before splitting.
+
+The split retains substantial source overlap: $1\,557$ test-arm instances
+have an identical template in their training fold, and $755$ test questions
+share a source subproblem with training. Layer selection on the reported
+folds adds selection optimism. All selected-layer activations are finite;
+the Qwen final-layer arrays contain nonfinite activations for $2\,237$ arms,
+which the probe code replaces with zero. That layer is unsuitable for
+interpreting a layer-wise performance decline.
+
+These measurements motivate a component-separated evaluation of template
+representations with nested layer selection and matched readout tuning.
+Their use in an allocator requires a further end-to-end comparison of
+evidence coverage, answer quality and representation-extraction cost.
+
+\section{Evidence-Aware Feedback for Prompt Search}
+\label{sec:ch5-feedback}
+
+\subsection{Separating Reward from Diagnostic Information}
+
+A scalar reward ranks candidate instructions. A diagnostic record identifies
+features of their executions that the optimizer can use when proposing a
+revision. Keeping these roles separate allows the same final-answer reward
+to be paired with different feedback representations.
+
+For a question $q$, the proposed record contains the generated plan, resolved
+queries, intermediate answers, retrieved evidence and final-answer score.
+The gold passages and reference decomposition are available to the
+optimisation-side feedback service. During execution, the decomposer and
+reader use the question, fixed demonstrations, retrieved passages and their
+own predicted bindings. Gold intermediate answers enter feedback after the
+execution rather than resolving its dependencies.
+
+The implemented feedback builder supports three views:
+\begin{enumerate}
+\item \textbf{Answer feedback.} The question, generated plan, final answer,
+      reference answers, exact match and F1.
+\item \textbf{Raw evidence feedback.} Answer feedback plus reference
+      obligations and their passage text, executed queries, intermediate
+      predictions and passage ranks. Available cell votes from the frozen
+      ownership ensemble are included as measurements.
+\item \textbf{Structured evidence feedback.} The same raw evidence payload
+      plus explicit dependency edges, per-obligation retrieval status,
+      estimated ownership status and restricted binding checks.
+\end{enumerate}
+
+The raw and structured views share identical underlying evidence text and
+ownership measurements for a given trace. Their shared payload is hashed
+after common clipping, and both obey the same overall reflection input cap.
+Structured feedback adds a derived organisation of that information. Its
+comparison with raw feedback therefore tests the value of the representation,
+while the comparison with answer-only feedback also includes additional
+supervision. Actual reflection tokens remain a reported cost because equal
+caps do not imply equal realised input lengths.
+
+\subsection{Observed Events and Estimated Assignments}
+
+Table~\ref{tab:ch5-diagnostics} distinguishes deterministic observations from
+classifier-dependent interpretations. The distinction prevents a failed
+answer from being assigned a single cause on the basis of a score alone.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Diagnostic fields supplied by the structured feedback interface.}
+\label{tab:ch5-diagnostics}
+\begin{tabular}{p{0.25\textwidth}p{0.33\textwidth}p{0.32\textwidth}}
+\hline
+Field & Measurement & Scope \\
+\hline
+Dependency structure & {\raggedright Plan references and interface validity\par}
+  & A property of the generated plan \\
+Reader evidence gap & Required passage absent from every five-passage reader
+  context & An observation of this execution \\
+Retained-list gap & Required passage absent from all saved rankings
+  & Censored at the retained depth \\
+Unassigned obligation & An obligation with zero estimated owners
+  & An estimated assignment gap \\
+Fold disagreement & Votes differ for an arm--evidence pair
+  & Estimator uncertainty \\
+Binding comparison & Intermediate answer compared with an aligned reference
+  & Available only for a uniquely matched template and its dependencies \\
+\hline
+\end{tabular}
+\end{table}
+
+The current binding check uses normalised exact subquestion templates and
+requires their referenced predecessors to align consistently. It leaves
+paraphrased, merged or otherwise ambiguous arms unmatched. A benchmark
+answer mismatch on an aligned arm is evidence about that intermediate
+prediction, not proof that it caused the final error. Causal attribution would
+require controlled re-execution that changes the suspected failure while
+holding the remaining policy fixed.
+
+Ownership estimates retain the five model votes and the identity of the
+frozen estimator. A predicted unowned passage is described as a suspected
+unassigned obligation. When a passage is available in a different arm's
+context, the record distinguishes global availability from the evidence
+available to its estimated owner. This is the distinction that the union and
+masked depths formalised in Chapter~4.
+
+\subsection{Reflective Search with a Fixed Execution Interface}
+
+GEPA supplies a reflective prompt-search procedure that uses execution
+feedback and candidate performance across examples~\cite{ch5-gepa}. The
+extension uses the pinned GEPA implementation to optimise the single
+decomposer instruction. The same adapter evaluates answer, raw and
+structured feedback conditions. The proposed contribution is the
+evidence-feedback representation within this common search procedure.
+
+The primary comparison uses final-answer F1 as its scalar reward in every
+condition. The original masked-depth score, complete-evidence coverage and
+resource use are retained as diagnostics. Candidate selection uses the
+instance-level Pareto strategy, with reflection batches of eight optimisation
+examples and strict improvement acceptance. Examples are sampled by shuffled
+epochs, and their exposure counts are logged.
+
+Only one text component is optimised. The component-exchange merge operator
+is disabled, because it would not provide a substantive combination of
+different components in this setting. The experiment is consequently a
+single-component reflective mutation comparison. Calling it an evolutionary
+search does not imply that every possible mutation, crossover or
+weight-training method is evaluated.
+
+The execution contract permits one to six arms and strictly backward
+references. Invalid plans trigger a shared direct-question fallback, which
+remains in the quality and cost denominators. The reader uses five passages
+per arm, and the same model settings, demonstrations and passage corpus are
+used across fresh search conditions. This matches the maximum execution
+allowance while leaving actual arm count and tokens free to differ.
+
+Fresh task execution uses GPT-4o-mini, snapshot
+\texttt{gpt-4o-mini-2024-07-18}. Reflection uses GPT-4o, snapshot
+\texttt{gpt-4o-2024-08-06}. The runner checks both returned model identifiers.
+The declared task seed and first search seed are one, with
+temperature zero for execution and one for reflection. Provider identity
+and generation settings enter the cache and run fingerprints. These
+settings remain separate from the historical Llama-based pilot.
+
+\section{Independent Evaluation Design}
+\label{sec:ch5-prospective}
+
+\subsection{Frozen Data Roles and Corpus Scope}
+
+The new comparison separates questions used for reflection, questions used
+for candidate selection and questions reserved for final confirmation.
+The source is the official answerable MuSiQue development
+release~\cite{trivedi2022musique}. Excluding all composite question IDs in the
+historical thousand-question panel leaves $1\,417$ cases. Removing three
+additional exact normalised question-text matches leaves $1\,414$.
+
+Of those questions, $363$ have every gold supporting passage in the fixed
+$11\,656$-passage corpus. The initial matched-backbone study uses this
+eligible subset. Eligibility is determined before new model outputs, by exact
+passage identity rather than observed retrieval success. It defines a
+corpus-covered target population. Broader MuSiQue performance requires a
+separate evaluation with the additional corpus material included.
+
+Questions sharing any underlying single-hop source ID are grouped before
+the new splits are assigned. The final manifests contain $96$ optimisation,
+$48$ selection and $200$ confirmation questions, with zero shared source
+IDs across these three splits. Table~\ref{tab:ch5-splits} gives their
+composition. Split identities and file hashes are frozen before candidate
+generation.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Frozen question-new splits for the prospective comparison.
+Components connect questions sharing a source single-hop ID.}
+\label{tab:ch5-splits}
+\begin{tabular}{lrrrrr}
+\hline
+Role & Questions & Two-hop & Three-hop & Four-hop & Components \\
+\hline
+Optimisation & $96$ & $23$ & $40$ & $33$ & $29$ \\
+Selection & $48$ & $16$ & $19$ & $13$ & $22$ \\
+Confirmation & $200$ & $73$ & $77$ & $50$ & $65$ \\
+\hline
+\end{tabular}
+\end{table}
+
+All selected composite question IDs and texts differ from the historical
+panel and the ownership classifier's training panel. Historical subproblem
+reuse remains: $343$ of the $344$ selected questions share at least one
+single-hop source with the historical thousand questions. These are new
+compositions under the documented exposure exclusions, rather than wholly
+new atomic facts. There is no source-ID overlap with the classifier's
+training questions. The confirmation set therefore tests transfer to new
+compositions within the corpus-covered regime.
+
+The reflection service accepts only hash-bound optimisation samples. The
+selection set supplies scores for ranking candidates and remains adaptive
+development data. Confirmation question contents and labels stay outside
+the search interface until the final instructions and analysis choices have
+been fixed.
+
+\subsection{Comparators and Search Allowances}
+
+The fresh study includes the unchanged initial instruction, nonadaptive
+instruction sampling, OPRO-style answer-feedback search and three GEPA
+feedback conditions. Nonadaptive proposals are generated from the task and
+initial instruction before their evaluation results are available. The
+OPRO control uses score histories and answer errors. The three GEPA
+conditions share the optimizer, reward and execution interface while varying
+the feedback view.
+
+Each fresh search is assigned a ceiling of $512$ example-level rollout
+evaluations and $24$ candidate proposals. A rollout is an executed
+candidate--question pair. Parent comparisons, proposed-candidate comparisons
+and validation executions count toward that ceiling. The different methods
+allocate their allowance differently, so search progress is measured against
+cumulative evaluations and actual cost.
+
+The nonadaptive schedule screens $24$ instructions on a common set of
+$12$ optimisation questions, then evaluates its four leaders on the $48$
+selection questions. This uses
+\begin{equation}
+  24\times12+4\times48=480
+  \label{eq:ch5-budget}
+\end{equation}
+candidate--question evaluations. The OPRO control uses four rounds of six
+proposals, with a declared twelve-question screen per round and selection
+evaluation for each round's nominee. The reflective search uses its allowance
+for parent and child batches and complete selection evaluations. The number
+of completed mutations is reported explicitly rather than inferred from
+the evaluation ceiling.
+
+Within a search condition, the winner is selected by mean selection F1.
+Ties are resolved by lower mean execution tokens and then instruction hash.
+The fixed initial instruction and the historical OPRO winner are retained
+as identified reference policies. The fresh pipeline may use a different
+API model configuration from the historical Llama pilot; comparisons are
+made within a frozen fresh backbone, and historical scores remain in their
+original regime.
+
+The principal contrast is structured versus answer-only feedback. Structured
+versus raw feedback is required to isolate the effect of diagnostic
+organisation from additional supervision. A second predeclared search seed
+provides a replication of search variability when resources permit. Both
+seeds' trajectories must then be retained.
+
+\subsection{Outcome Analysis and Cost Accounting}
+
+After selection, each final policy is evaluated on the same locked
+confirmation questions. The primary outcome is the question-weighted mean
+paired F1 difference. Exact match, complete evidence in the reader contexts,
+union depth, masked depth, arm count and model tokens are secondary
+measurements. All questions, including fallback executions, contribute to
+the aggregate results.
+
+Paired bootstrap resampling preserves each question's outcomes across
+policies. A complementary component-level bootstrap keeps questions sharing
+a source component together. The confirmation panel contains $65$ such
+components, with at most $20$ questions in one component. Question and
+component resampling describe sensitivity under different sampling units;
+neither supplies a distribution-free generalisation guarantee.
+
+Search cost and inference cost are recorded separately. Search cost includes
+instruction proposals, reflection and candidate evaluation. Inference cost
+includes decomposition, retrieval-associated model calls and every reader
+step for the selected policy. Cached deterministic evaluations count toward
+the logical search allowance while their actual charges are recorded
+separately. A cache hit is reuse of a result, not an independent execution.
+
+The passage-allocation replay in Chapter~4 provides a complementary cost
+diagnostic. On recorded lists it compares balanced total-slot allocation with
+the smallest oracle prefix allocation covering the gold passages. The oracle
+has access to gold identities and frozen rankings. It measures available
+allocation headroom; it is not a learned execution policy. In the sequential
+pipeline, changing an early reader allowance may change its answer and every
+downstream query. Such a policy requires fresh execution before claiming an
+answer-quality or runtime gain.
+
+\subsection{Separating Prompt and Allocation Effects}
+
+The completed studies intervene at different points: the OPRO pilot changes
+the decomposition instruction, while Section~\ref{sec:ch5-allocation}
+changes prefixes selected from fixed rankings. A prospective factorial
+comparison can test their combination. Freeze an initial prompt $p_0$, a
+search-selected prompt $p_1$, balanced allocation $g_0$ and learned
+allocation $g_1$ before final evaluation. Evaluate all four pairs
+$(p_i,g_j)$ on the same questions and reader budget. If $Y_{ij}$ denotes
+mean final-answer F1, the interaction is
+\begin{equation}
+  I=(Y_{11}-Y_{10})-(Y_{01}-Y_{00}).
+  \label{eq:ch5-factorial}
+\end{equation}
+It asks whether the allocation benefit changes under the new prompt.
+Each prompt generates its own traces under the same five-passages-per-hop
+policy; both allocators then act on those traces. This comparison concerns
+pooled context, with trace-generation cost reported separately. Its
+outcomes remain prospective.
+
+A sequential extension must choose each arm's budget using information
+available at that step and reserve resources for later arms. It then
+recomputes intermediate answers and downstream retrieval. The offline
+allocator uses resolved later queries and their score profiles, which
+would give an online policy future information. Step-local allocation
+and re-execution are therefore part of that extension.
+
+\subsection{Controlled Checks of the Diagnostic Representation}
+
+A prepared stress suite examines how ownership diagnostics should respond to
+known plan transformations. Twelve optimisation questions are selected
+deterministically before classifier evaluation, with four at each of two,
+three and four hops and twelve distinct source components. They yield
+$52$ cases: $12$ reference plans, $12$ relevant-arm duplications, $12$
+irrelevant-arm insertions, $12$ sink-arm omissions and $4$ independent-arm
+fusions.
+
+Expected ownership masks are derived from transformation provenance.
+Duplication adds an owner for the same supporting passage. An irrelevant
+arithmetic query adds an arm with no obligation from the reference task.
+Omitting an unreferenced sink creates a missing obligation only when its
+supporting passage is unique among the remaining arms. Shared evidence is
+tracked separately so that deleting a hop is not automatically equated with
+deleting its passage coverage.
+
+The four fusions combine independent reference arms whose distinct answers
+are subsequently used downstream. The scalar reference grammar provides
+no selector for multiple outputs from one fused arm. These four cases
+therefore use explicitly gold-resolved downstream inputs and test ownership
+on synthetic plans. They are excluded from claims about executable fused
+policies. The remaining transformations preserve valid backward references.
+
+The frozen five-model ensemble was evaluated on all $52$ cases using the
+reconstructed feature pipeline. Table~\ref{tab:ch5-ownership-stress}
+compares the predicted mask with the complete provenance-derived mask for
+each case. These transformation-suite measurements are separate from the
+historical classifier evaluation in Chapter~4.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{Ownership predictions on the optimisation-only stress suite.
+Exact agreement requires every cell of a case's ownership mask to match
+the transformation labels. Variants share twelve base questions.}
+\label{tab:ch5-ownership-stress}
+\begin{tabular}{lrr}
+\hline
+Transformation & Cases & Exact masks \\
+\hline
+Reference plan & $12$ & $12$ \\
+Duplicate relevant arm & $12$ & $12$ \\
+Insert irrelevant arm & $12$ & $7$ \\
+Omit sink arm & $12$ & $6$ \\
+Fuse independent arms, gold-resolved & $4$ & $2$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Reference plans and relevant-arm duplications preserve the expected masks
+in all twelve cases. After sink omission, the ensemble identifies six of
+the twelve missing obligations. Irrelevant insertion and omission produce
+additional positive assignments, making missingness sensitive to the
+estimator. This supports describing an unowned obligation as suspected
+rather than treating the mask as an omission oracle. The suite measures
+response to controlled, reference-derived transformations; the variants
+are dependent and the fused cases retain their gold-resolved scope.
+
+\section{Discussion}
+
+\subsection{What the Completed Experiment Establishes}
+
+The pilot uses the attribution method of Chapter~4 within an executable
+prompt search. It demonstrates that the measured instruction
+objective can change under automated proposals while the retrieval and
+reading backbone remains fixed. The selected instruction improves the
+masked-depth score by $0.90$ points on the development panel, preserves
+aggregate finite masked coverage and produces similar final-answer quality.
+Its higher mean arm count makes the cost distinction explicit.
+
+The candidate-level comparison also identifies a practical choice. Selecting
+for evidence depth and selecting for final-answer F1 can choose different
+instructions from the same search. An optimiser intended to improve QA
+should therefore be evaluated on the answer outcome, with the evidence
+measurements explaining where execution changes occur. An optimiser intended
+to improve retrieval depth should state that objective and measure total
+resource use alongside it.
+
+The allocation study adds a measured intervention on the evidence selected
+from recorded rankings. Its coverage gains are largest on 2Wiki at the
+smaller tested budgets, with more limited differences on MuSiQue and
+HotpotQA. The unit-increment policy optimises the concave interpolant
+exactly. Prediction, assigned-depth targets, that interpolant and the
+arm floor still contribute to the measured policy. The
+gap to the gold-informed union oracle combines these factors.
+The paired segment-policy MuSiQue reader experiment shows a $2.1$-point F1 increase at
+eight slots and a $1.4$-point decrease at thirty-two slots. Allocation
+therefore needs assessment at the intended budget and on final answers,
+alongside the evidence-coverage objective.
+
+\subsection{The Scope of the Evidence-Feedback Extension}
+
+The extension turns the rank matrix and ownership estimates into structured
+records for prompt revision. Its design separates an observed reader-context
+gap, an estimated assignment gap and an aligned intermediate-answer mismatch.
+It also preserves an information-matched raw view, enabling a direct test of
+whether this organisation helps the optimizer.
+
+Chapter~4 describes the ownership model's benchmark evaluation. The stress
+suite adds controlled duplication, insertion, omission
+and fusion measurements. Automatically optimised instructions can generate
+other arm styles and relations, which require a generated-plan attribution
+audit.
+Keeping final-answer F1 as the primary reward reduces reliance on estimated
+ownership for winner selection, while preserving ownership as diagnostic
+feedback.
+
+The fresh comparison is designed to establish performance of frozen
+instructions on new compositions. The fixed corpus eligibility filter,
+historical subproblem reuse and finite confirmation panel delimit its
+generalisability. Transfer to an expanded corpus, another dataset or another
+reader is a separate experiment. The chapter supplies completed prompt and
+allocation studies and a controlled protocol for measuring whether
+evidence feedback and allocation improve final-answer quality together.
+
+\section*{Conclusion}
+
+This chapter optimised a decomposition instruction using the ownership-masked
+retrieval score introduced in Chapter~4. Four rounds produced twenty-four
+new instructions, evaluated alongside the seed on one hundred questions.
+The selected instruction increased the score from $66.30$ to $67.20$, while
+exact match remained $44\%$ and F1 changed from $52.37$ to $52.48$.
+The distinction between retrieval depth, answer quality and total execution
+cost is therefore retained in the assessment of prompt changes.
+
+A complementary learned allocator uses arm features and shallow score
+profiles to distribute a fixed passage-slot budget. On generated sequential
+BM25 traces, unit-increment allocation increases eight-slot coverage by
+$6.3$ percentage points on 2Wiki, $4.7$ on MuSiQue and $0.8$ on HotpotQA.
+It optimises the concave-interpolant objective exactly; its measured
+coverage effects vary across budgets.
+Their cost accounting separates selected passages from the computation
+that generated the traces.
+On the earlier segment policy's $700$-question pooled-reader comparison, F1 rises from $0.424$ to
+$0.445$ at eight slots, with budget-dependent effects across the three
+tested settings.
+
+The proposed continuation uses final-answer F1 for selection and evidence
+responsibility for diagnostic feedback. Its implemented interfaces separate
+raw observations from estimated assignments, and its frozen evaluation
+design compares answer-only, raw and structured feedback under common
+search and execution allowances. Together, Chapters~4 and~5 provide an
+evidence-aware measurement, its use in completed prompt and allocation
+studies, and a controlled design for testing their contribution to answer
+quality on new questions.

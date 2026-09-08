@@ -1,0 +1,21 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Allocation on fixed BM25 traces. Segment denotes the segment heuristic and Unit the unit-increment optimiser of the concave interpolant. The budget counts selected slots, excluding trace generation and shallow-score acquisition. Differences are percentage points relative to balanced allocation.}
+\label{tab:ch5-bm25-allocation}
+\begin{tabular}{llrrrr}
+\hline
+Dataset & Budget & Balanced & Segment & Unit & $\Delta_{\rm Unit}$ (pp) \\
+\hline
+MuSiQue & 8 & 0.413 & 0.445 & 0.460 & +4.7 \\
+ & 16 & 0.528 & 0.541 & 0.546 & +1.8 \\
+ & 32 & 0.607 & 0.604 & 0.609 & +0.2 \\
+2Wiki & 8 & 0.688 & 0.746 & 0.751 & +6.3 \\
+ & 16 & 0.864 & 0.884 & 0.892 & +2.8 \\
+ & 32 & 0.926 & 0.932 & 0.932 & +0.6 \\
+HotpotQA & 8 & 0.762 & 0.763 & 0.770 & +0.8 \\
+ & 16 & 0.859 & 0.858 & 0.856 & -0.3 \\
+ & 32 & 0.907 & 0.904 & 0.904 & -0.3 \\
+\hline
+\end{tabular}
+\end{table}

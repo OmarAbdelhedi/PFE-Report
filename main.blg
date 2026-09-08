@@ -3,44 +3,49 @@ Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
 The top-level auxiliary file: main.aux
 The style file: ieeetr.bst
 Database file #1: references.bib
-You've used 22 entries,
+Warning--I didn't find a database entry for "ch4-2wiki"
+Warning--I didn't find a database entry for "ch4-hotpot"
+Warning--I didn't find a database entry for "ch5-opro"
+Warning--I didn't find a database entry for "ch5-gepa"
+You've used 32 entries,
             1876 wiz_defined-function locations,
-            588 strings with 9177 characters,
-and the built_in function-call counts, 7933 in all, are:
-= -- 692
-> -- 431
+            643 strings with 12010 characters,
+and the built_in function-call counts, 11323 in all, are:
+= -- 970
+> -- 643
 < -- 0
-+ -- 151
-- -- 129
-* -- 594
-:= -- 1102
-add.period$ -- 24
-call.type$ -- 22
-change.case$ -- 22
++ -- 225
+- -- 193
+* -- 865
+:= -- 1589
+add.period$ -- 33
+call.type$ -- 32
+change.case$ -- 32
 chr.to.int$ -- 0
-cite$ -- 22
-duplicate$ -- 414
-empty$ -- 736
-format.name$ -- 129
-if$ -- 1887
+cite$ -- 32
+duplicate$ -- 586
+empty$ -- 1043
+format.name$ -- 193
+if$ -- 2679
 int.to.chr$ -- 0
-int.to.str$ -- 22
-missing$ -- 22
-newline$ -- 71
-num.names$ -- 22
-pop$ -- 140
+int.to.str$ -- 32
+missing$ -- 32
+newline$ -- 100
+num.names$ -- 32
+pop$ -- 198
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 273
+skip$ -- 380
 stack$ -- 0
-substring$ -- 568
-swap$ -- 164
+substring$ -- 784
+swap$ -- 230
 text.length$ -- 0
 text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 0
-while$ -- 67
-width$ -- 24
-write$ -- 204
+while$ -- 92
+width$ -- 34
+write$ -- 293
+(There were 4 warnings)

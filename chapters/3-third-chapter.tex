@@ -1,12 +1,763 @@
 % !TEX root = ../main.tex
-\chapter{A Systematic Survey of the Trust Layer of RAG}
-\label{chap:survey}
+\chapter[Probing Compositional Question Difficulty in Language Model Representations]
+{Probing Compositional Question\\Difficulty in Language Model\\Representations}
+\chaptermark{Probing Compositional Question Difficulty}
+\label{chap:probing}
 
 \section*{Introduction}
 \phantomsection
 \addcontentsline{toc}{section}{Introduction}
 
+The preceding chapter established the importance of anticipating how much
+compositional reasoning a question may require before committing to a fixed
+retrieval or reasoning strategy. This chapter examines whether such difficulty
+is already reflected in the internal representations of a language model while
+it processes the question, before any answer is
+generated.\footnote{The study reported in this chapter was carried out during
+  the internship and has been accepted for
+  publication~\cite{abdelhedi2026probing}. The present author is its first
+  author and was responsible for the design and implementation of the probing
+  pipeline, its validation controls, and the analysis of the results. The
+  chapter develops the study in extended form.}
+
+Hidden states are extracted across the layers of three open instruction-tuned
+models and read with simple linear probes on three multi-hop benchmarks whose
+notions of difficulty differ in kind; every positive result is then examined
+through a series of controls.
+
+\section{Research Question and Problem Formulation}
+\label{sec:probing-problem}
+
+Let
+\begin{equation}
+  \mathcal{D}=\{(q_i,y_i)\}_{i=1}^{N}
+  \label{eq:probing-dataset}
+\end{equation}
+be a collection of questions, where \(q_i\) is a question and \(y_i\) is its
+difficulty label. Depending on the benchmark, \(y_i\) may be a binary
+easy--hard split, a human-assigned difficulty level, or a structural hop count.
+These labels provide operational proxies for compositional difficulty: they
+make the question measurable, but they do not constitute a universal
+definition of difficulty.
+
+For a frozen language model \(M\), processing question \(q_i\) produces a
+representation
+\begin{equation}
+  \mathbf{r}^{(\ell)}_i\in\mathbb{R}^{d}
+  \label{eq:probing-question-representation}
+\end{equation}
+at layer \(\ell\), where \(d\) is the hidden dimension. The principal research
+question is whether a simple function of \(\mathbf{r}^{(\ell)}_i\) can recover
+\(y_i\), and how that recoverability changes across model depth. More precisely,
+the experiments ask whether there exists a linear score
+\begin{equation}
+  s_i^{(\ell)}=\mathbf{w}^{(\ell)\top}\mathbf{r}^{(\ell)}_i
+  \label{eq:linear-difficulty-score}
+\end{equation}
+that orders questions according to their benchmark-defined difficulty on
+examples not used to fit the direction \(\mathbf{w}^{(\ell)}\). How that
+direction is obtained is the subject of
+Section~\ref{subsec:linear-layerwise-probe}.
+
+Decodability is the weakest of the four properties established here. A
+representation that genuinely encodes compositional structure should also
+exceed what the same procedure yields when the labels are shuffled, survive the
+removal of the question's surface statistics, order the difficulty levels
+rather than merely separate them, and hold across benchmarks that define
+difficulty differently. The four results follow in that order:
+
+\begin{enumerate}
+  \item difficulty is decodable from the question representation across model
+        depth;
+  \item the observed performance exceeds a shuffled-label null and is not
+        exhausted by six selected surface features;
+  \item the decoded direction orders an unseen intermediate difficulty class
+        between easy and hard extremes; and
+  \item the direction, after controlling for surface features, transfers
+        across benchmarks within the representation space of the same model.
+\end{enumerate}
+
+Figure~\ref{fig:probing-method-overview} summarises this logic. The language
+model is never trained or fine-tuned and no answer is generated: only the
+representations formed during the question's forward pass are studied.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt,
+                  minimum height=1.3cm,
+                  execute at begin node={\hyphenpenalty=10000\exhyphenpenalty=10000}},
+      vbox/.style={box, minimum height=1.4cm},
+      flow/.style={-{Latex[length=2mm]}, semithick},
+      panel/.style={rounded corners=3pt, draw=black!55, densely dashed}
+    ]
+    % --- Stage 1: layer-wise probing pipeline ------------------------------
+    \node[box, text width=1.42cm] (q) {Question\\\(q_i\)};
+    \node[box, text width=3.58cm, right=0.52cm of q]      (model)
+      {Frozen language model\\single forward pass};
+    \node[box, text width=2.40cm, right=0.52cm of model]  (states)
+      {Layer-wise\\representations\\
+       \(\mathbf{r}_i^{(0)},\ldots,\mathbf{r}_i^{(L)}\)};
+    \node[box, text width=2.02cm, right=0.52cm of states] (probe)
+      {Linear probe\\at each layer};
+    \node[box, text width=2.64cm, right=0.52cm of probe]  (auc)
+      {Out-of-fold AUC\\versus layer};
+
+    \draw[flow] (q)      -- (model);
+    \draw[flow] (model)  -- (states);
+    \draw[flow] (states) -- (probe);
+    \draw[flow] (probe)  -- (auc);
+
+    % --- Stage 2: validation of the decoded signal -------------------------
+    \coordinate (gc)    at ($(q.west)!0.5!(auc.east)$);
+    \coordinate (gtop)  at ([yshift=-2.05cm]gc);
+    \coordinate (elbow) at ([yshift=-0.70cm]auc.south);
+
+    \draw[panel] ([xshift=-7.85cm]gtop) rectangle ([yshift=-2.20cm,xshift=7.85cm]gtop);
+
+    \draw[flow, rounded corners=3pt] (auc.south) -- (elbow) -| (gtop);
+
+    \node[anchor=south, inner sep=2pt, font=\footnotesize\itshape]
+      at ($(elbow)!0.5!(elbow -| gtop)$) {decoded difficulty signal};
+
+    \node[anchor=west, fill=white, inner xsep=4pt, inner ysep=1pt,
+          font=\footnotesize\bfseries]
+      at ([xshift=-7.25cm]gtop) {Validation of the decoded signal};
+
+    \node[vbox, text width=2.95cm] at ([yshift=-1.10cm,xshift=-6.035cm]gtop)
+      {Label-permutation\\null};
+    \node[vbox, text width=3.55cm] at ([yshift=-1.10cm,xshift=-1.945cm]gtop)
+      {Surface-feature control\\and residualisation};
+    \node[vbox, text width=2.55cm] at ([yshift=-1.10cm,xshift=1.945cm]gtop)
+      {Ordinality test};
+    \node[vbox, text width=3.45cm] at ([yshift=-1.10cm,xshift=5.785cm]gtop)
+      {Cross-dataset transfer};
+  \end{tikzpicture}
+  \caption[Overview of the compositional-difficulty probing protocol]{Overview
+    of the compositional-difficulty probing protocol. A frozen language model
+    processes each question once, and a linear probe is evaluated independently
+    at each layer using out-of-fold predictions. The decoded signal is
+    subsequently examined through permutation, surface-feature, ordinality, and
+    cross-dataset transfer analyses.}
+  \label{fig:probing-method-overview}
+\end{figure}
+
+\section{Methodology}
+\label{sec:probing-methodology}
+
+\subsection{Hidden-State Extraction and Question Representation}
+\label{subsec:hidden-state-extraction}
+
+Each question is tokenised as raw text, without a chat template, and passed
+through a frozen causal language model once. Hidden states are read from all
+\(L+1\) positions in depth: layer \(0\) is the token-embedding output, while
+layers \(1,\ldots,L\) are the outputs of the transformer blocks. Extraction is
+forward-pass only; the model does not generate an answer.
+
+Because questions contain different numbers of tokens, each layer's token-level
+states must be reduced to one fixed-dimensional question vector. Let
+\(\mathbf{h}^{(\ell)}_{it}\) be the hidden state of token \(t\) for question
+\(i\) at layer \(\ell\), and let \(m_{it}\in\{0,1\}\) denote its attention mask.
+The reported experiments use mask-aware last-token pooling:
+\begin{equation}
+  t_i^{\star}=\max\{t:m_{it}=1\},
+  \qquad
+  \mathbf{r}^{(\ell)}_i=\mathbf{h}^{(\ell)}_{i t_i^{\star}}.
+  \label{eq:last-token-pooling}
+\end{equation}
+The maximum in Equation~\eqref{eq:last-token-pooling} identifies the final
+non-padding token, ensuring that padding is never selected. Last-token pooling
+is used because the model is causal: the final non-padding position is the only
+one whose representation has attended to the whole question. Mean pooling over
+the question's tokens is an equally defensible choice and is not evaluated
+here.
+For each question, the complete extracted representation is therefore
+\begin{equation}
+  \mathbf{R}_i=
+  \begin{bmatrix}
+    \mathbf{r}^{(0)}_i\\
+    \mathbf{r}^{(1)}_i\\
+    \vdots\\
+    \mathbf{r}^{(L)}_i
+  \end{bmatrix}
+  \in\mathbb{R}^{(L+1)\times d}.
+  \label{eq:layer-representation-matrix}
+\end{equation}
+Keeping one vector per layer makes it possible to determine not only whether
+difficulty is decodable, but also where in the network the signal emerges and
+where it is strongest.
+
+\subsection{Linear Probe and Layer-Wise Evaluation}
+\label{subsec:linear-layerwise-probe}
+
+The readout is deliberately the simplest one that can still order questions.
+At a given layer it averages the representations of the difficult questions,
+averages those of the easy questions, and takes the difference between the two
+averages; a new question is then scored by how far along that direction it
+falls. Formally, this is a regularisation-free diagonal Linear Discriminant
+Analysis (LDA) probe. Its simplicity is the point: the activation dimension
+\(d\) is several thousand while the number of questions \(N\) is at most
+900, and a classifier with more freedom could fit the labels in that regime
+without reading anything from the representation.
+
+All preprocessing is fitted within the training part of each fold. For feature
+\(j\), the standardised activation is
+\begin{equation}
+  \widehat{r}^{(\ell)}_{ij}
+  =\frac{r^{(\ell)}_{ij}-\mu^{(\ell)}_j}
+         {\sigma^{(\ell)}_j},
+  \label{eq:fold-standardisation}
+\end{equation}
+where the mean \(\mu^{(\ell)}_j\) and standard deviation
+\(\sigma^{(\ell)}_j\) are estimated only from the training fold. For a binary
+contrast, let \(\overline{\mathbf{r}}_{+}\) and
+\(\overline{\mathbf{r}}_{-}\) be the two class means in standardised space.
+The probe direction and score are
+\begin{equation}
+  \mathbf{w}=\overline{\mathbf{r}}_{+}
+             -\overline{\mathbf{r}}_{-},
+  \qquad
+  s_i=\mathbf{w}^{\top}\widehat{\mathbf{r}}_i.
+  \label{eq:diagonal-lda-probe}
+\end{equation}
+The direction is therefore fixed entirely by the two class means: the probe
+has no weights to tune and no other free parameters.
+
+The same construction covers the benchmarks that have three difficulty levels.
+It is applied once per level: that level takes the role of the difficult class
+and the other two together take the role of the easy one, which gives one
+direction for each level.
+
+Evaluation uses five-fold cross-validation. Each question receives a score from
+a probe that was not trained on that question, and the pooled out-of-fold scores
+are used to compute the Area Under the Receiver Operating Characteristic Curve
+(AUC). AUC has a direct reading in this setting: it is the probability that a
+randomly chosen difficult question receives a higher score than a randomly
+chosen easy one, so \(0.5\) corresponds to chance and \(1.0\) to a perfect
+ordering. The procedure is repeated independently at every layer to form an
+AUC-versus-layer curve. Where there are three levels, each of those
+directions is scored separately and the three AUCs are averaged; this average
+is what the macro one-versus-rest AUC means in the tables that follow. The
+binary 2Wiki contrast has a single direction and a single AUC. AUC is the primary measure because it evaluates ranking without requiring
+a deployment threshold.
+
+\subsection{Label-Permutation Null}
+\label{subsec:permutation-null}
+
+A probe is fitted at every one of several dozen layers, using several thousand
+features each time. A high value somewhere in that grid could therefore appear
+even when questions and labels have no relation at all. The label-permutation
+control measures how large such a value can be when that relation is removed by
+construction. The complete probing procedure is
+repeated for \(P=200\) random shuffles of the labels, yielding a null
+distribution at each layer.
+
+The empirical AUC curve is compared with the null's 5th--95th percentile band.
+If the real curve lies well above that band, its performance cannot be
+attributed to the capacity of this probing procedure under randomly associated
+labels. This is a statistical control for decodability; it does not, by itself,
+rule out meaningful but superficial correlates of the true labels.
+
+\subsection{Surface-Feature Control and Residualisation}
+\label{subsec:surface-residualisation}
+
+Benchmark difficulty may be correlated with visible properties of the question.
+Longer questions, for instance, may tend to contain more relations. The study
+collects six inexpensive surface statistics in
+\(\boldsymbol{\phi}_i\): character length, word count, capitalised-word count
+as a named-entity proxy, digit-token count, punctuation count, and tokenised
+length. A surface-only probe establishes how predictive these statistics are on
+their own.
+
+The residual test asks what is left in the hidden state once those cues have
+been taken out of it. For every activation feature, the part of its value that
+can be predicted from \(\boldsymbol{\phi}_i\) is estimated and subtracted,
+leaving only the part the six statistics cannot account for. The prediction is
+fitted inside each training fold, giving coefficients
+\(\mathbf{B}^{(\ell)}\); both training and held-out examples are then
+transformed as
+\begin{equation}
+  \widetilde{\mathbf{r}}^{(\ell)}_i
+  =\mathbf{r}^{(\ell)}_i
+   -\mathbf{B}^{(\ell)\top}\boldsymbol{\phi}_i.
+  \label{eq:surface-residualisation}
+\end{equation}
+The linear probe is then fitted to these residualised representations. Because
+the regression coefficients and all subsequent preprocessing are estimated
+inside the training fold, the held-out labels and activations do not influence
+the transformation used to score them.
+
+The comparison has three parts: the raw activation probe measures total
+decodability, the surface-only probe measures the selected visible cues, and the
+residual probe measures the component not linearly explained by those cues. A
+positive residual result supports a component beyond the six selected features;
+it does not prove complete independence from every possible aspect of surface
+form.
+
+\subsection{Ordinality Test}
+\label{subsec:ordinality-test}
+
+For benchmarks with at least three ordered classes, class separation need not
+imply a graded representation. A classifier might distinguish unrelated
+templates for each label without arranging them along one difficulty axis. The
+ordinality test therefore fits \(\mathbf{w}\) using only the lowest and highest
+difficulty classes, then projects the unseen middle class onto that direction.
+
+Let \(\overline{s}_{\mathrm{low}}\),
+\(\overline{s}_{\mathrm{mid}}\), and
+\(\overline{s}_{\mathrm{high}}\) be the out-of-fold mean projection scores for
+the three classes. Their interpolation fraction is
+\begin{equation}
+  \rho^{(\ell)}=
+  \frac{\overline{s}_{\mathrm{mid}}^{(\ell)}
+        -\overline{s}_{\mathrm{low}}^{(\ell)}}
+       {\overline{s}_{\mathrm{high}}^{(\ell)}
+        -\overline{s}_{\mathrm{low}}^{(\ell)}}.
+  \label{eq:ordinality-fraction}
+\end{equation}
+A value near \(0\) places the middle class close to the easy extreme, a value
+near \(1\) places it close to the hard extreme, and
+\(0<\rho^{(\ell)}<1\) places it between the two. The central point is that the
+middle class is never used to define the direction; interpolation therefore
+tests an ordering that the probe was not trained to impose.
+
+For MuSiQue, the extremes are 2-hop and 4-hop questions and the held-out middle
+class is 3-hop. For HotpotQA, the easy and hard labels define the axis and the
+medium class tests interpolation. The binary 2Wiki split cannot support this
+three-level test.
+
+\subsection{Cross-Dataset Transfer}
+\label{subsec:cross-dataset-transfer}
+
+The final validation asks whether a decoded direction captures a property that
+is shared across benchmarks rather than their individual topics or templates.
+A direction fitted on the extreme classes of source benchmark \(A\) is applied
+to the extreme classes of target benchmark \(B\), within the activation space
+of a fixed language model. Transfer is summarised by the retention ratio
+\begin{equation}
+  R_{A\rightarrow B}^{(\ell)}
+  =\frac{\operatorname{AUC}_{A\rightarrow B}^{(\ell)}-\tfrac{1}{2}}
+         {\operatorname{AUC}_{B}^{(\ell)}-\tfrac{1}{2}},
+  \label{eq:transfer-retention}
+\end{equation}
+where \(\operatorname{AUC}_{A\rightarrow B}\) is obtained by training on
+\(A\) and testing on \(B\), and \(\operatorname{AUC}_{B}\) is the target's own
+within-benchmark, cross-validated extreme-class score. Chance is \(0.5\), so
+subtracting it from both terms compares the two scores by how far each rises
+above chance rather than by their raw values. A retention near \(1\) means the
+transferred direction recovers what a probe trained on the target benchmark
+itself achieves; \(R=0\) corresponds to chance transfer and \(R<0\) to
+below-chance transfer.
+
+The reported principal analysis uses a fused leave-one-benchmark-out variant:
+for each target, the extreme classes of the other two benchmarks are pooled to
+fit the axis, which is then evaluated on the held-out benchmark's extreme
+classes. AUC and retention are averaged over the informative layer band in
+which the target benchmark's own extreme-class probe performs most strongly.
+Selecting this band from the target's within-benchmark curve, rather than from
+the transfer curve, prevents the reported transfer from being chosen at its own
+maximum.
+
+Transfer here is \emph{cross-benchmark}, not cross-model. Every transferred
+axis is trained and tested on representations produced by the same language
+model. Whether an axis learned in one model can be applied directly to another
+model is outside the scope of the experiment.
+
+\section{Experimental Setup}
+\label{sec:probing-experimental-setup}
+
+\subsection{Language Models}
+\label{subsec:probing-models}
+
+The experiments cover three open instruction-tuned language models:
+Qwen2.5-32B, Mistral-24B, and Gemma-27B. They have 65, 41, and 47 hidden-state
+positions respectively, counting the embedding output as position \(0\). Each model is probed only on the activations
+that it produced itself. This design supports replication of the finding across
+three model families, but it does not evaluate transfer of a probe between
+models.
+
+\subsection{Benchmarks and Difficulty Labels}
+\label{subsec:probing-benchmarks}
+
+Three English, Wikipedia-based multi-hop question-answering benchmarks provide
+deliberately different difficulty definitions:
+
+\begin{itemize}
+  \item \textbf{2WikiMultiHopQA}~\cite{ho2020constructing} supplies a binary
+        contrast derived from evidence-chain length. Questions with at most two
+        evidence items form the easy class, and questions with at least four
+        form the hard class.
+  \item \textbf{HotpotQA}~\cite{yang2018hotpotqa} provides human-annotated
+        easy, medium, and hard difficulty levels.
+  \item \textbf{MuSiQue}~\cite{trivedi2022musique} supplies a structural
+        composition label of 2-hop, 3-hop, or 4-hop.
+\end{itemize}
+
+The analysis samples 300 questions per class, producing 600 questions for the
+binary 2Wiki task and 900 each for HotpotQA and MuSiQue. The class-balanced
+design prevents class prevalence from dominating the evaluation. More
+importantly, the variation in label type makes agreement across benchmarks
+stronger evidence than repeated evaluation on one construction scheme. It also
+requires a conservative interpretation: evidence-chain length, human judgement,
+and hop count are related proxies, not interchangeable definitions of an
+abstract latent quantity.
+
+\subsection{Evaluation Configuration}
+\label{subsec:probing-evaluation}
+
+The procedure of Section~\ref{sec:probing-methodology} is applied unchanged to
+all nine model--benchmark pairs. Two reporting conventions hold throughout.
+Confidence intervals are the half-width of a 95\% bootstrap interval over
+questions, from 2,000 resamples; the reference quoted from the
+label-permutation null is its 95th percentile over the 200 shuffles.
+
+Unless stated otherwise, the figures use Qwen2.5-32B on MuSiQue as a running
+example, while the tables report all nine model--benchmark combinations. These
+choices keep the layer-wise plots readable without reducing the breadth of the
+numerical comparison.
+
+\section{Results}
+\label{sec:probing-results}
+
+\subsection{Layer-Wise Decodability of Compositional Difficulty}
+\label{subsec:probing-depth-results}
+
+Table~\ref{tab:probing-main-results} shows that compositional difficulty is
+linearly decodable above chance for every model--benchmark pair. Structural
+labels are especially separable: the 2Wiki binary contrast reaches an AUC from
+0.972 to 0.987, and MuSiQue's three-class hop count reaches a macro AUC from
+0.874 to 0.896. HotpotQA's human-labelled levels are less separable, with AUC
+from 0.694 to 0.716, consistent with a noisier and less purely structural proxy.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Layer-wise difficulty decoding and surface controls]{Difficulty is
+    linearly decodable from question representations beyond the selected
+    surface features. \(N\) is the sample size, \(C\) the number of classes,
+    and Layer the best-performing hidden-state position, with embeddings at
+    \(0\). Probe AUC is macro one-versus-rest AUC, except for binary 2Wiki.
+    ``Surf. resid.'' is the peak after fold-local surface residualisation;
+    Null95 is the 95th percentile of the 200-run permutation null. The
+    \(\pm\) value is the half-width of a 95\% bootstrap interval over questions
+    using 2,000 resamples.}
+  \label{tab:probing-main-results}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llrrrccc}
+    \toprule
+    Model & Benchmark & \(N\) & \(C\) & Layer & Probe AUC & Surf. only & Surf. resid. / Null95 \\
+    \midrule
+    \multirow{3}{*}{Qwen2.5-32B}
+      & 2Wiki    & 600 & 2 & 64 & \(0.987\pm0.006\) & 0.907 & \(0.838\pm0.034\) / 0.55 \\
+      & HotpotQA & 900 & 3 & 44 & \(0.716\pm0.024\) & 0.661 & \(0.627\pm0.027\) / 0.53 \\
+      & MuSiQue  & 900 & 3 & 24 & \(0.896\pm0.013\) & 0.779 & \(0.774\pm0.022\) / 0.53 \\
+    \midrule
+    \multirow{3}{*}{Mistral-24B}
+      & 2Wiki    & 600 & 2 & 21 & \(0.972\pm0.010\) & 0.911 & \(0.829\pm0.035\) / 0.55 \\
+      & HotpotQA & 900 & 3 & 18 & \(0.694\pm0.025\) & 0.660 & \(0.604\pm0.027\) / 0.53 \\
+      & MuSiQue  & 900 & 3 & 12 & \(0.874\pm0.015\) & 0.776 & \(0.753\pm0.023\) / 0.53 \\
+    \midrule
+    \multirow{3}{*}{Gemma-27B}
+      & 2Wiki    & 600 & 2 & 44 & \(0.978\pm0.010\) & 0.909 & \(0.833\pm0.035\) / 0.54 \\
+      & HotpotQA & 900 & 3 & 23 & \(0.709\pm0.024\) & 0.661 & \(0.606\pm0.027\) / 0.53 \\
+      & MuSiQue  & 900 & 3 & 24 & \(0.880\pm0.015\) & 0.780 & \(0.766\pm0.023\) / 0.53 \\
+    \bottomrule
+  \end{tabular}%
+  }
+\end{table}
+
+The layer profile is as important as the peak. Figure~\ref{fig:probe-auc-depth}
+shows that Qwen2.5-32B is at chance at the embedding layer on MuSiQue, after
+which decoding performance rises through the transformer and peaks at layer
+24. The same emergence profile occurs in all nine settings: the signal is
+absent from the token embeddings and becomes decodable as the question is
+processed. Where it peaks, however, tracks the benchmark's notion of difficulty
+more closely than it tracks the model. The structural hop count of MuSiQue is
+decoded earliest, at roughly a third to a half of network depth: layer 24 of 65
+for Qwen2.5-32B, layer 12 of 41 for Mistral-24B, and layer 24 of 47 for
+Gemma-27B. HotpotQA's human annotation peaks nearer the middle, and the 2Wiki
+evidence-chain contrast peaks latest, at or close to the final layer in two of
+the three models. What replicates across settings is therefore the emergence of
+the signal with depth, not one preferred layer.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapter3/probe-auc-by-layer.png}
+  \caption[Difficulty decoding across model depth]{Difficulty becomes linearly
+    decodable as the question is processed. The figure reports out-of-fold
+    macro one-versus-rest AUC and balanced accuracy by hidden-state position for
+    a diagonal-LDA probe on Qwen2.5-32B and MuSiQue. Performance begins near
+    chance at the embedding representation and peaks in the intermediate
+    layers. Adapted from~\cite{abdelhedi2026probing}.}
+  \label{fig:probe-auc-depth}
+\end{figure}
+
+This trajectory supports a representational interpretation stronger than a
+single high peak: the final token's contextual representation acquires
+difficulty-related structure across depth. It remains a statement about what is
+linearly readable, however, not proof that subsequent model computation uses
+that structure.
+
+\subsection{Robustness Beyond Surface Features}
+\label{subsec:probing-control-results}
+
+The first control verifies that the decoding curve is not reproduced when
+difficulty labels are detached from their questions. Across settings, the
+95th-percentile permutation reference remains around 0.53--0.55, far below the
+observed peaks in Table~\ref{tab:probing-main-results}.
+Figure~\ref{fig:probing-permutation-null} shows the complete 200-shuffle null
+band for the Qwen2.5-32B--MuSiQue example. The empirical curve rises well above
+the band over a broad span of layers rather than at one isolated position.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapter3/permutation-null.png}
+  \caption[Label-permutation null across depth]{The real probe curve lies well
+    above the 5th--95th percentile band obtained from 200 shuffled-label runs
+    for Qwen2.5-32B on MuSiQue. The control shows that the observed layer-wise
+    decodability is not reproduced by the probing pipeline when question--label
+    correspondence is destroyed. Adapted from~\cite{abdelhedi2026probing}.}
+  \label{fig:probing-permutation-null}
+\end{figure}
+
+Surface form nevertheless explains a meaningful part of performance. A probe
+using only the six surface statistics reaches 0.907--0.911 on 2Wiki and
+0.776--0.780 on MuSiQue, so the raw result cannot be described as independent
+of visible question properties. The residual analysis asks the narrower and
+more defensible question: does a decodable component remain after removing the
+linear contribution of those selected properties?
+
+The answer is positive for all model--benchmark pairs. Residual peak AUC is
+0.829--0.838 on 2Wiki, 0.753--0.774 on MuSiQue, and 0.604--0.627 on HotpotQA,
+all above the corresponding null reference. Figure~\ref{fig:probing-surface-control}
+shows that the residual curve for Qwen2.5-32B on MuSiQue remains elevated across
+depth even though it is lower than the raw curve.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.70\textwidth]{chapter3/surface-control.png}
+  \caption[Raw, surface-only, and residualised difficulty decoding]{Raw and
+    surface-residualised probe AUC across depth, with the surface-only score as
+    a reference, for Qwen2.5-32B on MuSiQue. Removing six selected surface
+    features reduces performance but leaves a substantial above-null signal.
+    This supports a component beyond those features, not complete independence
+    from all surface form. Adapted from~\cite{abdelhedi2026probing}.}
+  \label{fig:probing-surface-control}
+\end{figure}
+
+Together, the two controls delimit the claim. The signal is not a shuffled-label
+artefact, and the six measured surface statistics do not exhaust it. At the same
+time, the strength of surface-only prediction shows that compositional
+difficulty is partly expressed in the wording and structure of the input.
+
+\subsection{Ordinal Structure of the Difficulty Direction}
+\label{subsec:probing-ordinal-results}
+
+The extreme-class probes separate low from high difficulty almost perfectly on
+MuSiQue, reaching AUC values up to 0.99. More importantly, the unseen 3-hop
+class falls between the 2-hop and 4-hop extremes. Its interpolation fraction is
+0.58 for Qwen2.5-32B, 0.56 for Mistral-24B, and 0.47 for Gemma-27B. These values
+cluster around the midpoint despite the fact that 3-hop questions never define
+the direction.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.94\textwidth]{chapter3/ordinality.png}
+  \caption[Ordinality of the decoded MuSiQue difficulty direction]{Left:
+    out-of-fold AUC for the 2-hop versus 4-hop contrast by hidden-state
+    position. Right: the interpolation fraction of the held-out 3-hop class.
+    Across informative depths, the intermediate class lies between the two
+    extremes it was not used to fit. Results are for Qwen2.5-32B on MuSiQue.
+    The peak differs from the three-class peak because this test uses a binary
+    extreme-class contrast. Adapted from~\cite{abdelhedi2026probing}.}
+  \label{fig:probing-ordinality}
+\end{figure}
+
+Figure~\ref{fig:probing-ordinality} displays both the strength of the
+extreme-class contrast and the position of the held-out class. HotpotQA exhibits
+the same ordering, although its medium class lies closer to the hard extreme,
+with interpolation fractions from 0.93 to 0.96. The result therefore does not
+claim equal spacing among labels. It shows that the representation arranges the
+middle class in the expected order along a direction learned only from the
+endpoints, which is evidence for a graded difficulty axis rather than three
+disconnected class templates.
+
+\subsection{Cross-Dataset Transfer of the Residualised Difficulty Direction}
+\label{subsec:probing-transfer-results}
+
+Table~\ref{tab:probing-transfer-results} presents the fused
+leave-one-benchmark-out analysis. The raw axis transfers unevenly. It retains
+0.54--0.71 of above-chance within-benchmark performance on 2Wiki and only
+0.25--0.39 on MuSiQue; on HotpotQA, raw transfer is below chance, producing
+negative retention from \(-0.48\) to \(-0.42\). This failure is consistent with
+the raw axis mixing compositional structure with dataset-specific surface cues.
+Because retention is a ratio to each benchmark's own within-benchmark
+reference, and that reference is weak for HotpotQA, values above \(1\) occur;
+their interpretation is given after the table.
+
+\begin{table}[htbp]
+  \centering
+  \caption[Leave-one-benchmark-out transfer of the difficulty axis]{Fused
+    cross-benchmark transfer within each model. For each test benchmark, the
+    axis is fitted on pooled extreme classes from the other two benchmarks.
+    AUC is the mean binary extreme-class score over informative layers, and
+    \(R=(\mathrm{AUC}-0.5)/(\mathrm{AUC}_{\mathrm{within}}-0.5)\) is retention
+    relative to the test benchmark's own within-benchmark score. Raw uses
+    activations directly; Resid. first removes the six surface features. These
+    binary extreme-class AUCs are not directly comparable to the three-class
+    macro peaks in Table~\ref{tab:probing-main-results}.}
+  \label{tab:probing-transfer-results}
+  \begin{tabular}{llrrrr}
+    \toprule
+    & & \multicolumn{2}{c}{Raw} & \multicolumn{2}{c}{Residualised} \\
+    \cmidrule(lr){3-4}\cmidrule(lr){5-6}
+    Model & Test benchmark & AUC & \(R\) & AUC & \(R\) \\
+    \midrule
+    \multirow{3}{*}{Qwen2.5-32B}
+      & 2Wiki    & 0.823 &  0.71 & 0.796 & 0.94 \\
+      & HotpotQA & 0.384 & -0.43 & 0.774 & 1.95 \\
+      & MuSiQue  & 0.685 &  0.39 & 0.769 & 1.22 \\
+    \midrule
+    \multirow{3}{*}{Mistral-24B}
+      & 2Wiki    & 0.774 &  0.61 & 0.779 & 0.98 \\
+      & HotpotQA & 0.379 & -0.48 & 0.764 & 2.21 \\
+      & MuSiQue  & 0.627 &  0.27 & 0.720 & 1.02 \\
+    \midrule
+    \multirow{3}{*}{Gemma-27B}
+      & 2Wiki    & 0.744 &  0.54 & 0.724 & 0.80 \\
+      & HotpotQA & 0.398 & -0.42 & 0.756 & 2.44 \\
+      & MuSiQue  & 0.610 &  0.25 & 0.768 & 1.29 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+After surface residualisation, transfer becomes strong in all nine cases.
+Retention rises to 0.80--0.98 for 2Wiki, 1.02--1.29 for MuSiQue, and
+1.95--2.44 for HotpotQA. Figure~\ref{fig:probing-cross-benchmark-transfer}
+illustrates the Qwen2.5-32B transfer-to-MuSiQue case: the axis is fitted on the
+pooled extreme classes of 2Wiki and HotpotQA, then evaluated on MuSiQue.
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.7\textwidth]{chapter3/cross-benchmark-transfer.png}
+  \caption[Cross-benchmark transfer to MuSiQue]{Transfer to MuSiQue in the
+    representation space of Qwen2.5-32B, with the difficulty direction fitted
+    on pooled extreme classes from 2Wiki and HotpotQA. The raw direction
+    transfers weakly, whereas surface residualisation yields strong transfer
+    across the informative layer band. This is cross-benchmark transfer within
+    one model, not transfer between model families. Adapted
+    from~\cite{abdelhedi2026probing}.}
+  \label{fig:probing-cross-benchmark-transfer}
+\end{figure}
+
+A retention greater than \(1\) does not mean that more than 100\% of difficulty
+has been recovered. Retention normalises the transferred AUC above chance by a
+within-benchmark reference. HotpotQA has a comparatively weak residual
+within-benchmark signal, so a cleaner axis pooled from two other benchmarks can
+exceed that reference and produce a large ratio. The central finding is the
+consistent direction of the residual transfer, including between a human
+difficulty annotation and structural hop-based labels. Within each model's
+representation space, the component beyond the selected surface features is
+therefore substantially more benchmark-general than the raw axis.
+
+\section{Discussion and Limitations}
+\label{sec:probing-discussion}
+
+\subsection{Interpretation and Implications for Adaptive Computation}
+\label{subsec:probing-interpretation}
+
+The experiments support a coherent representational account. Difficulty is not
+linearly available in the embedding-layer representation of the last input
+token, but becomes decodable as contextual processing proceeds; where it is
+strongest depends on the benchmark's notion of difficulty, from roughly a third
+of network depth for hop counts to the final layers for the evidence-chain
+contrast. The decoded direction also has
+ordinal structure: it places an unseen middle class between extremes. Finally,
+surface residualisation weakens the within-benchmark signal yet makes its
+cross-benchmark behaviour markedly more consistent. Taken together, these
+results suggest that the model forms a graded representation related to how
+much compositional reasoning a question requires.
+
+The comparison with the surface-only probe deserves a direct statement, since
+those six statistics are themselves strong predictors. Read as a predictor, the
+probe is the better of the two in all nine settings, by between 0.03 and 0.12
+AUC. Read as a signal, the gap is wider than that margin suggests. The raw
+axis, which still carries surface information, transfers poorly between
+benchmarks and inverts on HotpotQA, whereas the residualised axis transfers in
+every case. Surface statistics are therefore a reasonable predictor within the
+benchmark for which they were chosen and an unreliable one outside it. The
+residualised probe is not proposed as a better predictor---it is deliberately
+handicapped---but as the measurement showing that the part of the signal which
+survives the controls is also the part that generalises.
+
+The implication for the adaptive computation of
+Chapter~\ref{chap:background} is concrete, and this chapter stops short of it.
+A score read from a forward pass that a system already performs could gate
+whether a question is decomposed at all, or how many subquestions are generated
+for it; Chapters~\ref{chap:empirical-studies} and~\ref{chap:guarantees} build
+that decomposition machinery but apply it to every question rather than under
+such a gate. Nothing here calibrates a threshold, routes a query, or measures
+whether using the score improves efficiency or answer quality. Nor does a probe
+show that the model itself consults this direction when allocating computation:
+decodability is not use, and joining the two is a continuation this report does
+not attempt.
+
+\subsection{Limitations and Future Directions}
+\label{subsec:probing-limitations}
+
+Several limitations bound the conclusions.
+
+\paragraph{Difficulty is partly surface form.}
+The surface-only probe reaches \(0.91\) on 2Wiki, so visible features carry
+real information about the benchmark labels. Residualisation removes six
+specified linear surface effects, not every lexical, syntactic, or semantic
+correlate. One it does not touch at all: 2WikiMultiHopQA is generated from
+templates, so its easy and hard classes may differ in template as well as in
+evidence-chain length, and 2Wiki is where the surface-only probe is strongest.
+A subsample matched on template or length would isolate this factor.
+
+\paragraph{Benchmark labels are heterogeneous proxies.}
+Hop count approximates the number of compositional steps, evidence-chain length
+defines a different structural split, and HotpotQA difficulty is a human
+annotation. HotpotQA is both the least decodable label and the source of the
+largest residual retention ratios because its within-benchmark reference is
+weak. The results decode these operational labels rather than difficulty in the
+abstract.
+
+\paragraph{The evidence is correlational.}
+No activation intervention or ablation tests whether the direction has a causal
+role; establishing one would require modifying the decoded component and
+measuring the resulting change in model behaviour.
+
+\paragraph{The empirical scope is narrow.}
+The study covers three open instruction-tuned models in the 24--32 billion
+parameter range, English Wikipedia-based multi-hop question answering,
+last-token pooling, and one regularisation-free linear probe family.
+Generalisation beyond that scope---to other model sizes, base models,
+architectures, languages, domains, task types, token positions, pooling
+choices, or nonlinear probes---is untested.
+
+Each of these bounds indicates its own continuation: causal intervention on the
+decoded direction, its relation to whether a model actually executes the
+required reasoning, further model families and scales, and a calibrated
+in-model difficulty estimate for adaptive computation.
+
 \section*{Conclusion}
 \phantomsection
 \addcontentsline{toc}{section}{Conclusion}
 
+This chapter showed that benchmark-defined compositional question difficulty is
+linearly decodable from the question representations of three language models.
+The signal emerges across depth, survives a permutation null and partial control
+for surface form, behaves ordinally, and transfers across benchmarks more
+consistently after surface residualisation. These findings establish a readable
+representational signal, not its causal use or an implemented router.
+
+This chapter answers the first of the two questions raised in
+Chapter~\ref{chap:background}, at the level of the model's internal
+representation. The chapters that follow address the second at a complementary
+level: instead of asking whether the difficulty of a question can be read
+before retrieval begins, they ask how the retrieval effort that a difficult
+question implies can be reduced once it does. The two studies are deliberately
+independent---no quantity computed here is consumed by what follows---and are
+joined by the problem they share rather than by a shared pipeline.

@@ -1,0 +1,15 @@
+\begin{table}[htbp]
+\centering
+\small
+\caption{Pooled final-reader evaluation on 700 retained MuSiQue traces. U denotes balanced allocation and L the learned segment heuristic. All 4,200 question--budget--policy evaluations completed. The last column gives L minus U and its descriptive pointwise paired 95\% F1 interval; the intervals at budgets 16 and 32 contain zero. The unit-increment allocator is a separate policy.}
+\label{tab:ch5-reader-fixed-traces}
+\begin{tabular}{r|rr|rr|rr|l}
+\hline
+Budget & Cov. U & Cov. L & EM U & EM L & F1 U & F1 L & $\Delta$F1 [95\% CI] \\
+\hline
+8 & 0.413 & 0.449 & 0.344 & 0.354 & 0.424 & 0.445 & $+0.021$ [$ 0.004, 0.039 $] \\
+16 & 0.523 & 0.547 & 0.360 & 0.377 & 0.454 & 0.464 & $+0.010$ [$ -0.008, 0.027 $] \\
+32 & 0.603 & 0.600 & 0.367 & 0.359 & 0.472 & 0.458 & $-0.014$ [$ -0.031, 0.001 $] \\
+\hline
+\end{tabular}
+\end{table}

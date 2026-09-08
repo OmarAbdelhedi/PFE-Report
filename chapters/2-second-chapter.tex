@@ -15,9 +15,10 @@ questions may require very different amounts of retrieval and reasoning.
 This chapter introduces the concepts needed for the remainder of the thesis. It
 first presents RAG and multi-hop question answering, then reviews retrieval
 methods and the notions of evidence coverage and retrieval depth. It subsequently
-discusses adaptive computation and question decomposition, before focusing on
-decomposition as a means of making evidence easier to retrieve. The chapter ends
-by identifying the two research gaps addressed in the following chapters.
+discusses adaptive computation, probing of internal model representations, and
+question decomposition, before focusing on decomposition as a means of making
+evidence easier to retrieve. The chapter ends by identifying the two research
+gaps addressed in the following chapters.
 
 \section[Multi-Hop Question Answering and Retrieval-Augmented Generation]
 {Multi-Hop Question Answering and\\Retrieval-Augmented Generation}
@@ -136,12 +137,7 @@ birthplace. Figure~\ref{fig:multihop-chain} makes this dependency explicit.
 \end{figure}
 
 Reasoning hop count and retrieval depth describe different quantities and must
-not be conflated:
-\begin{equation}
-  \boxed{\text{reasoning hop count}\neq\text{retrieval depth}.}
-  \label{eq:hops-not-depth}
-\end{equation}
-A four-hop benchmark question encodes four dependent reasoning operations.
+not be conflated. A four-hop benchmark question encodes four dependent reasoning operations.
 Retrieval depth \(k=50\), by contrast, means that up to fifty ranked passages are
 considered for a query. Later chapters seek to reduce the latter; they do not
 alter the benchmark's compositional hop count.
@@ -170,7 +166,7 @@ retrieving the evidence.
 
 The three benchmarks therefore provide distinct operational views of
 compositional difficulty. They form the empirical basis of the layer-wise
-probing study introduced in Chapter~\ref{chap:survey}~\cite{abdelhedi2026probing},
+probing study introduced in Chapter~\ref{chap:probing}~\cite{abdelhedi2026probing},
 without assuming that a nominal hop label is a complete measure of all forms of
 difficulty.
 
@@ -199,14 +195,144 @@ gold passages does not guarantee that the generator will combine them correctly.
 For this reason, the later evaluation isolates whether required evidence is
 available instead of inferring retrieval quality solely from the final answer.
 
+\subsection{Evidence Coverage and Retrieval Depth}
+\label{subsec:coverage-depth}
+
+A multi-hop question is not answerable from part of its evidence. The quantity
+of interest is therefore not how much of \(E(q)\) a ranking contains, but how
+deep the ranking must be read before it contains all of it. For a question whose
+evidence is all present, that depth is fixed by the lowest-ranked required
+passage:
+\begin{equation}
+  K^{\star}(q)=\max_{e\in E(q)}\operatorname{rank}(e\mid q).
+  \label{eq:min-complete-depth}
+\end{equation}
+Equivalently, \(K^{\star}(q)\) is the smallest cutoff \(k\) at which
+\(E(q)\subseteq D_k(q)\). If any required passage falls outside the evaluated
+search horizon, \(K^{\star}(q)\) is undefined and the question is
+\emph{censored}: assigning it an artificial finite depth would make a retrieval
+failure appear efficient.
+
+Depth is a per-question quantity, so a set of questions is summarised by the
+proportion whose evidence is fully available by a given depth:
+\begin{equation}
+  \operatorname{Coverage}(k)
+  =\frac{\bigl|\{\,q\in Q:\;K^{\star}(q)\le k\,\}\bigr|}{|Q|}.
+  \label{eq:coverage-at-k}
+\end{equation}
+A value of \(0.66\) at \(k\) means that two thirds of the questions have all of
+their evidence within the first \(k\) results, not that two thirds of the
+evidence has been found. Censored questions are counted in the denominator and
+never removed from it. Dropping them would evaluate each retrieval strategy on
+whichever subset of questions it happened to succeed on, and shallower depths
+would be obtained simply by failing more often.
+
+\(\operatorname{Coverage}(k)\) is non-decreasing in \(k\), so it can be read in
+the other direction as well: the shallowest depth at which a given proportion
+\(\alpha\) of the questions is served is
+\begin{equation}
+  k_{\alpha}=\min\{\,k:\operatorname{Coverage}(k)\ge\alpha\,\}.
+  \label{eq:k-alpha}
+\end{equation}
+Figure~\ref{fig:ranked-evidence} illustrates both levels. On the left, one
+question's ranked list has its three gold passages at ranks 2, 5 and 7, so
+\(K^{\star}=7\): reading only the top five leaves this question uncovered even
+though two of its three passages have appeared. On the right, the depths of a
+cohort of questions accumulate into the coverage curve, from which
+\(k_{\alpha}\) is read off.
+
+\begin{figure}[htbp]
+  \centering
+  \begin{tikzpicture}[
+      font=\footnotesize,
+      cell/.style={draw, minimum width=0.78cm, minimum height=0.72cm, align=center,
+                   inner sep=1pt},
+      gold/.style={cell, fill=black!18, very thick},
+      normal/.style={cell, fill=white},
+      marker/.style={-{Latex[length=1.8mm]}, semithick}
+    ]
+    % ---- left panel: one question ----------------------------------------
+    \foreach \x/\r in {0/1,1/2,2/3,3/4,4/5,5/6,6/7}
+      \node[font=\scriptsize] at (0.78*\x,0.68) {\r};
+    \node[normal] at (0,0)      {\(d_1\)};
+    \node[gold]   at (0.78,0)   {\(e_1\)};
+    \node[normal] at (1.56,0)   {\(d_3\)};
+    \node[normal] at (2.34,0)   {\(d_4\)};
+    \node[gold]   at (3.12,0)   {\(e_2\)};
+    \node[normal] at (3.90,0)   {\(d_6\)};
+    \node[gold]   at (4.68,0)   {\(e_3\)};
+    \node[anchor=east, font=\scriptsize] at (-0.45,0.68) {Rank};
+    \node[anchor=east, font=\scriptsize] at (-0.45,0)    {Passage};
+    \draw[marker] (4.68,-1.15) -- (4.68,-0.42);
+    \node[anchor=north] at (4.68,-1.15) {\(K^{\star}(q)=7\)};
+    \node[draw, fill=black!18, minimum width=0.4cm, minimum height=0.28cm]
+      at (-0.1,-1.5) {};
+    \node[anchor=west, font=\scriptsize] at (0.15,-1.5) {gold evidence};
+    \node[anchor=north, align=center] at (2.34,-2.0)
+      {one question:\\its depth \(K^{\star}(q)\)};
+
+    % ---- right panel: the cohort -----------------------------------------
+    \begin{scope}[xshift=7.6cm, yshift=-1.35cm, x=0.62cm, y=2.0cm]
+      \draw[-{Latex[length=1.8mm]}, semithick] (0,0) -- (7.4,0)
+        node[right=2pt, font=\scriptsize] {depth \(k\)};
+      \draw[-{Latex[length=1.8mm]}, semithick] (0,0) -- (0,1.25)
+        node[above left=0pt and -6pt, font=\scriptsize, align=center]
+        {\(\operatorname{Coverage}(k)\)};
+      \draw[dashed, black!45] (0,0.9) -- (5.2,0.9);
+      \node[anchor=east, font=\scriptsize] at (-0.1,0.9) {\(\alpha\)};
+      \node[anchor=east, font=\scriptsize] at (-0.1,0)   {\(0\)};
+      \draw[semithick]
+        (0,0) -- (1,0) -- (1,0.22) -- (2,0.22) -- (2,0.45) -- (3,0.45)
+        -- (3,0.6) -- (4,0.6) -- (4,0.78) -- (5,0.78) -- (5,0.9)
+        -- (6,0.9) -- (6,0.97) -- (7.1,0.97);
+      \draw[dashed, black!45] (5.2,0) -- (5.2,0.9);
+      \node[anchor=north, font=\scriptsize] at (5.2,-0.03) {\(k_{\alpha}\)};
+      \node[anchor=north, align=center] at (3.6,-0.42)
+        {a cohort of questions:\\the coverage curve};
+    \end{scope}
+  \end{tikzpicture}
+  \caption[Per-question retrieval depth and cohort coverage]{The two levels of
+    the measurement. Left: for one question, \(K^{\star}(q)\) is the rank of its
+    lowest-ranked gold passage; reading the top five would leave it uncovered.
+    Right: over a set of questions those depths accumulate into
+    \(\operatorname{Coverage}(k)\), the proportion covered by depth \(k\), from
+    which the depth \(k_{\alpha}\) serving a proportion \(\alpha\) is read. The
+    curve is schematic.}
+  \label{fig:ranked-evidence}
+\end{figure}
+
+Depth here is a rank-based proxy for retrieval effort. It is neither a reasoning
+hop count nor a measurement of wall-clock computation, which also depends on
+indexing, model architecture, batching, and hardware.
+
+Coverage and depth must therefore be read together. A useful retrieval strategy
+should leave few questions uncovered and should place the evidence of the rest
+near the top of its rankings: at equal coverage, lower depth is preferable; at
+equal depth, higher coverage is preferable. \emph{Coverage} in this sense means
+the recovery of annotated supporting passages, and is unrelated to
+\emph{conformal} or \emph{statistical} coverage, which concerns the long-run
+validity of prediction sets in uncertainty quantification.
+
 \section{Retrieval for Multi-Hop Reasoning}
 \label{sec:retrieval}
 
-Retrieval methods differ chiefly in how they represent queries and passages and
-how they compute the score \(s(q,d)\). Sparse methods emphasise lexical overlap,
-dense methods learn semantic vector representations, and late-interaction
-methods retain token-level matching. These choices determine the ranking on
-which evidence coverage and retrieval depth are measured.
+Retrieval methods can be characterised along two complementary dimensions. The
+first concerns how relevance between a query and a candidate passage is
+estimated through a score \(s(q,d)\): sparse, dense, and late-interaction
+methods provide different scoring mechanisms, while rerankers refine an initial
+candidate ordering. The second concerns how evidence discovery is organised.
+A conventional retriever performs a single search using the original query,
+whereas iterative and graph-based approaches use intermediate state or
+structured relations to guide subsequent discovery. These dimensions are not
+mutually exclusive. An iterative retriever may use dense scoring internally, a
+graph-based architecture may use lexical or dense similarity to locate and
+score nodes or passages, and a first-stage sparse or dense search may be
+followed by reranking. Of the mechanisms described below, lexical scoring and
+late interaction are the two used directly in the experiments of
+Chapter~\ref{chap:empirical-studies}, where they serve to decide which
+supporting passage a given subquestion is responsible for. The remainder are
+presented because they define the vocabulary in which retrieval behaviour is
+described throughout this report.
 
 \subsection{Sparse Retrieval}
 \label{subsec:sparse-retrieval}
@@ -282,9 +408,9 @@ a maximum-similarity operation for every query token:
   \label{eq:colbert}
 \end{equation}
 This \emph{MaxSim} interaction preserves fine-grained matches while allowing
-document representations to be precomputed. It is relevant to the later
-arm--evidence attribution problem because deciding whether a subquestion is
-responsible for a passage is partly a fine-grained query--passage matching task.
+document representations to be precomputed, which makes it applicable wherever
+a decision must be made about a specific query--passage pair rather than about
+a whole ranking.
 
 Retrieval systems also commonly separate inexpensive candidate generation from
 more expensive scoring. A fast retriever first produces a manageable candidate
@@ -297,8 +423,10 @@ coverage.
 \subsection{Iterative and Multi-Hop Retrieval}
 \label{subsec:iterative-retrieval}
 
+Beyond the relevance-scoring mechanism itself, multi-hop questions raise the
+question of how retrieval should evolve as new information becomes available.
 Single-pass retrieval uses the same original question to search for every
-supporting passage. Iterative retrieval instead allows evidence acquired at one
+supporting passage, whereas iterative retrieval allows evidence acquired at one
 step to change the next query. Multi-Hop Dense Retrieval (MDR) recursively
 retrieves passages with a dense representation conditioned on the question and
 earlier evidence, enabling later searches to incorporate newly identified bridge
@@ -318,94 +446,36 @@ These approaches differ architecturally, but share a crucial observation:
 retrieval can benefit from intermediate state rather than repeatedly treating
 the initial question as a fixed search query.
 
-\begin{center}
-  \fbox{\parbox{0.86\textwidth}{\centering
-    The original full question is not necessarily the best retrieval query for
-    every evidence passage.}}
-\end{center}
-This observation motivates the later shift from implicit intermediate state to
-explicit question decomposition.
+\subsection{Graph-Based Retrieval for Multi-Hop Reasoning}
+\label{subsec:graph-retrieval}
 
-\subsection{Evidence Coverage and Retrieval Depth}
-\label{subsec:coverage-depth}
+Iterative approaches organise evidence discovery through successive search
+steps, whereas graph-based approaches explicitly model relations among
+entities, passages, or concepts and use those relations to expose evidence that
+may be weakly connected to the original query. This is another way of
+organising retrieval, not a mutually exclusive alternative to sparse, dense, or
+late-interaction scoring: those mechanisms can still locate starting nodes or
+score candidate nodes and passages within a graph-based architecture. In
+multi-hop questions, a later passage may become relevant mainly through an
+entity or concept introduced by earlier evidence. Graph traversal or relevance
+propagation can make this connection explicit and expand beyond the passages
+found directly from the initial query.
 
-For the top-\(k\) passages \(D_k(q)\), evidence coverage is the fraction of gold
-passages retrieved:
-\begin{equation}
-  \operatorname{Coverage}@k(q)
-  =\frac{|E(q)\cap D_k(q)|}{|E(q)|}.
-  \label{eq:coverage-at-k}
-\end{equation}
-Complete recovery at a cutoff can be recorded as
-\begin{equation}
-  \operatorname{Complete}(q,k)
-  =\mathbb{1}\!\left[E(q)\subseteq D_k(q)\right].
-  \label{eq:complete-at-k}
-\end{equation}
-When all required evidence is present in the ranking, the minimum depth at which
-it has been recovered is determined by the lowest-ranked required passage:
-\begin{equation}
-  K^{\star}(q)=\max_{e\in E(q)}\operatorname{rank}(e\mid q).
-  \label{eq:min-complete-depth}
-\end{equation}
-Figure~\ref{fig:ranked-evidence} illustrates these quantities. At \(k=5\), two
-of three gold passages have been recovered, so coverage is \(2/3\). Complete
-coverage is first reached at \(K^{\star}=7\).
+HippoRAG is a representative approach. It builds a corpus-level knowledge graph,
+uses query--node similarity to identify starting points, and applies
+Personalized PageRank to propagate relevance toward connected knowledge and its
+source passages~\cite{gutierrez2024hipporag}. \mbox{HippoRAG~2} retains this
+graph-propagation foundation while deepening the integration of passages and
+using an LLM more effectively during online retrieval
+~\cite{gutierrez2025hipporag2}. The two systems illustrate how graph structure
+can help surface evidence connected through bridge entities even when that
+evidence is not retrieved directly from the original wording.
 
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[
-      font=\footnotesize,
-      cell/.style={draw, minimum width=1.28cm, minimum height=0.82cm, align=center},
-      gold/.style={cell, fill=black!18, very thick},
-      normal/.style={cell, fill=white},
-      marker/.style={-{Latex[length=1.8mm]}, semithick}
-    ]
-    \foreach \x/\r in {0/1,1/2,2/3,3/4,4/5,5/6,6/7}
-      \node[font=\scriptsize] at (1.28*\x,0.75) {\r};
-    \node[normal] at (0,0) {\(d_1\)};
-    \node[gold] at (1.28,0) {\(e_1\)};
-    \node[normal] at (2.56,0) {\(d_3\)};
-    \node[normal] at (3.84,0) {\(d_4\)};
-    \node[gold] at (5.12,0) {\(e_2\)};
-    \node[normal] at (6.40,0) {\(d_6\)};
-    \node[gold] at (7.68,0) {\(e_3\)};
-    \node[anchor=east] at (-0.85,0.75) {Rank};
-    \node[anchor=east] at (-0.85,0) {Passage};
-    \draw[marker] (5.12,-1.35) -- (5.12,-0.48);
-    \node[align=center] at (5.12,-1.65)
-      {\(k=5\)\\\(\operatorname{Coverage}@5=2/3\)};
-    \draw[marker] (7.68,-1.35) -- (7.68,-0.48);
-    \node[align=center] at (8.5,-1.65) {\(K^{\star}=7\)};
-    \node[draw, fill=black!18, minimum width=0.55cm, minimum height=0.35cm]
-      at (0.2,-1.65) {};
-    \node[anchor=west] at (0.55,-1.65) {gold evidence};
-  \end{tikzpicture}
-  \caption[Evidence coverage and minimum complete retrieval depth]{A ranked
-    retrieval list with three gold passages. Coverage at a fixed cutoff and the
-    minimum depth \(K^{\star}\) capture complementary aspects of retrieval.}
-  \label{fig:ranked-evidence}
-\end{figure}
-
-If at least one required passage does not occur within the evaluated search
-horizon, the question is \emph{uncovered}; assigning it an artificial finite
-depth would falsely make failure appear efficient. \(K^{\star}\) is thus defined
-for questions whose evidence is recovered, while coverage separately accounts
-for failures. It is a rank-based proxy for retrieval effort, not a reasoning hop
-count and not a direct measurement of wall-clock computation. Actual latency
-also depends on indexing, model architecture, batching, and hardware.
-
-Coverage and depth must therefore be evaluated jointly. A useful retrieval
-strategy should expose as much of the required evidence as possible and do so
-near the top of its rankings:
-\begin{equation}
-  \boxed{\text{high evidence coverage}\quad+\quad\text{low retrieval depth}.}
-  \label{eq:coverage-depth-goal}
-\end{equation}
-Here \emph{evidence coverage} means the recovery of annotated supporting
-passages. It is distinct from \emph{conformal} or \emph{statistical coverage},
-which concerns the long-run validity of prediction sets or risk guarantees in
-uncertainty-quantification methods.
+Graph-based retrieval therefore complements the sparse, dense, late-interaction,
+and iterative methods discussed above: it supplies an explicit mechanism for
+following associations across evidence items. What it does not do, and what
+none of the mechanisms in this section does, is determine which intermediate
+information need should be queried.
 
 Because the depth required for complete evidence recovery varies substantially
 from one question to another, applying a uniformly expensive retrieval policy is
@@ -418,14 +488,7 @@ what an input needs and adapt their computation accordingly.
 Fixed pipelines allocate the same retrieval and reasoning procedure to every
 input, although a direct factual question and a four-step compositional question
 have different needs. Adaptive systems instead obtain a signal about the input
-or current state and translate it into an action:
-\begin{equation}
-  \boxed{\text{signal}\longrightarrow\text{adaptive computational action}.}
-  \label{eq:signal-action}
-\end{equation}
-
-\subsection{Query Complexity and Routing}
-\label{subsec:complexity-routing}
+or current state and translate it into an action.
 
 Adaptive-RAG demonstrates complexity-aware routing for question answering. A
 classifier estimates whether a question is best handled without retrieval, with
@@ -441,16 +504,7 @@ is not a particular number of routing classes, but that a pre-answer estimate
 can govern retrieval, reasoning, or decomposition before their full costs are
 paid.
 
-Existing routing approaches establish that question complexity is actionable.
-They also motivate a representational question: instead of estimating difficulty
-only from surface characteristics with an external classifier, could the target
-LLM itself already encode this information internally? This is the question
-taken up in Chapter~\ref{chap:survey}.
-
-\subsection{Adaptive Retrieval During Generation}
-\label{subsec:adaptive-generation}
-
-Adaptation can also occur after generation begins. Forward-Looking Active
+Adaptation can also occur after generation has begun. Forward-Looking Active
 REtrieval augmented generation (FLARE) anticipates the next sentence, examines
 confidence in the predicted content, and triggers retrieval
 when low-confidence tokens indicate that more information is needed. The
@@ -459,333 +513,258 @@ Self-RAG trains a model to produce reflection signals that control retrieval on
 demand and support critique of both evidence and generated text
 ~\cite{asai2023selfrag}.
 
-These systems illustrate a broader design principle identified in the Trust
-Layer survey conducted during the internship: signals become operationally
-useful when connected to actions such as retrieval, re-retrieval, routing,
-stopping, filtering, or abstention~\cite{heidari2026trustlayer}. The present
-thesis adopts this signal-to-action perspective, but does not require a full
-taxonomy of uncertainty quantification. Its focus is the allocation of retrieval
-and decomposition effort for multi-hop questions.
+Both systems make the same structural move: a quantity computed during
+processing is read as a signal, and that signal licenses a change of
+behaviour---in these cases re-retrieval, or the decision to retrieve at all.
 
-\subsection{Difficulty and Uncertainty}
-\label{subsec:difficulty-uncertainty}
+These systems adapt on different signals. Adaptive-RAG estimates how much work
+a question will demand before any of that work is done; FLARE and Self-RAG
+estimate how reliable the content produced so far is. Both drive the same repertoire of actions---retrieve,
+re-retrieve, escalate---which makes the two easy to conflate, and they are not
+interchangeable. \emph{Difficulty} is the amount of reasoning a question structurally requires;
+\emph{uncertainty} is the reliability of what the system has produced. The two
+vary independently: a difficult question may be answered confidently when all
+the necessary evidence is available, and an easy one may remain uncertain
+because retrieval failed.
 
-Difficulty and uncertainty can influence the same adaptive action, but they are
-not interchangeable:
+Existing routing approaches establish that question complexity is actionable,
+and they estimate it from surface characteristics with a separate classifier.
+That raises a representational question: could the target model itself already
+encode this information internally?
+
+Before such a signal can guide an action, one must establish whether it is
+present in the model's representation and can be read out reliably. Probing
+provides a methodology for asking that question independently of the action that
+may eventually consume the signal.
+
+\section[Probing Internal Representations of Language Models]
+{Probing Internal Representations of\\Language Models}
+\label{sec:probing-representations}
+
+Neural models transform an input through a sequence of hidden representations.
+Probing studies these representations after training, asking what information
+about the input or computation is accessible at a particular stage. It is an
+analysis methodology rather than an adaptive policy: a decoded signal may later
+support routing, retrieval, or another action, but the probe itself only tests
+whether the signal can be recovered from a frozen model.
+
+\subsection{Linear Probing and Representation Analysis}
+\label{subsec:linear-probing}
+
+Let the hidden representation of question \(q\) at layer \(\ell\) be
 \begin{equation}
-  \boxed{\text{difficulty}\neq\text{uncertainty}.}
-  \label{eq:difficulty-not-uncertainty}
+  \mathbf{h}^{(\ell)}(q)\in\mathbb{R}^{d}.
+  \label{eq:question-representation}
 \end{equation}
-\emph{Difficulty} describes the amount or complexity of reasoning structurally
-required by a question. \emph{Uncertainty} describes the reliability of the
-system's current prediction, retrieval state, or answer. A difficult question
-may be answered confidently when all necessary evidence and reasoning are
-available; an easy question may remain uncertain because retrieval failed. The
-other combinations---difficult and uncertain, or easy and confident---are also
-possible. Chapter~\ref{chap:survey} therefore studies compositional difficulty
-from question representations before answer generation, rather than estimating
-uncertainty in an answer that has already been produced.
+Given a target property \(y\), a probe learns a readout \(g\) and predicts
+\begin{equation}
+  \widehat{y}
+  =g\!\left(\mathbf{h}^{(\ell)}(q)\right).
+  \label{eq:probe-readout}
+\end{equation}
+The language model is kept fixed while the readout is trained. Comparing
+readouts across layers can then reveal where a property becomes more or less
+accessible, without changing the representations being examined.
 
-Estimating difficulty is only useful if the estimate changes what the system does.
-For a question predicted to require compositional reasoning, one possible action
-is to expose its latent information needs explicitly through decomposition.
+A linear probe intentionally restricts the readout to a simple affine map,
+\begin{equation}
+  g\!\left(\mathbf{h}^{(\ell)}(q)\right)
+  =\mathbf{W}\mathbf{h}^{(\ell)}(q)+\mathbf{b},
+  \label{eq:linear-probe}
+\end{equation}
+followed, when needed, by a standard decision rule. Its primary purpose is not
+to construct the strongest possible classifier. Rather, it tests whether the
+property is \emph{readily decodable} through a deliberately limited mapping.
+Alain and Bengio introduced this perspective by fitting linear classifiers to
+intermediate neural-network features and tracking how class information became
+linearly separable with depth~\cite{alain2016probes}. In the context of LLMs,
+the linear representation hypothesis similarly proposes that some semantic or
+high-level properties correspond to directions or comparatively simple
+geometric structure in activation space~\cite{park2024linear}. This hypothesis
+motivates linear readouts without requiring a broader mechanistic account of
+every computation performed by the model.
+
+Probe performance nevertheless has a limited interpretation. High accuracy
+shows decodability under the chosen data distribution and probe family; it does
+not by itself show that the model uses the decoded feature causally, or that the
+feature will generalise beyond the evaluation setting. Hewitt and Liang further
+show that an expressive probe can learn a task or exploit memorisable
+correlations even when the representation does not encode the intended
+structure in a meaningful way. They propose control tasks and selectivity as
+ways to put task accuracy in the context of probe capacity
+~\cite{hewitt2019control}. Probing evidence should therefore be accompanied by
+appropriate controls and interpreted as evidence of accessible representational
+structure, not as an unrestricted claim about the model's reasoning process.
+
+\subsection{Latent Properties in LLM Representations}
+\label{subsec:latent-properties}
+
+Prior work indicates that language models contain signals associated with
+knowledge and confidence. Kadavath et al. show that models can assess whether
+their proposed answers are likely to be correct and can estimate whether they
+know an answer, establishing a behavioural form of model self-knowledge
+~\cite{kadavath2022know}. Although this self-evaluation is not itself the same
+as hidden-state probing, it motivates the search for related information inside
+the representations that precede an answer.
+
+Several studies recover truth-related structure directly from activations.
+Burns et al. identify latent knowledge without labelled examples by exploiting
+consistency between statements and their negations~\cite{burns2023discovering}.
+Marks and Tegmark find comparatively simple geometric structure separating true
+and false statements and study the transfer of truth directions across
+datasets~\cite{marks2024geometry}. Azaria and Mitchell likewise train
+classifiers on internal activations to distinguish truthful from false
+statements~\cite{azaria2023internal}. Together, these results show that semantic
+properties such as truth can be accessible to relatively simple readouts, while
+also reinforcing the need to test whether an apparent direction transfers and
+captures the intended property.
+
+Question-only probing moves closer to the setting of this thesis. Moreno
+Cencerrado et al. extract a representation after a question has been read but
+before an answer is generated, and show that a linear probe can predict aspects
+of the eventual answer's correctness and confidence~\cite{moreno2025noanswer}.
+This establishes that a question representation may contain predictive
+information about later success. The target considered here is different:
+previous work largely asks what the model knows, whether a statement is true, or
+whether the eventual answer is likely to be correct, whereas this thesis asks
+about the \emph{compositional difficulty of the input question}---how much
+multi-step reasoning the question demands.
+
+Yang et al. examine a related but distinct issue: whether LLMs internally recall
+and compose intermediate facts while processing a multi-hop prompt
+~\cite{yang2024latent}. Their question concerns the execution of a latent
+reasoning pathway. It should not be conflated with estimating the amount of
+reasoning demanded by the input:
+\begin{equation}
+  \underbrace{\text{Is multi-hop reasoning executed internally?}}
+    _{\text{latent reasoning}}
+  \neq
+  \underbrace{\text{How much reasoning is required?}}
+    _{\text{compositional difficulty}}.
+  \label{eq:latent-versus-required-reasoning}
+\end{equation}
+The former asks what occurs during a model's forward computation; the latter is
+the logically earlier question of whether the required degree of composition is
+already encoded in the question representation before answering.
+
+Prior work therefore shows that internal LLM representations contain decodable
+information about knowledge, truthfulness, confidence, and eventual answer
+correctness. Considerably less attention has been given to whether the question
+representation itself encodes compositional difficulty before answer
+generation. The
+next section turns from this analysis methodology to question decomposition,
+one possible action when additional compositional reasoning is required.
 
 \section{Question Decomposition for Multi-Hop Reasoning}
 \label{sec:decomposition}
 
-Question decomposition makes the information needs of a complex question
-explicit. Let
-\begin{equation}
-  D(q)=\{a_1,a_2,\ldots,a_m\},
-  \label{eq:decomposition}
-\end{equation}
-where each \(a_i\) is a simpler subquestion. In the remainder of this thesis,
-generated subquestions are also called \emph{decomposition arms}. The notation
-does not imply that arms are mutually independent: some can require answers
-obtained by earlier arms.
+\subsection{Why Decomposition Helps Multi-Hop Reasoning}
+\label{subsec:why-decomposition-helps}
 
-\subsection{Dependency-Aware Decomposition}
-\label{subsec:dependency-aware}
+A multi-hop question often conceals several intermediate information needs
+within a single surface form. Answering it may require identifying an entity,
+recovering a property of that entity, and only then applying a comparison or
+other operation. When these steps remain implicit, a model must determine the
+reasoning path, obtain the necessary facts, and compose them at the same time.
+Question decomposition instead converts the original question into simpler,
+explicit subproblems whose answers can be combined to obtain the final answer.
 
-In a chained decomposition, execution alternates between asking a subquestion
-and obtaining an intermediate answer:
-\begin{equation}
-  a_1\longrightarrow z_1\longrightarrow a_2(z_1)
-  \longrightarrow z_2\longrightarrow a_3(z_2),
-  \label{eq:chained-decomposition}
-\end{equation}
-where \(z_i\) is an intermediate answer or bridge entity. Before \(z_i\) is
-known, a downstream arm can represent the unresolved dependency abstractly;
-execution resolves dependencies in order and supplies the available information.
-The final downstream arm obtains what is needed to answer the original question.
+This separation is useful because knowing the answers to the component
+questions does not guarantee that a model can answer their composition. Press
+et al.\ describe this discrepancy as the \emph{compositionality gap} and show
+that it is not necessarily removed by increasing model scale
+~\cite{press2023compositionality}. Their Self-Ask method narrows the gap by
+having the model generate and answer explicit follow-up questions before
+producing its final response. More generally, decomposition reduces a complex
+inference into smaller reasoning steps, makes dependencies between intermediate
+answers explicit, and allows an error to be associated with a particular
+subproblem rather than with the question as a whole.
 
-More generally, dependencies form a directed acyclic graph (DAG),
-\begin{equation}
-  G=(V,E),\qquad V=\{a_1,\ldots,a_m\},
-  \label{eq:decomposition-dag}
-\end{equation}
-whose directed edges identify which arms supply information to others. A chain
-is a special case of a DAG; branching allows independent information needs to
-be resolved in parallel and later combined. Figure~\ref{fig:decomposition-dag}
-shows a generic branching example without prescribing a particular generation
-format or execution mechanism.
-
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[
-      font=\footnotesize,
-      box/.style={draw, rounded corners=2pt, align=center, minimum height=0.82cm,
-                  inner sep=4pt},
-      arm/.style={box, text width=2.6cm},
-      flow/.style={-{Latex[length=2mm]}, semithick},
-      bridge/.style={draw, circle, fill=black!7, align=center,
-                     minimum size=0.85cm, inner sep=2pt}
-    ]
-    \node[box, text width=4.5cm] (full) at (0,0) {Full multi-hop question};
-    \node[arm] (a1) at (-3.2,-1.8) {Arm \(a_1\)\\resolve entity};
-    \node[arm] (a2) at (3.2,-1.8) {Arm \(a_2\)\\resolve attribute};
-    \node[bridge] (z1) at (-1.7,-3.05) {\(z_1\)};
-    \node[bridge] (z2) at (1.7,-3.05) {\(z_2\)};
-    \node[arm] (a3) at (0,-4.35) {Arm \(a_3\)\\combine dependencies};
-    \node[box, fill=black!7, text width=2.3cm] (ans) at (0,-5.9) {Final answer};
-    \draw[flow] (full) -- (a1);
-    \draw[flow] (full) -- (a2);
-    \draw[flow] (a1) -- (z1);
-    \draw[flow] (a2) -- (z2);
-    \draw[flow] (z1) -- (a3);
-    \draw[flow] (z2) -- (a3);
-    \draw[flow] (a3) -- (ans);
-    \node[font=\scriptsize, anchor=east] at (-2.18,-3.05) {bridge entity};
-  \end{tikzpicture}
-  \caption[Dependency-aware question decomposition as a DAG]{A generic
-    dependency-aware decomposition. Arms may resolve independent needs, while
-    directed edges carry bridge entities or intermediate answers to downstream
-    arms. A purely sequential decomposition is a special case of this DAG.}
-  \label{fig:decomposition-dag}
-\end{figure}
-
-\subsection{The Compositionality Gap}
-\label{subsec:compositionality-gap}
-
-Explicit decomposition is motivated partly by the \emph{compositionality gap}:
-a model can answer the component questions needed for a problem yet fail when
-they are presented as one composed question. Press et al.\ show that this gap is
-not necessarily eliminated by model scaling and introduce Self-Ask, in which the
-model generates and answers explicit follow-up questions before producing its
-final response~\cite{press2023compositionality}. The result is important here not
-as a claim that decomposition always succeeds, but as evidence that exposing
-intermediate information needs can change a model's ability to use knowledge it
-already possesses or can retrieve.
+Focused subquestions may also provide more effective retrieval queries than the
+original multi-hop question. Each subquestion expresses a narrower information
+need and can therefore be matched against evidence relevant to one step of the
+reasoning chain. Retrieval is not the primary objective of every decomposition
+method, but this property provides an important connection between explicit
+reasoning structure and multi-hop evidence retrieval.
 
 \subsection{Earlier Question-Decomposition Approaches}
 \label{subsec:earlier-decomposition}
 
-Question decomposition predates modern instruction-tuned LLMs. Min et al.\
-decompose multi-hop reading-comprehension questions into simpler single-hop
-questions, answer them with existing readers, and globally rescore candidate
-decompositions and answers. Their method reduces the amount of dedicated
-supervision by treating subquestion generation as span prediction
-~\cite{min2019multihop}.
+Question decomposition was studied before the emergence of modern
+instruction-tuned LLMs. These earlier approaches treated the decomposition as a
+learned intermediate representation between a complex input question and the
+single-hop models used to answer it. The intermediate subquestions made it
+possible to reuse existing question-answering components, but producing them
+typically required a task-specific architecture, training procedure, or form
+of decomposition supervision.
 
-Perez et al.\ propose an unsupervised one-to-many sequence-transduction approach
-that learns to produce single-hop subquestions without explicit decomposition
-labels. Answers from an off-the-shelf question-answering model are subsequently recomposed into
-the final answer~\cite{perez2020unsupervised}. Together, these methods establish
-decomposition as an intermediate representation that can connect a complex
-question to reusable single-hop components.
+Min et al.\ decompose multi-hop reading-comprehension questions into simpler
+single-hop questions, answer the resulting questions with existing readers,
+and globally rescore candidate decompositions and answers. To limit the need
+for manually annotated decompositions, their approach casts subquestion
+generation as span prediction over the original question
+~\cite{min2019multihop}. The resulting decomposition is therefore not merely an
+explanation appended to an answer; it is an intermediate structure on which the
+downstream answering process operates.
+
+Perez et al.\ further reduce reliance on decomposition labels through an
+unsupervised one-to-many sequence-transduction model. Their system learns to
+map a multi-hop question to multiple single-hop subquestions, sends those
+subquestions to an off-the-shelf question-answering model, and recomposes the
+returned answers into a final prediction~\cite{perez2020unsupervised}. Together,
+these approaches established decomposition as a useful interface between
+complex questions and reusable single-hop components. At the same time, the
+decomposer remained a dedicated learned model designed for a particular
+decomposition and answering pipeline.
 
 \subsection{LLM-Based Decomposition}
-\label{subsec:llm-decomposition}
+\label{subsec:llm-based-decomposition}
 
-The prompting capabilities of LLMs enable decomposition without a fixed
-task-specific parser. Successive Prompting repeatedly generates a simpler
-question, answers it, and uses the result to continue until the complex problem
-is resolved~\cite{dua2022successive}. Least-to-Most Prompting first decomposes a
-problem and then solves the resulting subproblems sequentially, allowing earlier
+Large language models shifted question decomposition from a task-specific
+prediction problem toward a prompting problem. Rather than training a dedicated
+decomposer for each setting, a general-purpose model can be instructed---and,
+when useful, shown examples---to identify subproblems, solve them in an
+appropriate order, and combine their results. Self-Ask is an early example of
+this pattern: the prompt elicits follow-up questions whenever an intermediate
+fact is needed~\cite{press2023compositionality}.
+
+Successive Prompting interleaves decomposition and answering. At each step, the
+model generates a simpler question, answers it, and uses the accumulated
+context to determine the next question until the original problem is resolved
+~\cite{dua2022successive}. Least-to-Most Prompting separates these phases more
+clearly: it first decomposes a complex problem into a sequence of simpler
+subproblems and then solves them from least to most complex, using earlier
 solutions to support later ones~\cite{zhou2023leasttomost}. Decomposed Prompting
-treats the solution as a modular program in which a controller delegates
-subproblems to specialised prompts or modules~\cite{khot2023decomposed}.
+adopts a modular formulation in which a controller prompt breaks a task into
+subtasks and delegates them to specialised prompts, models, or symbolic
+modules~\cite{khot2023decomposed}.
 
-Their common pattern is
-\begin{center}
-  \fbox{\parbox{0.84\textwidth}{\centering
-    complex question \(\longrightarrow\) explicit simpler subproblems
-    \(\longrightarrow\) dependency-aware solution
-    \(\longrightarrow\) final aggregation.}}
-\end{center}
-Because an LLM's decomposition is generated rather than fixed, it is itself a
-configurable reasoning component. Different instructions or examples can expose
-different subproblems, and decomposition quality consequently affects all later
-retrieval and reasoning stages.
-
-\subsection{From Answer-Oriented to Retrieval-Oriented Decomposition}
-\label{subsec:retrieval-oriented-decomposition}
-
-Most decomposition methods are primarily evaluated through downstream task or
-answer performance. The perspective adopted in this thesis adds a narrower
-question: \emph{does the decomposition make the required evidence easier to
-retrieve?} Suppose a supporting passage \(e\) appears deep in the full-question
-ranking but near the top for a targeted arm:
-\begin{equation}
-  \operatorname{rank}(e\mid q)=80,
-  \qquad
-  \operatorname{rank}(e\mid a_i)=4.
-  \label{eq:rank-improvement-example}
-\end{equation}
-The underlying reasoning dependency has not disappeared. Rather, the arm states
-a narrower information need and can remove lexical or semantic interference from
-unrelated parts of the full question.
-
-This perspective does not imply that previous work ignores retrieval. Self-Ask
-can call a search engine for follow-up questions, and IRCoT explicitly couples
-intermediate reasoning with search~\cite{press2023compositionality,trivedi2023interleaving}.
-The contribution developed later is more specific: it makes evidence coverage
-and maximum retrieval depth explicit criteria for evaluating and optimising a
-generated decomposition.
-
-\section{Adaptive Decomposition and Efficient Evidence Retrieval}
-\label{sec:adaptive-decomposition}
-
-If decomposition is to improve retrieval, it must expose each evidence need
-without discarding difficult passages. This requires more than retrieving
-separately for every arm: the evaluation must know which arm is expected to
-retrieve which piece of evidence and must aggregate those arm-level results into
-a valid question-level measure.
-
-\subsection{The Evidence-Responsibility Problem}
-\label{subsec:evidence-responsibility}
-
-Consider a decomposition \(D(q)=\{a_1,\ldots,a_m\}\). Its gold evidence is
-\(E(q)=\{e_1,\ldots,e_n\}\). When retrieving with the full question, all
-evidence is associated with a single query. Under decomposition, evaluating every arm
-against every passage would penalise a focused arm for evidence unrelated to its
-subproblem. Let the responsibility relation be
-\begin{equation}
-  z_{ij}=
-  \begin{cases}
-    1, & \text{if arm \(a_i\) is responsible for evidence \(e_j\),}\\
-    0, & \text{otherwise.}
-  \end{cases}
-  \label{eq:responsibility}
-\end{equation}
-The evidence assigned to arm \(a_i\) is then
-\begin{equation}
-  E_i=\{e_j:z_{ij}=1\}.
-  \label{eq:arm-evidence}
-\end{equation}
-For an arm whose assigned evidence is retrieved, its required depth is
-\begin{equation}
-  K_i=\max_{e\in E_i}\operatorname{rank}(e\mid a_i),
-  \label{eq:arm-depth}
-\end{equation}
-and the decomposition's maximum depth, taken over arms with non-empty assigned
-evidence, is
-\begin{equation}
-  K_{\mathrm{decomp}}=\max_i K_i.
-  \label{eq:decomposition-depth}
-\end{equation}
-As with \(K^{\star}\), uncovered assignments must be recorded as coverage
-failures rather than silently given a favourable finite depth.
-
-The central difficulty is determining \(z_{ij}\) for arbitrary generated
-decompositions, whose wording and number of arms are not fixed in advance.
-MuSiQue is useful for developing this evaluation because its constructed
-question graph relates intermediate questions to supporting evidence
-~\cite{trivedi2022musique}. Chapter~\ref{chap:empirical-studies} develops the
-evidence-aware evaluator and arm--evidence attribution mechanism; the present
-chapter deliberately leaves its implementation unspecified.
-
-\subsection{Coverage--Depth Trade-Off}
-\label{subsec:coverage-depth-tradeoff}
-
-A small depth is meaningful only when the associated evidence has actually been
-recovered. Consider a method A with high coverage and maximum depth 10, and a
-method B with lower coverage and maximum depth 3. Method B is not automatically
-better: its shallow depth may be an artefact of missing the passages that are
-hardest to retrieve. The objectives are therefore simultaneous,
-\begin{equation}
-  \max\ \operatorname{Coverage},
-  \qquad
-  \min\ K_{\max}.
-  \label{eq:multiobjective}
-\end{equation}
-At equal coverage, lower depth is preferable; at equal depth, higher coverage is
-preferable.
-
-Figure~\ref{fig:coverage-depth-tradeoff} presents this as a schematic Pareto
-problem. The points are illustrative methods, not experimental measurements.
-A method is unambiguously improved when it moves upward without moving right,
-or leftward without moving down. Otherwise, the comparison exposes an explicit
-trade-off rather than collapsing failures and efficiency into one number.
-
-\begin{figure}[htbp]
-  \centering
-  \begin{tikzpicture}[
-      x=1cm,y=1cm,font=\footnotesize,
-      axis/.style={-{Latex[length=2mm]}, semithick},
-      guide/.style={dashed, black!45},
-      point/.style={circle, fill=black, inner sep=2.2pt}
-    ]
-    \draw[axis] (0,0) -- (9.2,0);
-    \node[below, align=center] at (7.25,-0.15)
-      {Maximum retrieval depth \(K_{\max}\)};
-    \draw[axis] (0,0) -- (0,5.5)
-      node[above left, align=right] {Evidence\\coverage};
-    \node[point] (a) at (6.8,4.5) {};
-    \node[above right] at (a) {A: high coverage, deeper};
-    \node[point] (b) at (2.4,2.8) {};
-    \node[below right] at (b) {B: shallower, lower coverage};
-    \node[point] (c) at (3.5,4.65) {};
-    \node[above right] at (c) {C};
-    \draw[guide] (a) -- (6.8,0);
-    \draw[guide] (b) -- (0,2.8);
-    \draw[-{Latex[length=2mm]}, very thick] (2.0,4.15) -- (0.65,5.05);
-    \node[align=center, anchor=south west] at (0.45,5.02)
-      {preferred direction\\higher and shallower};
-    \node[anchor=north west] at (0,-0.25) {lower is better};
-    \node[rotate=90, anchor=south] at (-0.6,2.1) {higher is better};
-  \end{tikzpicture}
-  \caption[Conceptual coverage--depth trade-off]{Conceptual comparison of
-    evidence coverage and maximum retrieval depth. Movement toward the
-    upper-left is preferred. Labels A--C are schematic and do not represent
-    experimental results.}
-  \label{fig:coverage-depth-tradeoff}
-\end{figure}
-
-\subsection{Evaluating the Quality of a Decomposition}
-\label{subsec:decomposition-quality}
-
-A retrieval-oriented evaluator for an arbitrary decomposition must answer five
-questions. First, does the set of arms preserve the evidence required by the
-original question? Second, is each passage assigned to an appropriate arm?
-Third, does that arm retrieve its evidence at a shallower rank? Fourth, can the
-arm-level results be aggregated without hiding uncovered evidence? Finally, does
-the resulting question-level metric provide a useful signal for improving the
-decomposer?
-
-Existing work demonstrates that decomposition can improve reasoning and that
-intermediate queries can guide retrieval. The perspective adopted in this thesis
-is to make evidence coverage and maximum retrieval depth explicit evaluation and
-optimisation criteria for the decomposition. Chapter~\ref{chap:empirical-studies}
-develops the evaluator and arm--evidence attribution, while
-Chapter~\ref{chap:guarantees} uses this evaluation as feedback for prompt
-optimisation.
+Although these methods differ in when decomposition occurs and how subproblems
+are solved, they replace a fixed learned decomposer with behaviour elicited
+largely through prompting. Decomposition consequently becomes a configurable
+reasoning component: instructions, demonstrations, output formats, and
+available modules can change both the number and the form of the generated
+subquestions. This flexibility makes decomposition easier to adapt across
+tasks, while also making the quality of the prompt and of the generated
+intermediate structure consequential for all subsequent reasoning and
+retrieval.
 
 \section{Research Gap and Thesis Positioning}
 \label{sec:research-gap}
 
-The preceding literature connects complex questions to adaptive computation and
-decomposition, but leaves two questions that structure the experimental chapters
-of this thesis.
+The preceding literature connects complex questions to adaptive computation,
+probing, and decomposition, but leaves two questions that structure the
+experimental chapters of this thesis.
 
 \subsection{Anticipating Compositional Difficulty}
 \label{subsec:gap-difficulty}
 
-Adaptive systems use query complexity or runtime confidence to select different
-policies. Many signals come from external classifiers, surface properties, or
-states observed only after generation has begun. This thesis instead asks
-whether the internal representation formed by the target LLM already contains a
-usable pre-answer signal about the question's compositional demands.
+Adaptive computation benefits from an estimate of query difficulty before an
+expensive policy is selected. At the same time, prior probing work shows that
+knowledge, truth, confidence, and eventual answer correctness can be decoded
+from internal representations. Whether those representations also encode the
+compositional difficulty of the question itself remains unresolved and is the
+first research question of this thesis.
 
 \begin{center}
   \fbox{\parbox{0.88\textwidth}{\centering
@@ -793,12 +772,10 @@ usable pre-answer signal about the question's compositional demands.
     question requires?}}}
 \end{center}
 
-Chapter~\ref{chap:survey} addresses this question through layer-wise probing of
-question representations. It separates compositional difficulty from expected
-answer correctness and evaluates the former without requiring an answer to be
-generated first.
+Chapter~\ref{chap:probing} investigates this question while keeping
+compositional difficulty conceptually distinct from expected answer correctness.
 
-\subsection{Optimizing Decomposition for Retrieval Efficiency}
+\subsection{Optimising Decomposition for Retrieval Efficiency}
 \label{subsec:gap-efficient-decomposition}
 
 Question decomposition exposes intermediate information needs, and iterative
@@ -812,12 +789,24 @@ and improved specifically as a set of retrieval queries.
     maximum depth required to retrieve that evidence?}}}
 \end{center}
 
-Answering this requires three capabilities: determining which evidence each arm
-is responsible for, evaluating decompositions jointly through coverage and
+Answering this requires three capabilities: determining which evidence each
+subquestion is responsible for, evaluating decompositions jointly through coverage and
 depth, and adapting the decomposition-generation strategy according to those
 metrics. Chapter~\ref{chap:empirical-studies} develops the evidence-aware
 evaluation and attribution required by the first two. Chapter~\ref{chap:guarantees}
 then uses the resulting signal to optimise the decomposition prompt.
+% TODO (before submission): this forward reference to prompt optimisation is
+% not yet supported by any background section. Once Chapter 5 is written, add a
+% new SECTION -- not a subsection of Section~\ref{sec:decomposition} -- placed
+% after it and immediately before Section~\ref{sec:research-gap}, covering the
+% prompt-optimisation family actually used (e.g. DSPy/MIPROv2, OPRO, TextGrad).
+% Rationale: it is the second half of the foundation for the second research
+% question, as Section~\ref{sec:probing-representations} is for the first, and
+% it is a distinct literature from decomposition. Size it to what Chapter 5
+% actually uses. Worth connecting back to the signal-to-action frame of
+% Section~\ref{sec:adaptive-computation}: there the signal is question
+% difficulty and the action is routing; in Chapter 5 the signal is the
+% coverage-depth metric and the action is a prompt update.
 
 \section*{Conclusion}
 \phantomsection
@@ -827,11 +816,15 @@ This chapter presented the background necessary for the experimental work in
 the remainder of the thesis. Multi-hop question answering requires both
 reasoning across several pieces of evidence and retrieval mechanisms capable of
 exposing that evidence efficiently. Existing work approaches these demands
-through stronger retrievers, iterative search, adaptive computation, and
-question decomposition.
+through improved retrieval, adaptive computation, and question decomposition,
+while probing provides a means of identifying internal signals that may support
+such adaptation.
 
-Two questions remain central. The first is whether multi-hop difficulty can be
-identified directly from the model before answering, which is investigated in
-Chapter~\ref{chap:survey}. The second is whether decomposition can be evaluated
+Two questions remain central, and they approach the same difficulty from
+opposite sides: one asks whether the amount of reasoning a question requires is
+already visible inside the model, the other asks how the retrieval work that
+this amount implies can be reduced outside it. The first is whether
+compositional difficulty is encoded in the question representation before
+answering, which is investigated in Chapter~\ref{chap:probing}. The second is whether decomposition can be evaluated
 and optimised to preserve evidence coverage while reducing retrieval depth,
 which motivates Chapters~\ref{chap:empirical-studies} and~\ref{chap:guarantees}.

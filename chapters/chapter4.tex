@@ -1,0 +1,873 @@
+\chapter{Evidence-Aware Evaluation of Question Decomposition}
+\label{ch:evidence-aware}
+
+\section*{Introduction}
+
+Chapter~3 examined how compositional difficulty is represented before a model
+answers a question. This chapter studies the retrieval process that follows a
+decision to decompose. Its objective is to measure whether the resulting
+subquestions retrieve the evidence needed for the original question, and how
+deeply each relevant retrieval list must be searched.
+
+A decomposition changes several parts of the computation at once. It creates
+additional retrieval queries, assigns information needs to those queries and
+passes intermediate answers between them. Final-answer accuracy combines these
+effects. Passage recall measures evidence availability but leaves the assignment
+of that evidence to individual subquestions unspecified. Evaluating the
+decomposition therefore requires three separate quantities: complete evidence
+availability, evidence ownership and successful answer execution.
+
+The chapter develops an evaluation based on a matrix of evidence ranks and a
+learned ownership mask. The mask identifies which supporting passages each
+subquestion is intended to retrieve. A maximum over the selected cells measures
+the depth required to satisfy those assignments. A separate union measurement
+records whether the evidence was retrieved anywhere in the execution. The
+ownership model is evaluated on reference-style decompositions whose
+assignments are known. Retrieval and answer results are then compared on a
+100-question MuSiQue panel. Finally, fixed-list budget replay distinguishes
+per-query depth from total passage expenditure. These measurements provide the
+objective and diagnostic information used for prompt optimisation in Chapter~5.
+
+\section{Problem Formulation}
+\label{sec:ch4-problem}
+
+\subsection{A Decomposition as an Executable Sequence}
+
+Let $q$ be a question with reference answer $y$ and annotated supporting
+passages $E(q)=\{e_1,\ldots,e_h\}$. MuSiQue supplies both supporting passages
+and a reference decomposition into connected single-hop questions
+\cite{trivedi2022musique}. A generated decomposition is an ordered sequence
+$U(q)=(u_1,\ldots,u_A)$. An item $u_a$ may contain a reference to the answer of
+an earlier item. The execution substitutes the predicted earlier answer,
+retrieves passages for the resulting query $\widetilde u_a$ and produces an
+intermediate answer $\widehat y_a$:
+\begin{equation}
+  \widetilde u_a
+  = \operatorname{substitute}(u_a,\widehat y_1,\ldots,\widehat y_{a-1}),
+  \qquad
+  \widehat y_a
+  = \operatorname{reader}\bigl(\widetilde u_a,R_a[1:k]\bigr).
+  \label{eq:ch4-execution}
+\end{equation}
+Here $R_a=(d_{a1},d_{a2},\ldots)$ is the ranked passage list returned for
+$\widetilde u_a$, and $k$ is the number of passages supplied to the reader.
+Backward references make the execution sequential even when the decomposition
+contains conceptually independent branches. The retained implementation returns
+$\widehat y_A$ as the final answer. Each step receives its own retrieved
+context; the final step has no additional synthesis call over the union of all
+earlier passages.
+
+The number of generated subquestions $A$ may differ from the reference hop
+count $h$. One subquestion can combine several reference information needs.
+Several subquestions can address the same need. The evaluation therefore permits
+many-to-many assignments instead of requiring an alignment by position.
+
+\subsection{Availability, Assignment and Execution}
+
+The three evaluation objects are defined as follows.
+\begin{description}
+  \item[Availability.] Every annotated supporting passage occurs in at least
+  one retrieved prefix.
+  \item[Assignment.] Every supporting passage has an identified owner, and
+  each owning subquestion retrieves the passages assigned to it.
+  \item[Execution.] The reader produces the required intermediate answers
+  and the final answer matches the reference under the specified answer metric.
+\end{description}
+
+These properties answer different questions. Evidence retrieved for a later
+subquestion may have been unavailable when an earlier answer was produced.
+Conversely, a model may answer correctly from a passage outside the annotated
+evidence set or from parametric knowledge. The measurements below concern
+recovery of benchmark evidence and reference-answer accuracy. Their relation is
+examined empirically rather than imposed by definition.
+
+\section{Retrieval Depth and Evidence Responsibility}
+\label{sec:ch4-depth}
+
+\subsection{The Evidence-Rank Matrix}
+
+For a recorded execution, define an $A\times h$ matrix
+\begin{equation}
+  \rho_{ai}
+  = \min\{r : d_{ar}=e_i\}.
+  \label{eq:ch4-ranks}
+\end{equation}
+The evaluation retains the first $K=200$ ranked passages per subquestion.
+When $e_i$ is absent from that prefix, its recorded rank is $+\infty$.
+This value denotes censoring at $K$, including evidence that might occur deeper
+in the full retrieval list. Passage matching uses the benchmark passage
+identity, determined from its title and text.
+
+The matrix records where each required passage occurs for each query. It does
+not determine which query was responsible for that passage. That second object
+is introduced below.
+
+\subsection{Union Depth}
+
+The union depth is the smallest common prefix length that makes all annotated
+evidence available somewhere in the retrieval lists:
+\begin{equation}
+  D_{\mathrm{union}}(q)
+  = \max_{1\leq i\leq h}\min_{1\leq a\leq A}\rho_{ai}.
+  \label{eq:ch4-union}
+\end{equation}
+Consequently, $D_{\mathrm{union}}(q)\leq k$ exactly when
+$E(q)\subseteq\bigcup_a R_a[1:k]$. The inner minimum allows one successful
+retriever to satisfy the availability requirement for a passage. The outer
+maximum requires every annotated passage to be present.
+
+This definition is appropriate for measuring a pooled evidence collection. In
+the sequential execution of Equation~\ref{eq:ch4-execution}, however, a passage
+can appear in the pooled collection without reaching the particular reader call
+that needed it. Union depth is therefore reported alongside an assignment-aware
+measurement.
+
+\subsection{Ownership-Masked Depth}
+
+Let $M\in\{0,1\}^{A\times h}$ be an ownership mask, with $M_{ai}=1$ when
+subquestion $a$ is assigned responsibility for passage $e_i$. Define
+\begin{equation}
+  D_M(q)=
+  \begin{cases}
+    \displaystyle\max_{(a,i):M_{ai}=1}\rho_{ai},
+      & \text{if every column of $M$ contains an owner},\\[2mm]
+    +\infty, & \text{otherwise}.
+  \end{cases}
+  \label{eq:ch4-masked}
+\end{equation}
+An assigned cell whose evidence is absent from the retained list also makes
+$D_M(q)=+\infty$. The evaluation distinguishes this retrieval censoring from
+an unowned column, which indicates an uncovered assignment under the predicted
+mask.
+
+The row and column structure has a direct interpretation. A zero row is an
+idle subquestion with respect to the annotated evidence. A row with several
+ones assigns several evidence items to one subquestion. A zero column leaves
+an evidence item unowned. A column with several ones assigns that evidence to
+several subquestions. Idle rows contribute no retrieval obligation to
+Equation~\ref{eq:ch4-masked}; their generation and reading costs remain part
+of the executed system.
+
+Multiple ownership is interpreted conjunctively: each selected owner must
+retrieve the passage. A rule that accepts retrieval by any selected owner would
+use a minimum over owners and would measure a different execution requirement.
+The present rule preserves the interpretation of each positive cell as a
+specific obligation of a specific reader call.
+
+For comparison, the all-cells maximum is
+\begin{equation}
+  D_{\mathrm{all}}(q)=\max_{a,i}\rho_{ai}.
+  \label{eq:ch4-all}
+\end{equation}
+It requires every subquestion to retrieve every supporting passage. Whenever
+the mask assigns every evidence item, the three quantities satisfy
+\begin{equation}
+  D_{\mathrm{union}}(q)\leq D_M(q)\leq D_{\mathrm{all}}(q).
+  \label{eq:ch4-order}
+\end{equation}
+The first inequality follows because each selected rank is at least the
+smallest rank in its column. The second follows because the masked maximum
+ranges over a subset of all cells. A zero column is handled separately by the
+censoring rule in Equation~\ref{eq:ch4-masked}.
+
+For example, consider
+\begin{equation}
+  \rho=
+  \begin{pmatrix}1&80\\40&2\end{pmatrix},
+  \qquad
+  M=\begin{pmatrix}1&0\\0&1\end{pmatrix}.
+  \label{eq:ch4-example}
+\end{equation}
+Both union depth and ownership-masked depth equal $2$, while the all-cells
+maximum equals $80$. Each subquestion retrieves its own assigned passage near
+the beginning of its list. Requiring the off-diagonal passages changes the
+question being evaluated. With a single full-question query, the control assigns
+all evidence to that query, so the three depth definitions coincide.
+
+\subsection{Coverage and an Aggregate Depth Score}
+
+For a panel of $n$ questions, complete-evidence coverage at depth $k$ is
+\begin{equation}
+  C_D(k)=\frac{1}{n}\sum_{j=1}^{n}
+  \mathbf{1}\{D(q_j)\leq k\},
+  \label{eq:ch4-coverage}
+\end{equation}
+where $D$ is either $D_{\mathrm{union}}$ or $D_M$. Coverage is a
+question-level complete-set measurement. A question missing one required
+passage receives the same coverage value as a question missing several, while
+the retained rank matrix identifies the individual missing items.
+
+Prompt optimisation also requires a scalar objective. The retained objective
+assigns logarithmic credit to finite depths:
+\begin{equation}
+  v_K(d)=
+  \begin{cases}
+    1-\dfrac{\log d}{\log K}, & 1\leq d\leq K,\\[2mm]
+    0, & d=+\infty,
+  \end{cases}
+  \qquad
+  J_D=\frac{100}{n}\sum_{j=1}^{n}v_K(D(q_j)).
+  \label{eq:ch4-credit}
+\end{equation}
+The score is $100$ when all required evidence appears at rank $1$ and $0$
+when every question is censored or reaches depth $K$. Questions with unowned
+evidence remain in the denominator. Reporting $C_D(K)$ beside $J_D$
+distinguishes incomplete retrieval from complete retrieval at the search limit.
+The score summarises complete coverage and depth. Arm count and model tokens
+are recorded separately because Equation~\ref{eq:ch4-credit} does not price
+them.
+
+\section{Learning the Ownership Mask}
+\label{sec:ch4-ownership}
+
+\subsection{Supervision from Reference Decompositions}
+
+MuSiQue associates each reference subquestion with a supporting passage.
+Substituting the reference intermediate answers resolves its dependencies and
+provides labelled subquestion--passage pairs. The associated passage is a
+positive ownership example; the other supporting passages of the same original
+question provide negative examples. These labels encode the benchmark's
+reference assignment. An alternative valid decomposition can have a different
+assignment.
+
+Training uses a curated set of $6\,847$ MuSiQue training questions. The
+resulting training matrix contains $36\,694$ cells, of which $15\,452$ are
+positive.
+The held-out control contains $100$ questions with reference-style subquestions
+and known reference assignments. The retained masks provide the predictions
+evaluated below; the archived template history is only partially documented.
+The control contains $48$
+two-hop, $30$ three-hop and $22$ four-hop questions.
+
+The held-out question identifiers and exact resolved-subquestion--passage pairs
+are absent from the training set. Within the training set, questions sharing an
+exact repeated pair are assigned together to prevent that pair from appearing
+in both fitting and evaluation folds.
+
+\subsection{Textual and Contextual Features}
+
+For each candidate cell, a $193$-dimensional feature vector describes the
+relation between the resolved subquestion and the supporting passage. The
+features combine passage-level and sentence-level ColBERT scores, lexical
+similarity, token alignment, title overlap and features of the subquestion
+before intermediate-answer substitution. ColBERT supplies contextual token
+representations with a late interaction score \cite{khattab2020colbert}.
+
+Absolute support and relative support are both represented. Background
+normalisation compares semantic scores against a fixed pool of $300$ passages
+drawn from training data. Row features compare one subquestion's support for
+different evidence passages. Column features compare different subquestions'
+support for the same passage. Agreement features record whether different
+similarity measures identify the same candidate.
+
+These comparisons are relevant to ownership: two passages may share an entity,
+while only one answers the relation requested by the subquestion. They also
+permit a cell to receive low support even when it is the best option in its row.
+The predictor can consequently leave a row or column empty. Retrieval rank,
+measured depth, reference hop position and the diagonal reference label are
+excluded from the feature vector. The predictor is fitted to textual assignment
+labels rather than to the retrieval outcomes that it will help evaluate.
+
+The evaluation still supplies the annotated evidence passages as candidates.
+Thus the mask is an offline attribution instrument with known evidence to
+assign. Using text-based features does not by itself provide the complete
+evidence set for a new question at deployment.
+
+\subsection{Fitting, Threshold Selection and Ensemble Decision}
+
+Five grouped folds are constructed while balancing reference hop cohorts. Each
+rotation uses three folds to fit a weighted logistic model, one disjoint fold
+to select its threshold and one fold for evaluation. Regularisation is selected
+within the fitting portion. Standardisation parameters are estimated from the
+same fitting data. The retained configuration gives positive ownership examples
+weight $3$.
+
+For model $b$, let $p_b(a,i)$ be its predicted ownership score. Its threshold
+is obtained from the lower tail of scores assigned to positive calibration
+cells. If those scores in ascending order are $p_{(1)},\ldots,p_{(m)}$, the
+rule is
+\begin{equation}
+  t_b=p_{(\lfloor(m+1)\alpha\rfloor)},
+  \qquad \alpha=0.01,
+  \label{eq:ch4-threshold}
+\end{equation}
+with threshold $-\infty$ when the indicated index is zero. The final mask uses
+a majority vote:
+\begin{equation}
+  \widehat M_{ai}
+  =\mathbf{1}\left\{
+      \sum_{b=1}^{5}\mathbf{1}\{p_b(a,i)\geq t_b\}\geq3
+    \right\}.
+  \label{eq:ch4-vote}
+\end{equation}
+
+The lower-quantile threshold favours retaining true ownership assignments.
+Here $\alpha$ specifies the threshold-selection rule. Empirical recall,
+precision and complete-mask agreement quantify the resulting five-model
+procedure. A per-cell quantile rule and a majority vote require additional
+assumptions and analysis to yield a simultaneous guarantee for every assignment
+in a question. The results in this chapter are held-out measurements of the
+specified ensemble.
+
+\subsection{How Assignment Error Changes the Depth Measurement}
+
+Ownership prediction affects the measurement itself. Adding a positive cell
+adds a retrieval obligation and can increase the masked maximum. Removing a
+positive cell can reduce that maximum if the corresponding passage retains
+another owner. Removing its last owner instead censors the question. Mask
+errors can therefore move measured depth in either direction.
+
+This dependence motivates evaluation at three levels: individual cells,
+complete arm rows and complete question masks. It also motivates freezing the
+attribution model when comparing decomposition prompts. A change in attribution
+must be distinguished from a change in the underlying retrieved lists.
+
+\section{Experimental Protocol}
+\label{sec:ch4-protocol}
+
+\subsection{Systems and Retained Executions}
+
+The retrieval study uses the same $100$ MuSiQue questions across the compared
+configurations. Its two language-model settings use GPT-4o-mini and
+Llama-3.3-70B-Instruct respectively for decomposition and reading. Retrieval
+uses HippoRAG~2 with NV-Embed-v2 embeddings and the model-specific graph and
+reranking configuration. HippoRAG~2 combines passage information with graph
+retrieval based on personalised PageRank \cite{gutierrez2025hipporag2}. Each reader call
+receives five passages; the retained rankings extend to $200$ passages for
+depth analysis.
+
+Three generated-decomposition prompts are compared with direct full-question
+retrieval. The baseline decomposition prompt serves as the reference generated
+policy, while the atomic-query prompt requests atomic single-fact queries. Both
+prompts use the same three demonstrations. The extended-instruction prompt uses a more detailed
+instruction specification without those demonstrations. These are
+different prompting configurations, so their comparison measures the full
+prompting choice rather than instruction length alone.
+
+Two GPT-4o-mini controls use the reference decomposition. The first substitutes
+gold intermediate answers into downstream queries. The second substitutes the
+reader's predicted intermediate answers. Both retain reference subquestions;
+the gold-answer condition isolates the effect of supplying correct intermediate
+bindings within this pipeline.
+
+\subsection{Metrics and Comparison Units}
+
+Answer quality is measured by exact match (EM) and token F1 against the reference
+answer and accepted aliases. Retrieval is measured by complete-evidence
+coverage, union depth and ownership-masked depth. The number of generated arms,
+retrieved passage slots and recorded total model tokens describe resource use.
+Per-arm passage counts charge duplicate passages again when they are sent to
+separate reader calls. Unique passage counts instead describe the pooled
+collection.
+
+The reference-answer control records one token total across several execution
+branches. Per-branch costs are therefore unavailable. Generated and direct runs
+have separate recorded totals, which are reported per question.
+
+Comparisons pair the same questions across configurations. Where intervals are
+reported, they are percentile intervals from $10\,000$ paired question-level
+bootstrap resamples. They describe variation within this development panel.
+Several prompt and attribution configurations were examined on the panel, so
+these intervals are descriptive rather than a correction for adaptive model
+selection. The reference-style ownership control was kept separate from weight fitting
+and threshold calibration; its role is a structured assignment control rather
+than an evaluation of arbitrary generated plans.
+
+\section{Results}
+\label{sec:ch4-results}
+
+\subsection{Ownership Recovery on Reference-Style Arms}
+
+Table~\ref{tab:ch4-ownership} reports the retained ownership ensemble on the
+reference-style control. Of $274$ reference owner cells, $269$ are recovered. Seven
+non-owner cells are selected. Precision is $97.46\%$ and recall is $98.18\%$.
+The ensemble recovers all assignments exactly on $92$ of the $100$ questions.
+It recovers $264$ of the $274$ complete arm rows, which is a different unit
+from complete question-mask agreement.
+
+\begin{table}[htbp]
+\centering
+\caption{Ownership prediction on the reference-style decomposition control.
+Cell metrics use $814$ subquestion--passage pairs. Complete-mask agreement is
+measured over the $100$ questions.}
+\label{tab:ch4-ownership}
+\begin{tabular}{lr}
+\hline
+Measurement & Value \\
+\hline
+True positives / false negatives & $269\,/\,5$ \\
+False positives / true negatives & $7\,/\,533$ \\
+Precision & $97.46\%$ \\
+Recall & $98.18\%$ \\
+Cell accuracy & $98.53\%$ \\
+AUROC of mean model scores & $0.9977$ \\
+Exact arm rows & $264/274$ \\
+Exact question masks & $92/100$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The cohort breakdown in Table~\ref{tab:ch4-cohorts} shows the distribution of
+the twelve cell errors. Four-hop questions contain three of the five missed
+owners. Because several cells belong to the same question, cell totals are
+reported with their question counts rather than interpreted as independent
+question outcomes.
+
+\begin{table}[htbp]
+\centering
+\caption{Ownership errors by reference hop count. TP, FN, FP and TN count
+individual cells, while $n$ counts questions.}
+\label{tab:ch4-cohorts}
+\begin{tabular}{lrrrrrr}
+\hline
+Reference hops & $n$ & Cells & TP & FN & FP & TN \\
+\hline
+2 & 48 & 192 & 95 & 1 & 4 & 92 \\
+3 & 30 & 270 & 89 & 1 & 0 & 180 \\
+4 & 22 & 352 & 85 & 3 & 3 & 261 \\
+\hline
+\end{tabular}
+\end{table}
+
+On the gold-answer retrieval traces, the exact reference mask yields complete
+assigned-evidence coverage of $100\%$ at depth $200$ and a score of $86.47$.
+Using the learned ownership mask gives $97\%$ coverage and a score of
+$84.84$. This comparison isolates the effect of replacing the reference
+assignment with its prediction on those fixed lists.
+
+\subsection{Sensitivity to the Attribution Model}
+
+Table~\ref{tab:ch4-masks} compares two attribution models on the same retrieval
+traces: the earlier token-multiview model and the retained ownership-multiview
+model. The
+baseline generated decomposition receives scores of $52.32$ and $72.19$
+respectively. The analogous atomic-query values are $52.81$ and $66.64$. These
+changes arise from the assigned cells, with the passages and ranks held fixed.
+
+\begin{table}[htbp]
+\centering
+\caption{Masked-depth measurements under two attribution models on fixed
+GPT-4o-mini retrieval traces. Coverage is complete assigned-evidence coverage
+at $K=200$; score is $J_{D_M}$ from Equation~\ref{eq:ch4-credit}. The last
+row uses the exact reference assignment.}
+\label{tab:ch4-masks}
+\small
+\begin{tabular}{llrr}
+\hline
+Decomposition & Attribution & Coverage (\%) & Score \\
+\hline
+Baseline & Token-multiview & 78 & 52.32 \\
+Baseline & Ownership-multiview & 87 & 72.19 \\
+Atomic-query & Token-multiview & 77 & 52.81 \\
+Atomic-query & Ownership-multiview & 81 & 66.64 \\
+Reference, gold bindings & Token-multiview & 88 & 59.86 \\
+Reference, gold bindings & Ownership-multiview & 97 & 84.84 \\
+Reference, gold bindings & Reference assignment & 100 & 86.47 \\
+\hline
+\end{tabular}
+\end{table}
+
+The reference-style control supports the use of the retained predictor for
+recovering known assignments. For generated arms, assignments can legitimately
+be fused or shared. The score differences in Table~\ref{tab:ch4-masks}
+therefore establish sensitivity to attribution rather than a labelled accuracy
+comparison on generated plans. Prompt comparisons in Chapter~5 keep the current
+ownership model fixed.
+
+\subsection{Evidence Availability and Final Answers}
+
+For readability, $C_U(k)$ denotes the union coverage
+$C_{D_{\mathrm{union}}}(k)$ in the result tables.
+Table~\ref{tab:ch4-system} reports the direct and generated-decomposition
+executions. With GPT-4o-mini, the baseline decomposition raises complete union
+coverage at five passages per arm from $45\%$ to $76\%$. EM changes from
+$40\%$ to $52\%$ and F1 from $52.64$ to $59.00$. With Llama-3.3-70B,
+complete union coverage changes from $46\%$ to $79\%$, while EM changes from
+$42\%$ to $43\%$ and F1 from $52.30$ to $51.37$.
+
+\begin{table}[htbp]
+\centering
+\caption{Recorded execution results on $100$ MuSiQue questions. EM and F1
+are percentages. $C_U(5)$ is complete union coverage at five passages per arm.
+Arms and tokens are per-question means. Retrieved evidence and final answers
+are separate outcomes.}
+\label{tab:ch4-system}
+\small
+\begin{tabular}{llrrrrr}
+\hline
+Model & Prompt & EM & F1 & $C_U(5)$ & Arms & Tokens \\
+\hline
+GPT-4o-mini & Direct & 40 & 52.64 & 45 & 1.00 & 4\,369 \\
+ & Baseline & 52 & 59.00 & 76 & 2.79 & 12\,763 \\
+ & Atomic-query & 52 & 59.66 & 72 & 2.66 & 11\,898 \\
+ & Extended-instruction & 50 & 60.39 & 74 & 2.61 & 13\,881 \\
+\hline
+Llama-3.3-70B & Direct & 42 & 52.30 & 46 & 1.00 & 4\,530 \\
+ & Baseline & 43 & 51.37 & 79 & 3.00 & 14\,069 \\
+ & Atomic-query & 45 & 53.54 & 78 & 3.22 & 14\,789 \\
+ & Extended-instruction & 47 & 55.94 & 75 & 2.84 & 15\,271 \\
+\hline
+\end{tabular}
+\end{table}
+
+The paired bootstrap interval for the baseline decomposition's EM change is
+$[2,22]$ percentage points for GPT-4o-mini and $[-8,10]$ for Llama-3.3-70B.
+These measurements show why retrieval and answer metrics are both needed.
+Improved pooled availability can coexist with a small change in final answers,
+because the sequence must still use the retrieved evidence and propagate useful
+intermediate states.
+
+The per-arm comparison also changes the total retrieval expenditure. The
+baseline GPT-4o-mini decomposition retrieves a mean of $13.95$ passage slots
+across its reader calls, compared with $5$ for direct retrieval. Its mean pooled
+collection contains $11.35$ distinct passages. Thus the coverage increase in
+Table~\ref{tab:ch4-system} combines a change in query formulation with more
+passage slots and more reader calls. Section~\ref{sec:ch4-budget} compares
+fixed lists at a common total passage budget.
+
+\subsection{The Role of Intermediate Bindings}
+
+The two reference-decomposition controls use the same subquestion templates
+and reader but change the answers substituted into later queries.
+Table~\ref{tab:ch4-bindings} reports their outcomes. Gold substitution yields
+EM $64\%$ versus $49\%$ under predicted substitution, with a paired bootstrap
+interval of $[8,22]$ percentage points for the difference. Complete union
+coverage at five passages per arm changes from $80\%$ to $92\%$.
+
+\begin{table}[htbp]
+\centering
+\caption{Reference-decomposition controls with GPT-4o-mini. Gold bindings
+supply reference intermediate answers when constructing downstream queries.
+Predicted bindings use the reader's earlier outputs.}
+\label{tab:ch4-bindings}
+\begin{tabular}{lrrr}
+\hline
+Intermediate substitution & EM (\%) & F1 & $C_U(5)$ (\%) \\
+\hline
+Predicted answers & 49 & 57.50 & 80 \\
+Gold answers & 64 & 70.73 & 92 \\
+\hline
+\end{tabular}
+\end{table}
+
+The intervention changes downstream query text and consequently can change
+both retrieval and answer generation. Its effect includes error propagation
+through those two stages. Supplying gold intermediate answers defines an
+oracle-assisted control. The measured gap identifies a role for intermediate
+state quality within the reference-chain pipeline; it is not a gain achieved by
+an operational binding policy.
+
+\section{Depth Under a Total Passage Budget}
+\label{sec:ch4-budget}
+
+\subsection{Equal-Allocation Replay}
+
+A common per-arm depth gives more total passage slots to longer decompositions.
+To separate these quantities, consider a per-question ceiling $B\leq AK$
+distributed among the $A$ recorded retrieval lists. Equal allocation uses the
+whole allowance and assigns
+\begin{equation}
+  k_a(B)=\left\lfloor\frac{B}{A}\right\rfloor
+        +\mathbf{1}\{a\leq B\bmod A\},
+  \qquad
+  \sum_{a=1}^{A}k_a(B)=B.
+  \label{eq:ch4-budget-allocation}
+\end{equation}
+The remainder is allocated in execution order. A passage slot is charged each
+time it occurs in an arm prefix, including duplicates across arms. Complete
+evidence availability is then evaluated in
+$\bigcup_a R_a[1:k_a(B)]$.
+
+This allowance counts selected passage slots. Equal slot counts can produce
+different numbers of unique passages and different token totals, since passages
+can recur across arms and vary in length. Retrieving the ranked lists, producing
+the queries and reading the contexts incur separate computational costs.
+
+These are fixed-list replays. The original intermediate answers and later
+queries were generated using five passages per reader call. Changing a prefix
+in the replay leaves those earlier answers and later queries unchanged. The
+result measures the coverage of the recorded lists at a specified slot budget.
+An end-to-end policy evaluated at that budget would regenerate intermediate
+answers and dependent queries under its actual contexts.
+
+\paragraph{Per-question and average budgets.}
+Under a hard ceiling $B$ for each question, the largest feasible common depth
+within a question is $\lfloor B/A(q)\rfloor$. Complete-evidence availability
+is non-decreasing in every prefix length, so this choice weakly dominates
+smaller equal depths. Equation~\ref{eq:ch4-budget-allocation} also spends the
+integer remainder. A single depth shared across the entire panel is a weaker
+comparator when arm counts vary: feasibility limits it to
+$\lfloor B/\max_q A(q)\rfloor$. Unequal within-question allocation can improve
+on the balanced comparator by placing more slots on deeper arms. An average
+budget instead permits transfers between questions, including transfers that
+retain positive allocations for every question. That is a different resource
+constraint from the per-question comparisons here.
+
+\subsection{A Fixed-List Oracle Allocation}
+
+The rank matrix also permits an exact comparison with the least expensive
+prefix allocation for its recorded lists:
+\begin{equation}
+  B^*(q)=
+  \min_{k_1,\ldots,k_A\in\{0,\ldots,K\}}
+  \left\{\sum_a k_a:
+    E(q)\subseteq\bigcup_a R_a[1:k_a]
+  \right\}.
+  \label{eq:ch4-oracle-budget}
+\end{equation}
+The value is $+\infty$ when the retained lists jointly miss annotated
+evidence. For finite cases, it can be computed by dynamic programming over
+subsets of evidence. Let $S_a(k)$ denote the evidence indices found in arm
+$a$'s first $k$ passages. Starting from $F_0(\varnothing)=0$, the update is
+\begin{equation}
+  F_a(T\cup S_a(k))
+  \leftarrow
+  \min\{F_a(T\cup S_a(k)),F_{a-1}(T)+k\}.
+  \label{eq:ch4-dynamic-program}
+\end{equation}
+Unreachable states have value $+\infty$, and
+$B^*(q)=F_A(\{1,\ldots,h\})$. Only zero and prefix lengths at which an
+additional evidence item appears need to be considered: a longer prefix with
+the same evidence set adds cost without changing that state. With at most
+four annotated hops in this panel, the subset state space is small.
+
+The oracle uses gold evidence identities to choose its allocation. Moreover,
+all recorded queries are available even when their selected prefix length is
+zero. The objective charges passage slots but leaves the generation of those
+queries and their intermediate states outside the optimisation. It is an exact
+minimum for the fixed-list problem and an optimistic reference for a system
+that must construct and execute the queries. It is not an achieved runtime or
+token saving.
+
+\subsection{Allocation Headroom on the Recorded Lists}
+
+At $B=15$, equal allocation recovers complete evidence for $76$ questions
+under the baseline GPT-4o-mini decomposition and $78$ under its Llama
+counterpart. The corresponding oracle allocations reach $85$ and $87$.
+Table~\ref{tab:ch4-budget} reports the same comparison for the other prompts
+and direct retrieval.
+
+\begin{table}[htbp]
+\centering
+\caption{Complete evidence coverage (\%) at a total budget of $15$ passage
+slots on fixed recorded lists. The oracle chooses prefixes using gold evidence
+and is a reference allocation rather than a deployed policy. Each row contains
+$100$ questions.}
+\label{tab:ch4-budget}
+\begin{tabular}{llrr}
+\hline
+Model & Prompt & Equal allocation & Oracle allocation \\
+\hline
+GPT-4o-mini & Direct & 66 & 66 \\
+ & Baseline & 76 & 85 \\
+ & Atomic-query & 73 & 85 \\
+ & Extended-instruction & 75 & 83 \\
+\hline
+Llama-3.3-70B & Direct & 65 & 65 \\
+ & Baseline & 78 & 87 \\
+ & Atomic-query & 75 & 88 \\
+ & Extended-instruction & 75 & 85 \\
+\hline
+\end{tabular}
+\end{table}
+
+The baseline decompositions retain a coverage advantage over direct retrieval
+in this replay after the total slot budget is matched. The additional nine
+questions recoverable by oracle allocation in each model setting identify
+uneven depth requirements across arms. This result motivates evaluation of
+observable allocation policies. Their value must be measured after accounting
+for the decisions and intermediate answers needed to obtain the lists.
+
+\section{A Cross-Benchmark Fixed-Trace Study}
+\label{sec:ch4-bm25}
+
+\subsection{Retrieval Regime and Evaluation Population}
+
+A complementary BM25 study applies the passage-slot accounting to MuSiQue,
+2WikiMultiHopQA~\cite{ch4-2wiki} and HotpotQA~\cite{ch4-hotpot}. It uses
+separate closed corpora containing $11\,656$, $10\,426$ and $9\,811$
+passages, respectively. Supporting passages are identified from each
+benchmark's annotations. The metric is complete annotated-evidence availability
+in the selected union; it requires the evidence set but no estimated ownership
+mask. The ownership measurement remains relevant when the question is which
+arm has the evidence needed for its own decision.
+
+Each source panel contains $1\,000$ questions. Saved generated-plan traces
+are available for $824$ MuSiQue, $977$ 2Wiki and $996$ HotpotQA questions.
+The full-question control is restricted to the same retained IDs within each
+dataset. Thus the comparisons are paired on available traces, with $176$,
+$23$ and $4$ source questions outside their respective denominators.
+These coverage values are conditional on obtaining a retained trace; they
+do not represent success rates for the entire original intake. The source
+panels also have historical project exposure, so these results are
+development evidence separate from the frozen comparison in Chapter~5.
+
+The sequential traces use generated subquestions. A GPT-4o-mini reader answers
+each arm from five BM25 passages, and those predicted answers resolve later
+references. Up to $200$ ranks per arm are saved for replay. This is a
+different retriever and execution implementation from the HippoRAG experiments
+above. Every allocation below acts on those saved lists. Its slot budget
+excludes the calls and contexts used to generate the intermediate answers.
+
+Selected slots, unique pooled passages and reader tokens remain distinct.
+Two allocations with the same $\sum_a k_a$ can have different overlap between
+arms and hence different deduplicated context sizes. A subsequent reader over
+the pooled union is an additional policy; its answer quality must be measured
+separately from the coverage frontiers reported here.
+
+\subsection{Matched Passage-Slot Frontiers}
+
+Table~\ref{tab:ch4-bm25-availability} compares full-question retrieval,
+balanced allocation from Equation~\ref{eq:ch4-budget-allocation}, and the
+fixed-list oracle at $B=8$. The balanced allocation spends the integer
+remainder in execution order. The saved plans contain at most seven arms
+on MuSiQue and HotpotQA and six on 2Wiki, so this budget can allocate at
+least one slot to every arm.
+
+\input{tables/ch4_bm25_availability}
+
+The oracle recovers $12.4$, $19.3$ and $7.4$ additional percentage points
+over balanced allocation on MuSiQue, 2Wiki and HotpotQA, respectively.
+These are opportunities within the existing rankings. They preserve the
+recorded queries and reveal how unequal evidence ranks constrain a balanced
+split. The gain from generating better queries is outside this oracle's
+policy class.
+
+The subset dynamic program in Equation~\ref{eq:ch4-dynamic-program}
+independently reproduces the saved oracle coverage on all three retained
+panels at the checked budgets. For a fixed panel, its frontier is
+\begin{equation}
+  C^*(B)=\frac{1}{n}\sum_{q=1}^{n}\mathbf{1}\{B^*(q)\leq B\}.
+  \label{eq:ch4-oracle-frontier}
+\end{equation}
+Questions whose lists jointly miss a required passage remain uncovered for
+every allocation. Zero-depth arms are permitted by the oracle, with the
+cost of constructing their saved queries kept outside the objective.
+
+A complementary reading fixes coverage and compares the first tested budget
+that reaches it. On the MuSiQue sequential panel, balanced allocation first
+reaches coverage $0.50$, $0.60$ and $0.70$ at $16$, $32$ and $128$ slots.
+The oracle reaches the same targets at $8$, $16$ and $48$ slots. These values
+are minima over the reported budget grid, rather than exact interpolated
+crossings. They quantify allocation headroom and do not constitute achieved
+token or runtime reductions.
+
+Generated arm count also differs from benchmark reasoning depth. Mean arm
+counts are $2.53$, $2.79$ and $2.10$ on the retained MuSiQue, 2Wiki and
+HotpotQA panels. More arms create more allocation choices and can increase
+the cost of a common per-arm depth. They can also reflect redundant splitting
+or a prompt preference. An association between allocation headroom and arm
+count therefore concerns plan structure, rather than establishing that
+semantically harder questions obtain greater savings.
+
+\subsection{Reference and Generated Query Regimes}
+
+The MuSiQue artifacts support three retrieval regimes. Reference plans use
+the benchmark decomposition and gold intermediate answers. Sequential plans
+use generated subquestions and the reader's predicted answers. Paraphrased
+queries replace a reference with a noun phrase derived from the referenced
+subquestion, without reading an intermediate answer. Table~\ref{tab:ch4-bm25-regimes}
+reports their balanced coverage at two total slot budgets.
+
+\begin{table}[tbp]
+\centering
+\small
+\caption{MuSiQue BM25 retrieval regimes. Coverage is measured on each
+retained panel under balanced slot allocation. The reference row uses a
+different plan source and a larger panel.}
+\label{tab:ch4-bm25-regimes}
+\begin{tabular}{lrrr}
+\hline
+Query regime & $n$ & Coverage at $B=8$ & Coverage at $B=200$ \\
+\hline
+Reference plan, gold bindings & $1\,000$ & $0.595$ & $0.962$ \\
+Generated plan, predicted bindings & $824$ & $0.413$ & $0.733$ \\
+Generated plan, paraphrased references & $824$ & $0.109$ & $0.397$ \\
+\hline
+\end{tabular}
+\end{table}
+
+The sequential and paraphrase archives contain the same $824$ question IDs
+and the same arm counts. Their different rankings show that the way
+intermediate references are turned into query text materially changes
+evidence availability. Reference plans provide a separate oracle-assisted
+comparison: they change both the source of the plan and its bindings, and
+their full reported panel has a different size. The three-row comparison
+therefore does not isolate a pure binding intervention. The controlled
+reference-chain comparison earlier in this chapter supplies the narrower
+evidence about predicted versus gold intermediate answers.
+
+The distinction also constrains interpretation of allocation. At $B=200$,
+the sequential fixed-list oracle covers $0.795$ of the retained MuSiQue
+questions, compared with balanced coverage $0.733$. Both results concern
+the selected prefixes of queries already produced with five passages per
+intermediate reader. A changed operational budget can alter those answers
+and later rankings, which requires re-execution to evaluate.
+
+\section{Discussion and Implications for Optimisation}
+\label{sec:ch4-discussion}
+
+The evaluation decomposes a retrieval plan into measurable obligations. Union
+depth measures pooled evidence availability. The ownership mask localises that
+evidence to the subquestion expected to use it. Answer metrics then measure the
+outcome of executing the sequence. These distinctions prevent a shallow union
+from being interpreted as a fully supported reasoning chain and prevent a
+masked-depth change caused by attribution from being attributed to improved
+retrieval.
+
+The ownership study provides a working measurement model. It recovers the
+reference assignment on $92$ of $100$ complete reference-style masks while retaining
+high cell recall and precision. Its empirical scope is reference-style arms
+with known supporting passages. Generated plans can change the semantic
+structure through fusion, splitting, omission or incorrect dependency
+substitution. Chapter~5 evaluates controlled transformations of reference plans
+to measure sensitivity to several of these changes. Transfer to naturally
+generated plans requires independently labelled assignments from that regime.
+
+The answer experiments establish the importance of execution state. Under
+reference decompositions, substituting gold intermediate answers changes both
+retrieval coverage and final accuracy. An unowned passage in the predicted
+mask can therefore have several explanations: a missing information need, an
+altered query following an earlier error, or a classifier disagreement. Feedback
+for optimisation should retain those distinctions. A predicted attribution
+diagnosis is evidence to inspect, rather than a verified causal explanation of
+the failure.
+
+The resource measurements distinguish retrieval depth, total passage slots and
+model tokens. The masked objective rewards shallow completion of assigned
+evidence; the fixed-budget replay measures allocation efficiency on existing
+lists. A prompt that raises the former can still create more arms or consume
+more tokens. Chapter~5 consequently evaluates the optimisation objective
+together with complete-evidence coverage, answer quality and execution cost.
+
+The complementary BM25 study extends the fixed-slot analysis to three
+benchmarks and larger retained panels. Its oracle gaps motivate observable
+allocation policies, while its query-regime comparison establishes the need
+to document how dependent subquestions were resolved. Those results retain
+their closed-corpus, fixed-trace and available-case scope alongside the
+separate attribution and answer measurements.
+
+The current system applies decomposition to every question in these
+experiments. The difficulty probe of Chapter~3 supplies a separate measurement
+and is not used to select or route these executions. Connecting a pre-answer
+difficulty estimate to a decomposition policy requires its own cost and answer
+evaluation.
+
+\section*{Conclusion}
+
+This chapter addressed the evaluation component of the retrieval-efficiency
+question posed in Section~2.6.2. It defined complete evidence availability and
+ownership-masked retrieval depth, trained a textual ownership predictor and
+evaluated its assignments on reference-style decompositions. The predictor
+recovered $269$ of $274$ owner cells and $92$ complete question masks out of
+$100$.
+
+The retrieval study showed that evidence availability, assignment and answer
+execution vary separately. Generated decompositions increased complete pooled
+retrieval coverage, while the answer gains depended on the model and execution
+state. A fixed-budget analysis also identified room to allocate passage slots
+more selectively across the recorded arms. These findings support an
+evidence-aware optimisation objective while specifying the additional answer
+and cost measurements required to assess its practical effect. Chapter~5 uses
+this evaluation to study decomposition prompt search and learned passage
+allocation.
