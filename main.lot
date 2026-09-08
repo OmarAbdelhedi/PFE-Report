@@ -26,5 +26,5 @@
 \contentsline {table}{\numberline {5.9}{\ignorespaces Diagnostic fields supplied by the structured feedback interface.}}{64}{table.caption.61}%
 \contentsline {table}{\numberline {5.10}{\ignorespaces Ownership predictions on the optimisation-only stress suite. Exact agreement requires every cell of a case's ownership mask to match the transformation labels. Variants share twelve base questions.}}{65}{table.caption.62}%
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {A.1}{\ignorespaces Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here.}}{69}{table.caption.65}%
-\contentsline {table}{\numberline {A.2}{\ignorespaces Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID.}}{70}{table.caption.66}%
+\contentsline {table}{\numberline {A.1}{\ignorespaces Exploratory depth prediction on the fixed reference panel. Mean AUROC averages the five depth thresholds. Each model's layer is selected using the same cross-validation results reported here.}}{70}{table.caption.65}%
+\contentsline {table}{\numberline {A.2}{\ignorespaces Frozen question-new splits for the prospective comparison. Components connect questions sharing a source single-hop ID.}}{71}{table.caption.66}%

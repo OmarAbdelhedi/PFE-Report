@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.30)  8 SEP 2026 19:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.8.30)  8 SEP 2026 19:58
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -998,16 +998,16 @@ Chapter 5.
 LaTeX Font Info:    Trying to load font information for T1+cmtt on input line 87.
  (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
 File: t1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
-) [53] [54] [55] [56] [57] [58] [59] [60] (./chapters/tables/ch5_bm25_allocation.tex) [61] (./chapters/tables/ch5_reader_fixed_traces.tex) [62] [63] [64] [65] [66]) (./chapters/conclusion.tex [67]) (./chapters/optimisation-appendix.tex [68
+) [53] [54] [55] [56] [57] [58] [59] [60] (./chapters/tables/ch5_bm25_allocation.tex) [61] (./chapters/tables/ch5_reader_fixed_traces.tex) [62] [63] [64] [65] [66]) (./chapters/conclusion.tex [67] [68
 
-]
+]) (./chapters/optimisation-appendix.tex [69]
 Appendix A.
-[69
+[70
 
-] [70] [71]) [72] (./main.bbl [73
+] [71] [72]) [73] (./main.bbl [74
 
 
-] [74] [75]) [76] (./N.bbl) [77
+] [75] [76]) [77] (./N.bbl) [78
 
 
 ] (./main.aux)
@@ -1200,18 +1200,18 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 ### semi simple group (level 1) entered at line 171 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 32209 strings out of 476097
- 577345 string characters out of 5793633
+ 32210 strings out of 476097
+ 577352 string characters out of 5793633
  1952975 words of memory out of 5000000
  53116 multiletter control sequences out of 15000+600000
  588777 words of font info for 113 fonts, out of 8000000 for 9000
  59 hyphenation exceptions out of 8191
  84i,12n,93p,626b,2718s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cmextra/cmex8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmib10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx1728.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfbx2488.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0700.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm0800.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1000.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1095.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1200.pfb></usr/share/texmf/fonts/type1/public/cm-super/sfti1440.pfb></usr/share/texmf/fonts/type1/public/cm-super/sftt1200.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/arabtex/xnsh14.pfb>
-Output written on main.pdf (90 pages, 1983323 bytes).
+Output written on main.pdf (91 pages, 1988264 bytes).
 PDF statistics:
- 1764 PDF objects out of 2073 (max. 8388607)
- 1564 compressed objects within 16 object streams
- 391 named destinations out of 1000 (max. 500000)
+ 1769 PDF objects out of 2073 (max. 8388607)
+ 1568 compressed objects within 16 object streams
+ 392 named destinations out of 1000 (max. 500000)
  1109 words of extra memory for PDF output out of 10000 (max. 10000000)
 

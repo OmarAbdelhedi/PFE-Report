@@ -5,4 +5,79 @@
 \markboth{Conclusion}{Conclusion}
 \label{sec:conclusion}
 
-\noindent This internship project aimed to design 
+This internship project investigated how multi-hop question answering can be
+made more adaptive and evidence-aware. The work addressed the problem from two
+complementary perspectives: first, whether the compositional difficulty of a
+question can be identified before answer generation; and second, once
+decomposition is used, how the resulting retrieval process can be evaluated and
+improved.
+
+The first part of the thesis showed that benchmark-defined compositional
+difficulty is linearly decodable from the internal representations of several
+language models. Across three models and three multi-hop benchmarks, the signal
+emerged across network depth, remained above a label-permutation null, survived
+partial control for selected surface features, exhibited ordinal structure, and
+transferred more consistently across benchmarks after surface residualisation.
+These results provide evidence that question representations contain a graded
+component associated with compositional demand, which could ultimately provide
+a useful signal for adaptive processing before the full cost of answering is
+incurred.
+
+Once decomposition is employed, the thesis focused on the evidence retrieved by
+its subquestions. An evidence-aware evaluation framework was developed to
+separate final-answer correctness from evidence availability and retrieval
+depth. The framework also introduced an evidence-ownership estimator for
+associating supporting passages with the subquestions expected to retrieve
+them. On the reference-style control, 92 of 100 complete ownership masks were
+recovered. On the 100-question MuSiQue development panel, generated
+decomposition increased evidence availability and, with GPT-4o-mini, raised
+exact match from 40\% to 52\%. The experiments also showed that improved
+retrieval does not necessarily produce an equivalent answer-quality gain,
+highlighting the importance of intermediate answers and downstream reasoning in
+the complete execution. :contentReference[oaicite:0]{index=0}
+
+The final part of the work investigated how these measurements could support
+optimisation. Automated search over decomposition instructions demonstrated that
+the retrieval-oriented score can be used as an optimisation objective, although
+the selected prompt achieved only a modest development-set improvement and did
+not improve exact match. More importantly, the candidate comparison showed that
+the prompt favoured by retrieval depth was not the one favoured by final-answer
+quality, illustrating that retrieval-oriented and end-to-end objectives are not
+fully interchangeable. A learned passage allocator was also developed to
+distribute a fixed retrieval budget across subquestions. Under the tight
+eight-slot setting, unit-increment allocation increased complete-evidence
+coverage by 6.3 percentage points on 2WikiMultiHopQA and 4.7 points on MuSiQue,
+while a separate 700-question MuSiQue experiment produced a 2.1-point F1 gain
+for the learned segment policy. The advantage diminished at larger budgets,
+indicating that adaptive allocation is particularly relevant when context is
+constrained. :contentReference[oaicite:1]{index=1} :contentReference[oaicite:2]{index=2}
+
+Several limitations remain. The difficulty study relies on benchmark-defined
+proxies and establishes decodability rather than a causal role of the identified
+representation. Ownership estimation on naturally generated decompositions
+requires broader independent validation. The prompt-search pilot uses a shared
+development panel, while the passage-allocation experiments operate on recorded
+retrieval traces rather than fully regenerated sequential executions. The
+structured evidence-feedback interface developed in Chapter~5 has been
+diagnostically validated, but its comparative effect on prompt optimisation
+remains to be evaluated. :contentReference[oaicite:3]{index=3}
+:contentReference[oaicite:4]{index=4}
+
+These limitations define the main directions for future work. A natural next
+step is to connect the pre-answer difficulty signal with an adaptive routing
+policy that considers not only predicted difficulty, but also the expected
+benefit and computational cost of decomposition. Passage allocation should also
+be extended from fixed-trace replay to online sequential execution, where each
+budget decision can affect intermediate answers and subsequent queries.
+Finally, the proposed independent evaluation can determine whether structured
+evidence feedback improves prompt search compared with answer-only or raw
+evidence feedback.
+
+Overall, this thesis shows that adaptive multi-hop question answering can be
+studied at several complementary levels: compositional demand can be detected
+before answering, decomposition can be evaluated through the evidence it
+exposes, and retrieval resources can be allocated according to the needs of
+individual subquestions rather than uniformly. These results provide a
+foundation for future RAG systems in which reasoning and retrieval behaviour
+are increasingly adapted to the structure and evidence requirements of each
+question.

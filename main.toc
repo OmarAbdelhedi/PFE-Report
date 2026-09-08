@@ -133,12 +133,12 @@
 \contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{66}{subsection.5.5.1}%
 \contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{67}{subsection.5.5.2}%
 \contentsline {chapter}{Conclusion and outlook}{68}{section*.64}%
-\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{69}{appendix.A}%
-\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{69}{section.A.1}%
-\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{70}{section.A.2}%
-\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{70}{subsection.A.2.1}%
-\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{71}{subsection.A.2.2}%
-\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{71}{subsection.A.2.3}%
-\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{72}{subsection.A.2.4}%
-\contentsline {chapter}{Bibliography}{73}{section*.67}%
-\contentsline {chapter}{Netography}{77}{section*.69}%
+\contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{70}{appendix.A}%
+\contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{70}{section.A.1}%
+\contentsline {section}{\numberline {A.2}Independent Evaluation Design}{71}{section.A.2}%
+\contentsline {subsection}{\numberline {A.2.1}Frozen Data Roles and Corpus Scope}{71}{subsection.A.2.1}%
+\contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{72}{subsection.A.2.2}%
+\contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{72}{subsection.A.2.3}%
+\contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{73}{subsection.A.2.4}%
+\contentsline {chapter}{Bibliography}{74}{section*.67}%
+\contentsline {chapter}{Netography}{78}{section*.69}%
