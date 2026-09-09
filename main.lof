@@ -1,18 +1,18 @@
 \babel@toc {english}{}\relax 
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces The EV Complex, home of the Gina Cody School (photograph: Tasitch, CC BY 2.0)}}{5}{figure.caption.17}%
+\contentsline {figure}{\numberline {1.1}{\ignorespaces The EV Complex, home of the Gina Cody School (photograph: Tasitch, CC BY 2.0)}}{5}{figure.caption.18}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Separation of retrieval and generation in RAG}}{10}{figure.caption.20}%
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Multi-hop reasoning through a bridge entity}}{11}{figure.caption.21}%
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Per-question retrieval depth and cohort coverage}}{12}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Separation of retrieval and generation in RAG}}{10}{figure.caption.21}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Multi-hop reasoning through a bridge entity}}{11}{figure.caption.22}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Per-question retrieval depth and cohort coverage}}{12}{figure.caption.23}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Overview of the compositional-difficulty probing protocol}}{24}{figure.caption.25}%
-\contentsline {figure}{\numberline {3.2}{\ignorespaces Difficulty decoding across model depth}}{30}{figure.caption.27}%
-\contentsline {figure}{\numberline {3.3}{\ignorespaces Label-permutation null across depth}}{30}{figure.caption.28}%
-\contentsline {figure}{\numberline {3.4}{\ignorespaces Raw, surface-only, and residualised difficulty decoding}}{31}{figure.caption.29}%
-\contentsline {figure}{\numberline {3.5}{\ignorespaces Ordinality of the decoded MuSiQue difficulty direction}}{32}{figure.caption.30}%
-\contentsline {figure}{\numberline {3.6}{\ignorespaces Cross-benchmark transfer to MuSiQue}}{32}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Overview of the compositional-difficulty probing protocol}}{24}{figure.caption.26}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Difficulty decoding across model depth}}{30}{figure.caption.28}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Label-permutation null across depth}}{30}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Raw, surface-only, and residualised difficulty decoding}}{31}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Ordinality of the decoded MuSiQue difficulty direction}}{32}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Cross-benchmark transfer to MuSiQue}}{32}{figure.caption.33}%
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted.}}{42}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Execution conditions in the retrieval study. The diagram is the execution shared by every condition, with the two marked points that the comparison varies: the source of the subquestion sequence and the source of the intermediate answers substituted into later subquestions. The table states what each condition supplies at those two points. Direct execution has neither, and the gold-binding condition is oracle-assisted.}}{42}{figure.caption.39}%
 \addvspace {10\p@ }
 \addvspace {10\p@ }

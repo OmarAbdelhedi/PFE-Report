@@ -1,14 +1,14 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{Abstract}{ii}{section*.1}%
-\contentsline {chapter}{Dedications}{iii}{section*.3}%
-\contentsline {chapter}{Acknowledgements}{iv}{section*.5}%
-\contentsline {chapter}{List of Figures}{ix}{section*.7}%
-\contentsline {chapter}{List of Tables}{x}{section*.9}%
-\contentsline {chapter}{List of Abbreviations}{xii}{section*.12}%
+\contentsline {chapter}{Abstract}{i}{section*.1}%
+\contentsline {chapter}{Dedications}{ii}{section*.3}%
+\contentsline {chapter}{Acknowledgements}{iii}{section*.5}%
+\contentsline {chapter}{List of Figures}{ix}{section*.8}%
+\contentsline {chapter}{List of Tables}{x}{section*.10}%
+\contentsline {chapter}{List of Abbreviations}{xii}{section*.13}%
 \vspace {1.2em}
-\contentsline {chapter}{General Introduction}{1}{section*.14}%
+\contentsline {chapter}{General Introduction}{1}{section*.15}%
 \contentsline {chapter}{\numberline {1}General Presentation and Context of the Internship}{3}{chapter.1}%
-\contentsline {section}{Introduction}{3}{section*.15}%
+\contentsline {section}{Introduction}{3}{section*.16}%
 \contentsline {section}{\numberline {1.1}Host organisation}{3}{section.1.1}%
 \contentsline {subsection}{\numberline {1.1.1}Concordia University}{4}{subsection.1.1.1}%
 \contentsline {subsection}{\numberline {1.1.2}Gina Cody School of Engineering and Computer Science}{4}{subsection.1.1.2}%
@@ -16,9 +16,9 @@
 \contentsline {section}{\numberline {1.2}Problem statement}{6}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Objectives and expected deliverables}{6}{section.1.3}%
 \contentsline {section}{\numberline {1.4}Working methodology}{7}{section.1.4}%
-\contentsline {section}{Conclusion}{8}{section*.18}%
+\contentsline {section}{Conclusion}{8}{section*.19}%
 \contentsline {chapter}{\numberline {2}Background and State of the Art}{9}{chapter.2}%
-\contentsline {section}{Introduction}{9}{section*.19}%
+\contentsline {section}{Introduction}{9}{section*.20}%
 \contentsline {section}{\numberline {2.1}Multi-Hop Question Answering and Retrieval-Augmented Generation}{9}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Retrieval-Augmented Generation}{9}{subsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.1.2}Multi-Hop Question Answering}{10}{subsection.2.1.2}%
@@ -43,9 +43,9 @@
 \contentsline {section}{\numberline {2.7}Research Gap and Thesis Positioning}{21}{section.2.7}%
 \contentsline {subsection}{\numberline {2.7.1}Anticipating Compositional Difficulty}{21}{subsection.2.7.1}%
 \contentsline {subsection}{\numberline {2.7.2}Optimising Decomposition for Retrieval Efficiency}{21}{subsection.2.7.2}%
-\contentsline {section}{Conclusion}{22}{section*.23}%
+\contentsline {section}{Conclusion}{22}{section*.24}%
 \contentsline {chapter}{\numberline {3}Probing Compositional Question Difficulty in Language Model Representations}{23}{chapter.3}%
-\contentsline {section}{Introduction}{23}{section*.24}%
+\contentsline {section}{Introduction}{23}{section*.25}%
 \contentsline {section}{\numberline {3.1}Research Question and Problem Formulation}{23}{section.3.1}%
 \contentsline {section}{\numberline {3.2}Methodology}{24}{section.3.2}%
 \contentsline {subsection}{\numberline {3.2.1}Hidden-State Extraction and Question Representation}{24}{subsection.3.2.1}%
@@ -66,11 +66,11 @@
 \contentsline {section}{\numberline {3.5}Discussion and Limitations}{33}{section.3.5}%
 \contentsline {subsection}{\numberline {3.5.1}Interpretation and Implications for Adaptive Computation}{33}{subsection.3.5.1}%
 \contentsline {subsection}{\numberline {3.5.2}Limitations and Future Directions}{34}{subsection.3.5.2}%
-\contentsline {paragraph}{Difficulty is partly surface form.}{34}{paragraph*.33}%
-\contentsline {paragraph}{Benchmark labels are heterogeneous proxies.}{34}{paragraph*.34}%
-\contentsline {paragraph}{The evidence is correlational.}{34}{paragraph*.35}%
-\contentsline {paragraph}{The empirical scope is narrow.}{34}{paragraph*.36}%
-\contentsline {section}{Conclusion}{35}{section*.37}%
+\contentsline {paragraph}{Difficulty is partly surface form.}{34}{paragraph*.34}%
+\contentsline {paragraph}{Benchmark labels are heterogeneous proxies.}{34}{paragraph*.35}%
+\contentsline {paragraph}{The evidence is correlational.}{34}{paragraph*.36}%
+\contentsline {paragraph}{The empirical scope is narrow.}{34}{paragraph*.37}%
+\contentsline {section}{Conclusion}{35}{section*.38}%
 \contentsline {chapter}{\numberline {4}Evidence-Aware Evaluation of Question Decomposition}{36}{chapter.4}%
 \contentsline {section}{\numberline {4.1}Problem Formulation}{36}{section.4.1}%
 \contentsline {subsection}{\numberline {4.1.1}Sequential Execution of a Decomposition}{36}{subsection.4.1.1}%
@@ -86,21 +86,21 @@
 \contentsline {section}{\numberline {4.4}Experimental Protocol}{41}{section.4.4}%
 \contentsline {subsection}{\numberline {4.4.1}Evaluation Questions, Systems, and Execution Settings}{41}{subsection.4.4.1}%
 \contentsline {subsection}{\numberline {4.4.2}Compared Configurations and Evaluation Procedure}{41}{subsection.4.4.2}%
-\contentsline {paragraph}{Measurements and comparisons.}{42}{paragraph*.39}%
+\contentsline {paragraph}{Measurements and comparisons.}{42}{paragraph*.40}%
 \contentsline {section}{\numberline {4.5}Ownership Validation and Decomposition Results}{43}{section.4.5}%
 \contentsline {subsection}{\numberline {4.5.1}Ownership Prediction Accuracy}{43}{subsection.4.5.1}%
 \contentsline {subsection}{\numberline {4.5.2}Sensitivity to Ownership Predictions}{44}{subsection.4.5.2}%
 \contentsline {subsection}{\numberline {4.5.3}Decomposition versus Direct Retrieval}{45}{subsection.4.5.3}%
 \contentsline {subsection}{\numberline {4.5.4}The Effect of Intermediate Answers}{45}{subsection.4.5.4}%
-\contentsline {paragraph}{Reference and generated queries with BM25.}{46}{paragraph*.45}%
+\contentsline {paragraph}{Reference and generated queries with BM25.}{46}{paragraph*.46}%
 \contentsline {section}{\numberline {4.6}Evidence Coverage Under a Passage Budget}{46}{section.4.6}%
 \contentsline {subsection}{\numberline {4.6.1}Passage-Slot Accounting and Balanced Allocation}{47}{subsection.4.6.1}%
 \contentsline {subsection}{\numberline {4.6.2}Oracle Allocation on Recorded Lists}{47}{subsection.4.6.2}%
 \contentsline {subsection}{\numberline {4.6.3}Allocation Results on the MuSiQue Panel}{48}{subsection.4.6.3}%
 \contentsline {subsection}{\numberline {4.6.4}Cross-Benchmark BM25 Evaluation}{49}{subsection.4.6.4}%
-\contentsline {paragraph}{Evaluation population and trace generation.}{49}{paragraph*.48}%
-\contentsline {paragraph}{Coverage at a matched budget.}{49}{paragraph*.49}%
-\contentsline {paragraph}{Budgets needed for target coverage.}{50}{paragraph*.51}%
+\contentsline {paragraph}{Evaluation population and trace generation.}{49}{paragraph*.49}%
+\contentsline {paragraph}{Coverage at a matched budget.}{49}{paragraph*.50}%
+\contentsline {paragraph}{Budgets needed for target coverage.}{50}{paragraph*.52}%
 \contentsline {section}{\numberline {4.7}Discussion and Implications for Optimisation}{50}{section.4.7}%
 \contentsline {subsection}{\numberline {4.7.1}Contributions and Implications}{50}{subsection.4.7.1}%
 \contentsline {subsection}{\numberline {4.7.2}Scope and Limitations}{50}{subsection.4.7.2}%
@@ -112,7 +112,7 @@
 \contentsline {section}{\numberline {5.2}Automated Search over Decomposition Instructions}{54}{section.5.2}%
 \contentsline {subsection}{\numberline {5.2.1}Search Configuration}{55}{subsection.5.2.1}%
 \contentsline {subsection}{\numberline {5.2.2}Search Procedure and Feedback}{55}{subsection.5.2.2}%
-\contentsline {paragraph}{Examples supplied to the optimiser.}{56}{paragraph*.54}%
+\contentsline {paragraph}{Examples supplied to the optimiser.}{56}{paragraph*.55}%
 \contentsline {subsection}{\numberline {5.2.3}Progress Across Search Rounds}{56}{subsection.5.2.3}%
 \contentsline {subsection}{\numberline {5.2.4}Retrieval, Answers, and Cost of the Selected Instruction}{56}{subsection.5.2.4}%
 \contentsline {subsection}{\numberline {5.2.5}Choosing between Retrieval and Answer Objectives}{57}{subsection.5.2.5}%
@@ -132,7 +132,7 @@
 \contentsline {section}{\numberline {5.5}Discussion and Implications}{66}{section.5.5}%
 \contentsline {subsection}{\numberline {5.5.1}Contributions and Practical Implications}{66}{subsection.5.5.1}%
 \contentsline {subsection}{\numberline {5.5.2}Scope and Limitations}{67}{subsection.5.5.2}%
-\contentsline {chapter}{Conclusion and outlook}{68}{section*.64}%
+\contentsline {chapter}{Conclusion and outlook}{68}{section*.65}%
 \contentsline {chapter}{\numberline {A}Supplementary Optimisation Studies}{70}{appendix.A}%
 \contentsline {section}{\numberline {A.1}Exploratory Hidden-State Prediction of Assigned Depth}{70}{section.A.1}%
 \contentsline {section}{\numberline {A.2}Independent Evaluation Design}{71}{section.A.2}%
@@ -140,5 +140,5 @@
 \contentsline {subsection}{\numberline {A.2.2}Comparators and Search Allowances}{72}{subsection.A.2.2}%
 \contentsline {subsection}{\numberline {A.2.3}Outcome Analysis and Cost Accounting}{72}{subsection.A.2.3}%
 \contentsline {subsection}{\numberline {A.2.4}Separating Prompt and Allocation Effects}{73}{subsection.A.2.4}%
-\contentsline {chapter}{Bibliography}{74}{section*.67}%
-\contentsline {chapter}{Netography}{78}{section*.69}%
+\contentsline {chapter}{Bibliography}{74}{section*.68}%
+\contentsline {chapter}{Netography}{78}{section*.70}%

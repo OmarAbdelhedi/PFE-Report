@@ -187,8 +187,10 @@
 % The cover page (above) is outside the numbering and carries no folio.
 \clearpage
 \pagenumbering{roman}
-\subfile{chapters/0-i-signature}
-\clearpage
+% 0-i-signature.tex (supervisor assessment/signature page) exists but is
+% deliberately not included. Uncomment both lines below to switch it back on.
+%\subfile{chapters/0-i-signature}
+%\clearpage
 \subfile{chapters/0-iv-abstract}   % Abstract + Keywords, then Resume + Mots cles (one page)
 \clearpage
 \subfile{chapters/0-ii-Dedications}
