@@ -1,31 +1,51 @@
-% !TEX root = ../main.tex
-% =====================================================================
-% ABSTRACT (English) + KEYWORDS, then RESUME (French) + MOTS CLES.
-% Both sit on a SINGLE page and take one Contents entry.
-% NOTE: both texts are to be written by the author. The resume is to be
-% written directly in French, NOT translated from the English abstract.
-% =====================================================================
-
 \phantomsection
-\addcontentsline{toc}{chapter}{Abstract / R\'esum\'e}
-\markboth{Abstract / R\'esum\'e}{Abstract / R\'esum\'e}
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{Abstract}{Abstract}
 
 \begin{center}
 \textbf{\Large Abstract}
 \end{center}
 
+Retrieval-Augmented Generation (RAG) gives Large Language Models (LLMs) access
+to external knowledge, yet multi-hop questions remain challenging: they require
+several dependent pieces of evidence, and not every question demands the same
+amount of retrieval and reasoning. This thesis investigates how such systems
+can become more adaptive and evidence-aware, from recognising compositional
+difficulty before answering to improving the retrieval process once question
+decomposition is used.
+
+First, we ask whether an LLM's internal representations already reveal how
+compositionally difficult a question is. Across three language models and three
+multi-hop benchmarks, benchmark-defined difficulty is linearly decodable from
+hidden representations, emerges progressively across model depth, survives
+controls for label permutation and selected surface features, exhibits ordinal
+structure, and transfers more consistently across benchmarks after surface
+residualisation. These findings identify a potential pre-answer signal for
+adaptive computation.
+
+The thesis then turns to question decomposition. We introduce an evidence-aware
+evaluation framework that separates final-answer correctness from whether the
+required supporting evidence is retrieved, how deeply it appears in the
+rankings, and which subquestions are responsible for retrieving it. The
+evidence-ownership estimator recovers 92 of 100 complete reference-style
+assignment masks. On a controlled MuSiQue development panel, decomposition
+increases evidence availability and raises GPT-4o-mini exact match from 40\% to
+52\%, while further experiments show that better retrieval does not always
+translate directly into better answers.
+
+Finally, the proposed measurements are used to study automated decomposition
+prompt search and adaptive passage allocation. Prompt optimisation reveals that
+retrieval-oriented and answer-oriented objectives can favour different
+instructions. Under a tight eight-passage budget, learned allocation improves
+complete-evidence coverage by 6.3 percentage points on 2WikiMultiHopQA and
+4.7 points on MuSiQue, while a separate 700-question MuSiQue experiment yields
+a 2.1-point F1 gain. Together, these results support a view of multi-hop RAG in
+which reasoning strategy, decomposition quality, and retrieval resources are
+adapted to the structure and evidence needs of each question.
 
 \vspace{0.8em}
-\noindent\textbf{Keywords:} 
 
-
-\vspace{2.5em}
-
-\begin{center}
-\textbf{\Large R\'esum\'e}
-\end{center}
-
-
-
-\vspace{0.8em}
-\noindent\textbf{Mots cl\'es :} 
+\noindent\textbf{Keywords:} Retrieval-Augmented Generation, Large Language
+Models, Multi-Hop Question Answering, Question Decomposition, Compositional
+Difficulty, Representation Probing, Adaptive Retrieval, Evidence-Aware
+Evaluation.

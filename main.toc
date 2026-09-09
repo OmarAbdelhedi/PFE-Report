@@ -1,5 +1,5 @@
 \babel@toc {english}{}\relax 
-\contentsline {chapter}{Abstract / R\'esum\'e}{ii}{section*.1}%
+\contentsline {chapter}{Abstract}{ii}{section*.1}%
 \contentsline {chapter}{Dedications}{iii}{section*.3}%
 \contentsline {chapter}{Acknowledgements}{iv}{section*.5}%
 \contentsline {chapter}{List of Figures}{ix}{section*.7}%
